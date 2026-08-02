@@ -1,4 +1,4 @@
-import { http } from './http.js';
+import { http, describeRequestError } from './http.js';
 import { ICellIssue } from '../types.js';
 
 export interface IModelSettings {
@@ -138,7 +138,10 @@ export async function getImageAltSuggestion(
     }
   } catch (error) {
     console.error('Error getting suggestions:', error);
-    return { ok: false, text: 'Error getting suggestions. Please try again.' };
+    return {
+      ok: false,
+      text: `Alt text request failed — ${describeRequestError(error)}`
+    };
   }
 }
 
@@ -199,7 +202,10 @@ export async function getTableCaptionSuggestion(
     }
   } catch (error) {
     console.error('Error getting suggestions:', error);
-    return { ok: false, text: 'Error getting suggestions. Please try again.' };
+    return {
+      ok: false,
+      text: `Caption request failed — ${describeRequestError(error)}`
+    };
   }
 }
 
@@ -254,6 +260,9 @@ export async function sendLLMRequest(
     }
   } catch (error) {
     console.error('Error sending LLM request:', error);
-    return { ok: false, text: 'Error sending request. Please try again.' };
+    return {
+      ok: false,
+      text: `Request failed — ${describeRequestError(error)}`
+    };
   }
 }
