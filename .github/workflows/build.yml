@@ -55,6 +55,20 @@ jobs:
           jlpm install
           jlpm build
 
+      # The release workflow publishes from build:prod, which enables webpack
+      # plugins the dev build skips. `python -m build` below cannot cover this:
+      # skip-if-exists in pyproject.toml sees the dev output and skips the
+      # production build entirely. Run it explicitly so a prod-only failure
+      # fails CI instead of silently breaking the next release.
+      - name: Production build (matches the release path)
+        env:
+          YARN_ENABLE_IMMUTABLE_INSTALLS: 'false'
+          YARN_CHECKSUM_BEHAVIOR: update
+        run: |
+          set -eux
+          npm run build -w packages/core
+          npm run build:prod -w packages/extension
+
       - name: Test extension loads
         working-directory: packages/extension
         run: |
