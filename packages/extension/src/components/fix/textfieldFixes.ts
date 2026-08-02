@@ -404,6 +404,19 @@ export class LinkTextFixWidget extends TextFieldFixWidget {
     return 'Update the link text or aria-label:';
   }
 
+  constructor(issue: ICellIssue, cell: Cell<ICellModel>, aiEnabled: boolean) {
+    super(issue, cell, aiEnabled);
+
+    // AI suggestion is not implemented for links yet, so remove the button
+    // rather than leaving it visible but inert.
+    const suggestButton = this.node.querySelector(
+      '.suggest-button'
+    ) as HTMLButtonElement;
+    if (suggestButton) {
+      suggestButton.remove();
+    }
+  }
+
   applyTextToCell(providedText: string): void {
     if (providedText === '') {
       return;
@@ -480,7 +493,7 @@ export class LinkTextFixWidget extends TextFieldFixWidget {
   }
 
   async displayAISuggestions(): Promise<void> {
-    // Not implemented for links today
+    // Unreachable: the suggest button is removed in the constructor.
     return;
   }
 }
