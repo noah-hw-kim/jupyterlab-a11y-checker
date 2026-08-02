@@ -42317,7 +42317,7 @@ function rawIpynbToGeneralCells(ipynbContent) {
 init_esm_shims();
 var import_axe_core = __toESM(require_axe());
 
-// ../core/node_modules/marked/lib/marked.esm.js
+// ../../node_modules/marked/lib/marked.esm.js
 init_esm_shims();
 function _getDefaults() {
   return {
