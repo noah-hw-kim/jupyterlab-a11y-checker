@@ -164,7 +164,7 @@ export async function getTableCaptionSuggestion(
           content: prompt
         }
       ],
-      max_tokens: 150
+      max_tokens: 1024
     });
 
     const response = await http.post(languageSettings.baseUrl, body, {
