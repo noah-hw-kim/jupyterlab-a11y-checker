@@ -50,6 +50,22 @@
           "title": "Vision Model",
           "default": "amazon.nova-pro-v1:0",
           "minLength": 1
+        },
+        "reasoningEffort": {
+          "type": "string",
+          "title": "Reasoning Effort",
+          "description": "Choose Low to request less reasoning from compatible providers. Provider default omits the reasoning_effort field for broader compatibility.",
+          "default": "provider-default",
+          "oneOf": [
+            {
+              "const": "provider-default",
+              "title": "Provider default"
+            },
+            {
+              "const": "low",
+              "title": "Low"
+            }
+          ]
         }
       }
     }

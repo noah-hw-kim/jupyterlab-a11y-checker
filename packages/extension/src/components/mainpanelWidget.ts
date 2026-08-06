@@ -27,6 +27,7 @@ interface ISettingsShape {
   baseUrl?: string;
   apiKey?: string;
   model?: string;
+  reasoningEffort?: 'provider-default' | 'low';
 }
 
 export class MainPanelWidget extends Widget {
@@ -489,7 +490,10 @@ export class MainPanelWidget extends Widget {
         this.visionModelSettings = {
           baseUrl: visionModel.baseUrl || this.visionModelSettings.baseUrl,
           apiKey: visionModel.apiKey || this.visionModelSettings.apiKey,
-          model: visionModel.model || this.visionModelSettings.model
+          model: visionModel.model || this.visionModelSettings.model,
+          ...(visionModel.reasoningEffort === 'low'
+            ? { reasoningEffort: 'low' }
+            : {})
         };
       }
     } catch (error) {

@@ -1,10 +1,14 @@
 import { http, describeRequestError } from './http.js';
 import { ICellIssue } from '../types.js';
 
+const SUGGESTION_MAX_TOKENS = 1024;
+const GENERAL_LLM_MAX_TOKENS = 1500;
+
 export interface IModelSettings {
   baseUrl: string;
   apiKey: string;
   model: string;
+  reasoningEffort?: 'low';
 }
 
 export interface IAISuggestionResponse {
@@ -70,7 +74,7 @@ export async function getImageAltSuggestion(
   visionSettings: IModelSettings
 ): Promise<IAISuggestionResponse> {
   let prompt =
-    'Read the provided image and respond with a short description of the image, without any explanation. Avoid using the word "image" in the description.';
+    'Return only one plain-text sentence of no more than 40 words describing the essential visual content. Do not include analysis, explanations, labels, quotation marks, or the word "image".';
   prompt += `Content: \n${issue.issueContentRaw}\n\n`;
 
   // New River implementation - using OpenAI Chat Completions API format
@@ -85,7 +89,7 @@ export async function getImageAltSuggestion(
         {
           role: 'system',
           content:
-            'You are a helpful assistant that generates alt text for images.'
+            'You generate concise alt text. Answer directly without analysis or explanation.'
         },
         {
           role: 'user',
@@ -103,7 +107,10 @@ export async function getImageAltSuggestion(
           ]
         }
       ],
-      max_tokens: 1024
+      max_tokens: SUGGESTION_MAX_TOKENS,
+      ...(visionSettings.reasoningEffort === 'low'
+        ? { reasoning_effort: 'low' }
+        : {})
     });
 
     const response = await http.post(visionSettings.baseUrl, body, {
@@ -124,7 +131,7 @@ export async function getImageAltSuggestion(
       if (choice.finish_reason === 'length') {
         return {
           ok: false,
-          text: 'Output limit reached before completing alt text. Please increase token allowance or lower reasoning settings.'
+          text: `This model reached the ${SUGGESTION_MAX_TOKENS.toLocaleString('en-US')}-token limit before producing alt text. Try a non-reasoning setting or a more compact vision model.`
         };
       }
 
@@ -167,7 +174,7 @@ export async function getTableCaptionSuggestion(
           content: prompt
         }
       ],
-      max_tokens: 1024
+      max_tokens: SUGGESTION_MAX_TOKENS
     });
 
     const response = await http.post(languageSettings.baseUrl, body, {
@@ -188,7 +195,7 @@ export async function getTableCaptionSuggestion(
       if (choice.finish_reason === 'length') {
         return {
           ok: false,
-          text: 'Output limit reached before completing caption. Please increase token allowance or lower reasoning settings.'
+          text: `This model reached the ${SUGGESTION_MAX_TOKENS.toLocaleString('en-US')}-token limit before producing a caption. Try a Low reasoning effort setting (Go to Settings -> Settings Editor -> A11y Checker Settings) or a more compact language model.`
         };
       }
 
@@ -227,7 +234,7 @@ export async function sendLLMRequest(
           content: prompt
         }
       ],
-      max_tokens: 1500
+      max_tokens: GENERAL_LLM_MAX_TOKENS
     });
 
     const response = await http.post(settings.baseUrl, body, {
@@ -246,7 +253,7 @@ export async function sendLLMRequest(
       if (choice.finish_reason === 'length') {
         return {
           ok: false,
-          text: 'Output limit reached before completing request.'
+          text: `This model reached the ${GENERAL_LLM_MAX_TOKENS.toLocaleString('en-US')}-token limit before completing the response. Try a shorter prompt or a model that produces more concise responses.`
         };
       }
 
