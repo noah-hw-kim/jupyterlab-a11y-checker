@@ -92,6 +92,27 @@ export class MainPanelWidget extends Widget {
               </div>
           </div>
           <h1 class="main-title">Accessibility Checker</h1>
+          <section
+            class="service-disclaimer"
+            aria-labelledby="service-disclaimer-title"
+          >
+            <h2 id="service-disclaimer-title">Accessibility limitations</h2>
+
+            <p>
+              This service may not result in fully accessible documents. Please follow
+              up with manual remediation.
+            </p>
+
+            <p>By using this service, you acknowledge:</p>
+
+            <ul>
+              <li>The service may not produce a 100% accessibility score.</li>
+              <li>Color selection and contrast must be manually remediated.</li>
+              <li>Logical reading order must be manually remediated.</li>
+              <li>Tables may require manual remediation.</li>
+              <li>Figures may require additional alt text.</li>
+            </ul>
+          </section>
           <div class="controls-container">
               <button class="control-button ai-control-button">
                 <span class="material-icons" aria-hidden="true">auto_awesome</span>
