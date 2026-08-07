@@ -131,7 +131,7 @@ export async function getImageAltSuggestion(
       if (choice.finish_reason === 'length') {
         return {
           ok: false,
-          text: `This model reached the ${SUGGESTION_MAX_TOKENS.toLocaleString('en-US')}-token limit before producing alt text. Try a non-reasoning setting or a more compact vision model.`
+          text: `This model reached the ${SUGGESTION_MAX_TOKENS.toLocaleString('en-US')}-token limit before producing alt text. Try selecting Low reasoning effort in Settings -> Settings Editor -> A11y Checker Settings, or use a more compact vision model.`
         };
       }
 
@@ -195,7 +195,7 @@ export async function getTableCaptionSuggestion(
       if (choice.finish_reason === 'length') {
         return {
           ok: false,
-          text: `This model reached the ${SUGGESTION_MAX_TOKENS.toLocaleString('en-US')}-token limit before producing a caption. Try a Low reasoning effort setting (Go to Settings -> Settings Editor -> A11y Checker Settings) or a more compact language model.`
+          text: `This model reached the ${SUGGESTION_MAX_TOKENS.toLocaleString('en-US')}-token limit before producing a caption. Try a more compact language model.`
         };
       }
 
