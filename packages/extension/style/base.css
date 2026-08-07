@@ -638,3 +638,37 @@
 .loading-overlay .material-icons.loading {
   animation: spin 1s linear infinite;
 }
+
+/* ==========================================================================
+   Service Disclaimer
+   ========================================================================== */
+.a11y-panel .service-disclaimer {
+  margin: 0 16px 20px;
+  padding: 12px 14px;
+  color: var(--jp-ui-font-color1);
+  background-color: var(--jp-layout-color2);
+  border: 1px solid var(--jp-border-color1);
+  border-left: 4px solid var(--jp-warn-color1, #f0ad4e);
+  border-radius: 4px;
+  font-size: var(--jp-ui-font-size1, 13px);
+  line-height: 1.5;
+}
+
+.a11y-panel .service-disclaimer h2 {
+  margin: 0 0 8px;
+  font-size: var(--jp-ui-font-size2, 14px);
+  font-weight: 600;
+}
+
+.a11y-panel .service-disclaimer p {
+  margin: 0 0 8px;
+}
+
+.a11y-panel .service-disclaimer ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.a11y-panel .service-disclaimer li + li {
+  margin-top: 4px;
+}
