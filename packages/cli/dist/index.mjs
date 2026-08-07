@@ -45269,7 +45269,7 @@ var NodeImageProcessor = class {
 
 // src/index.ts
 var program2 = new Command();
-program2.name("jupyterlab-a11y-check").description("CLI to check Jupyter Notebooks for accessibility issues").version("0.1.6").option("--json", "output a JSON summary suitable for LLM processing").argument("[files...]", "Paths to the .ipynb files to check").action(async (filePaths, options2) => {
+program2.name("jupyterlab-a11y-check").description("CLI to check Jupyter Notebooks for accessibility issues").version("0.1.7").option("--json", "output a JSON summary suitable for LLM processing").argument("[files...]", "Paths to the .ipynb files to check").action(async (filePaths, options2) => {
   if (!filePaths || filePaths.length === 0) {
     console.log(
       import_chalk.default.yellow(
