@@ -1,6 +1,6 @@
 {
     "name": "jupyterlab-a11y-checker",
-    "version": "0.2.9+csuf.1",
+    "version": "0.2.9",
     "type": "module",
     "description": "A JupyterLab extension that checks and suggests fixes for a11y issues.",
     "keywords": [
@@ -8,9 +8,9 @@
         "jupyterlab",
         "jupyterlab-extension"
     ],
-    "homepage": "https://github.com/berkeley-cdss/jupyterlab-a11y-checker",
+    "homepage": "https://github.com/noah-hw-kim/jupyterlab-a11y-checker",
     "bugs": {
-        "url": "https://github.com/berkeley-cdss/jupyterlab-a11y-checker/issues"
+        "url": "https://github.com/noah-hw-kim/jupyterlab-a11y-checker/issues"
     },
     "license": "BSD-3-Clause",
     "author": "Research, Teaching, and Learning at UC Berkeley",
@@ -24,7 +24,7 @@
     "style": "style/index.css",
     "repository": {
         "type": "git",
-        "url": "https://github.com/berkeley-cdss/jupyterlab-a11y-checker.git",
+        "url": "https://github.com/noah-hw-kim/jupyterlab-a11y-checker.git",
         "directory": "packages/extension"
     },
     "scripts": {
