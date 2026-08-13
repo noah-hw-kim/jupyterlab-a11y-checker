@@ -27,6 +27,7 @@ interface ISettingsShape {
   baseUrl?: string;
   apiKey?: string;
   model?: string;
+  reasoningEffort?: 'provider-default' | 'low';
 }
 
 export class MainPanelWidget extends Widget {
@@ -73,24 +74,37 @@ export class MainPanelWidget extends Widget {
     this.title.icon = accessibilityIcon;
     this.node.innerHTML = `
       <div class="main-container">
-          <div class="notice-container">
-              <div class="notice-header">
-                  <div class="notice-title">
-                      <span class="chevron material-icons" aria-hidden="true">expand_more</span>
-                      <strong>Notice: Known cell navigation error </strong>
-                  </div>
-                  <button class="notice-delete-button" aria-label="Dismiss notice">&#x2715;</button>
-              </div>
-              <div class="notice-content hidden">
-                  <p>
-                      The jupyterlab-a11y-checker has a known cell navigation issue for Jupyterlab version 4.2.5 or later.
-                      To fix this, please navigate to 'Settings' → 'Settings Editor' → Notebook, scroll down to 'Windowing mode',
-                      and choose 'defer' from the dropdown. Please note that this option may reduce the performance of the application.
-                      For more information, please see the <a href="https://jupyter-notebook.readthedocs.io/en/stable/changelog.html" target="_blank" style="text-decoration: underline;">Jupyter Notebook changelog.</a>
-                  </p>
-              </div>
-          </div>
+          
           <h1 class="main-title">Accessibility Checker</h1>
+
+          <p class="checker-description">
+            The Accessibility Checker scans the current notebook for common
+            accessibility issues in headings, images, links, tables, and rendered
+            content. It identifies affected cells and provides guidance to help you
+            address each issue.
+          </p>
+
+          <section
+            class="service-disclaimer"
+            aria-labelledby="service-disclaimer-title"
+          >
+            <h2 id="service-disclaimer-title">Accessibility limitations</h2>
+
+            <p>
+              This service may not result in fully accessible documents. Please follow
+              up with manual remediation.
+            </p>
+
+            <p>By using this service, you acknowledge:</p>
+
+            <ul>
+              <li>The service may not produce a 100% accessibility score.</li>
+              <li>Color selection and contrast must be manually remediated.</li>
+              <li>Logical reading order must be manually remediated.</li>
+              <li>Tables may require manual remediation.</li>
+              <li>Figures may require additional alt text.</li>
+            </ul>
+          </section>
           <div class="controls-container">
               <button class="control-button ai-control-button">
                 <span class="material-icons" aria-hidden="true">auto_awesome</span>
@@ -104,24 +118,6 @@ export class MainPanelWidget extends Widget {
           <div class="issues-container"></div>
       </div>
         `;
-
-    // Notice
-    const noticeContainer = this.node.querySelector('.notice-container');
-    const noticeContent = this.node.querySelector(
-      '.notice-content'
-    ) as HTMLElement;
-    const noticeToggleButton = this.node.querySelector('.notice-title');
-    const noticeDeleteButton = this.node.querySelector('.notice-delete-button');
-    const expandIcon = this.node.querySelector('.chevron');
-
-    noticeToggleButton?.addEventListener('click', () => {
-      noticeContent?.classList.toggle('hidden');
-      expandIcon?.classList.toggle('expanded');
-    });
-
-    noticeDeleteButton?.addEventListener('click', () => {
-      noticeContainer?.classList.add('hidden');
-    });
 
     // Controls
     const aiControlButton = this.node.querySelector(
@@ -489,7 +485,10 @@ export class MainPanelWidget extends Widget {
         this.visionModelSettings = {
           baseUrl: visionModel.baseUrl || this.visionModelSettings.baseUrl,
           apiKey: visionModel.apiKey || this.visionModelSettings.apiKey,
-          model: visionModel.model || this.visionModelSettings.model
+          model: visionModel.model || this.visionModelSettings.model,
+          ...(visionModel.reasoningEffort === 'low'
+            ? { reasoningEffort: 'low' }
+            : {})
         };
       }
     } catch (error) {

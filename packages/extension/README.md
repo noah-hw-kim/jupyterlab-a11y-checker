@@ -2,6 +2,10 @@
 
 [![jupyterlab-a11y-checker](https://marketplace.orbrx.io/api/badge/jupyterlab-a11y-checker?metric=downloads&leftColor=%23555&rightColor=%23F37620&style=flat)](https://marketplace.orbrx.io/extensions/jupyterlab-a11y-checker)
 
+> This is the CSUF-maintained distribution of the JupyterLab Accessibility
+> Checker, based on the UC Berkeley project. It contains CSUF-specific
+> configuration and enhancements.
+
 jupyterLab-a11y-checker is a JupyterLab extension that helps authors detect and fix accessibility issues in Jupyter Notebooks, aligning with WCAG 2.1 AA guidelines. It enables authors to identify accessibility issues in their notebooks and provides actionable suggestions to fix them. It combines the strengths of [axe-core](https://github.com/dequelabs/axe-core), a widely used accessibility engine, with custom notebook-specific detection algorithms that address issues axe cannot reliably cover in JupyterLab.
 
 Here's how the extension looks like:
@@ -29,10 +33,10 @@ To simplify the remediation process, we integrate both a Large Language Model (L
 You can install the extension directly via pip:
 
 ```bash
-pip install jupyterlab-a11y-checker
+pip install csuf-jupyterlab-a11y-checker
 ```
 
-Find the package on PyPI. [Link to PyPI Package](https://pypi.org/project/jupyterlab-a11y-checker/).
+Find the package on PyPI. [Link to PyPI Package](https://pypi.org/project/csuf-jupyterlab-a11y-checker/).
 
 ### CLI Usage
 
@@ -128,7 +132,7 @@ twine upload your-package.whl
 #### Development uninstall
 
 ```bash
-pip uninstall jupyterlab_a11y_checker
+pip uninstall csuf-jupyterlab-a11y-checker
 ```
 
 #### Testing in a JupyterHub setup
