@@ -672,3 +672,10 @@
 .a11y-panel .service-disclaimer li + li {
   margin-top: 4px;
 }
+
+.a11y-panel .checker-description {
+  margin: 0 16px 20px;
+  color: var(--jp-ui-font-color1);
+  font-size: var(--jp-ui-font-size2, 14px);
+  line-height: 1.5;
+}
