@@ -12,5 +12,5 @@ except ImportError:
 def _jupyter_labextension_paths():
     return [{
         "src": "labextension",
-        "dest": "a11y-checker"
+        "dest": "jupyterlab-a11y-checker"
     }]

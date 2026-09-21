@@ -98,11 +98,11 @@ jobs:
           set -eux
           pip install build
           python -m build
-          pip uninstall -y "jupyterlab_a11y_checker" jupyterlab
+          pip uninstall -y "csuf-jupyterlab-a11y-checker" jupyterlab
 
       - name: Upload extension packages
         uses: actions/upload-artifact@v4
         with:
           name: extension-artifacts
-          path: packages/extension/dist/jupyterlab_a11y_checker*
+          path: packages/extension/dist/csuf_jupyterlab_a11y_checker*
           if-no-files-found: error
