@@ -1,0 +1,5 @@
+{
+  "packageManager": "python",
+  "packageName": "csuf-jupyterlab-a11y-checker",
+  "uninstallInstructions": "Use your Python package manager to uninstall csuf-jupyterlab-a11y-checker"
+}
