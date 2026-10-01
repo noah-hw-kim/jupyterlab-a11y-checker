@@ -25,6 +25,15 @@ The CLI tool can be used as a standalone tool to audit notebooks without requiri
 - Integration with AI agents for accessibility analysis
 - Pre-commit hooks and validation
 
+### A11yLens Project Extension
+
+This repository is also being extended for the A11yLens project. Before making substantial changes related to semantic accessibility analysis, context selection, model-assisted remediation, validation, or JupyterLab integration, read:
+
+docs/a11ylens-project-brief.md
+docs/a11ylens-development-guide.md
+
+The existing repository remains the source of truth for current architecture and behavior. The A11yLens documents describe additional project requirements and should not be used to duplicate existing abstractions.
+
 ## Quick Start
 
 ### Running the CLI Tool
