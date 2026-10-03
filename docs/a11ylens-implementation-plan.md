@@ -192,7 +192,8 @@ Write a function that takes an array of `IGeneralCell` objects and returns an ar
   - Source kind: `"code-output"`
   - MIME type
   - A hash of the image data (so you can detect when the image changes later)
-  - Alt state: always "missing" for code outputs (they don't have alt text by default)
+  - Existing alt text: read a valid stored description for this output, when available. Metadata associated with a different image must not be reused.
+  - Alt state: `"missing"` when no valid stored description exists, `"empty"` when the stored description is an empty string, or `"present"` when it is nonempty. This records presence only; semantic analysis later assesses whether a present description is weak or acceptable.
 
 - **Attachments:** Handle `attachment:filename.png` references in Markdown cells.
 

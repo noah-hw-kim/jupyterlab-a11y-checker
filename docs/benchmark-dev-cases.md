@@ -10,10 +10,14 @@ All 6 test cases are concretely implemented as live notebook cells in the fixtur
 
 ## Benchmark Summary
 
-| Case # | ID | Presence (`altState`) | Semantic Quality | Type | Fixture Location | Expected Judgment |
+Presence (`altState`) describes whether alt text exists: `missing`, `empty`, or `present`. Expected semantic quality is a human-authored reference label for nonempty descriptions: `weak` or `acceptable`. It is **not applicable** when alt text is missing or empty because there is no nonempty description to assess.
+
+Expected semantic quality and `shouldImprove` are evaluation reference labels, not model predictions. Keep these labels, required-fact annotations, and prohibited-claim annotations out of model inputs; compare the model's results against them during evaluation.
+
+| Case # | ID | Presence (`altState`) | Expected Semantic Quality | Type | Fixture Location | Expected Judgment |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Case 1** | `dev-case-01-missing-html` | `missing` | `missing` | `markdown-html` | `dev_benchmark_cases.ipynb` (Cell 1) | `shouldImprove: true` |
-| **Case 2** | `dev-case-02-empty-markdown` | `empty` | `empty` | `markdown-inline` | `dev_benchmark_cases.ipynb` (Cell 2) | `shouldImprove: true` |
+| **Case 1** | `dev-case-01-missing-html` | `missing` | Not applicable | `markdown-html` | `dev_benchmark_cases.ipynb` (Cell 1) | `shouldImprove: true` |
+| **Case 2** | `dev-case-02-empty-markdown` | `empty` | Not applicable | `markdown-inline` | `dev_benchmark_cases.ipynb` (Cell 2) | `shouldImprove: true` |
 | **Case 3** | `dev-case-03-weak-markdown` | `present` | `weak` | `markdown-inline` | `dev_benchmark_cases.ipynb` (Cell 3) | `shouldImprove: true` |
 | **Case 4** | `dev-case-04-weak-code-output` | `present` | `weak` | `code-output` | `dev_benchmark_cases.ipynb` (Cell 4) | `shouldImprove: true` |
 | **Case 5** | `dev-case-05-acceptable-markdown` | `present` | `acceptable` | `markdown-inline` | `dev_benchmark_cases.ipynb` (Cell 5) | `shouldImprove: false` |
@@ -29,7 +33,7 @@ All 6 test cases are concretely implemented as live notebook cells in the fixtur
 * **Snippet**: `<img src="sales_chart.png">`
 * **Current Alt Text**: *(None — `alt` attribute is completely omitted from the HTML tag)*
 * **Alt-Text Presence (`altState`)**: `missing`
-* **Semantic Quality**: `missing`
+* **Expected Semantic Quality**: Not applicable (no nonempty description to assess).
 * **Surrounding Context**:
   * Heading: `## Case 1: Missing Alt Text (HTML <img> without alt attribute)`
   * Preceding Markdown: `The following line chart illustrates quarterly revenue performance.`
@@ -53,7 +57,7 @@ All 6 test cases are concretely implemented as live notebook cells in the fixtur
 * **Snippet**: `![](sales_chart.png)`
 * **Current Alt Text**: `""` *(explicitly empty string between brackets)*
 * **Alt-Text Presence (`altState`)**: `empty`
-* **Semantic Quality**: `empty`
+* **Expected Semantic Quality**: Not applicable (no nonempty description to assess).
 * **Surrounding Context**:
   * Heading: `## Case 2: Empty Alt Text (Markdown empty brackets)`
   * Preceding Markdown: `The following chart illustrates quarterly revenue growth over recent quarters.`
@@ -77,7 +81,7 @@ All 6 test cases are concretely implemented as live notebook cells in the fixtur
 * **Snippet**: `![graph](sales_chart.png)`
 * **Current Alt Text**: `"graph"`
 * **Alt-Text Presence (`altState`)**: `present`
-* **Semantic Quality**: `weak`
+* **Expected Semantic Quality**: `weak`
 * **Surrounding Context**:
   * Heading: `## Case 3: Weak Alt Text (Markdown with generic "graph")`
   * Preceding Markdown: `Company financial overview showing quarterly revenue performance.`
@@ -109,7 +113,7 @@ All 6 test cases are concretely implemented as live notebook cells in the fixtur
   ```
 * **Current Alt Text**: `"histogram"`
 * **Alt-Text Presence (`altState`)**: `present`
-* **Semantic Quality**: `weak`
+* **Expected Semantic Quality**: `weak`
 * **Surrounding Context**:
   * Code Cell: Matplotlib histogram plotting customer age distribution.
   * Section Title: `"Customer Age Distribution"`
@@ -133,7 +137,7 @@ All 6 test cases are concretely implemented as live notebook cells in the fixtur
 * **Snippet**: `![Line chart showing quarterly revenue increasing steadily across five quarters.](sales_chart.png)`
 * **Current Alt Text**: `"Line chart showing quarterly revenue increasing steadily across five quarters."`
 * **Alt-Text Presence (`altState`)**: `present`
-* **Semantic Quality**: `acceptable`
+* **Expected Semantic Quality**: `acceptable`
 * **Surrounding Context**:
   * Heading: `## Case 5: Acceptable Alt Text (Markdown Descriptive)`
   * Preceding Markdown: `Financial summary showing revenue across five consecutive quarters.`
@@ -157,7 +161,7 @@ All 6 test cases are concretely implemented as live notebook cells in the fixtur
   `"Bar chart comparing 2026 department enrollment with Computer Science highest at 1,200 students."`
 * **Current Alt Text**: `"Bar chart comparing 2026 department enrollment with Computer Science highest at 1,200 students."`
 * **Alt-Text Presence (`altState`)**: `present`
-* **Semantic Quality**: `acceptable`
+* **Expected Semantic Quality**: `acceptable`
 * **Surrounding Context**:
   * Code Cell:
      ```python
