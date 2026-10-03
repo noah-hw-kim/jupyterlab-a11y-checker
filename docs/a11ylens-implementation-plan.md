@@ -79,7 +79,7 @@ Review this table as a high-level map of where the project is heading. We follow
 
 | Interface | Purpose | Defined & Used In |
 |-----------|---------|-------------------|
-| `IImageCandidate` | Describes one image found in a notebook | Phase 2 (Extraction) |
+| `IImageCandidate` | Describes one image found in a notebook | Phase 1 (defined), Phase 2 (populated) |
 | `IModelClient` | How the app talks to any AI model | Phase 3 (Minimal E2E) |
 | `ISemanticResult` | The AI's judgment about an image's alt text | Phase 3 (Minimal E2E) |
 | `IContextPackage` | Describes the notebook context selected for one image | Phase 4 (Context Strategies) |
@@ -88,7 +88,7 @@ Review this table as a high-level map of where the project is heading. We follow
 | `IEvaluationRecord` | Recorded result of running one test case | Phase 7 (Experiment) |
 
 > [!TIP]
-> Do not add these to `packages/core/src/types.ts` right now. We will introduce and write each interface step by step as we build the feature that requires it.
+> `IImageCandidate`, `ImageSourceType`, and `AltTextState` are already defined in `packages/core/src/types.ts`. Do not add the remaining interfaces (`IModelClient`, `ISemanticResult`, etc.) yet — define each one step by step as we build the feature that requires it.
 
 #### 2. Confirm the AI model works
 
@@ -153,7 +153,7 @@ Before the AI can analyze an image, you need to *find* all the images. Images ca
 
 #### 1. Extend `IGeneralCell` to include outputs
 
-The existing [`IGeneralCell`](file:///home/orrijoa61b/projects/jupyterlab-a11y-checker/packages/core/src/types.ts#L15-L20) interface only has `cellIndex`, `type`, `source`, and `attachments`. You need to add an optional `outputs` field so that code-cell outputs (images) are available.
+The existing [`IGeneralCell`](../packages/core/src/types.ts) interface only has `cellIndex`, `type`, `source`, and `attachments`. You need to add an optional `outputs` field so that code-cell outputs (images) are available.
 
 ```typescript
 export interface IGeneralCell {
@@ -201,7 +201,7 @@ Write a function that takes an array of `IGeneralCell` objects and returns an ar
 
 #### 4. Reuse existing scanners
 
-The project already has image-detection code in [`packages/core/src/detection/category/image.ts`](file:///home/orrijoa61b/projects/jupyterlab-a11y-checker/packages/core/src/detection/category/image.ts). **Don't rewrite it** — extend or call it. The existing code already finds missing alt text; you're adding the ability to also capture the image data and handle code outputs.
+The project already has image-detection code in [`packages/core/src/detection/category/image.ts`](../packages/core/src/detection/category/image.ts). **Don't rewrite it** — extend or call it. The existing code already finds missing alt text; you're adding the ability to also capture the image data and handle code outputs.
 
 #### 5. Write tests
 
@@ -671,7 +671,7 @@ Record or prepare a live demo covering:
 
 | Interface | One-line description | Defined & Used In |
 |-----------|---------------------|-------------------|
-| `IImageCandidate` | One image found in the notebook | Phase 2 (Extraction) |
+| `IImageCandidate` | One image found in the notebook | Phase 1 (defined), Phase 2 (populated) |
 | `IModelClient` | API wrapper for any OpenAI-compatible model | Phase 3 (Minimal E2E) |
 | `ISemanticResult` | AI's judgment: concern + suggestion | Phase 3 (Minimal E2E) |
 | `IContextPackage` | Notebook context selected for one image | Phase 4 (Context Strategies) |
