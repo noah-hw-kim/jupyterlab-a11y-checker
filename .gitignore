@@ -143,3 +143,9 @@ package-lock.json
 
 # Windows Zone.Identifier mark-of-the-web artifacts
 *:Zone.Identifier
+
+# Local environment variables & secrets
+.env*
+
+# Local scratch and throwaway scripts
+scratch/

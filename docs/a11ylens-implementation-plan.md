@@ -62,7 +62,7 @@ Each phase builds on the one before it. **Do not skip ahead.**
 ## Phase 1 — Set Up and Prove Feasibility
 
 **Target dates:** October 1–4  
-**One-sentence goal:** Make sure the AI model works, define your data shapes, and create your first test cases.
+**One-sentence goal:** Make sure the AI model works, verify access to notebook outputs, and create your first test cases.
 
 ### Why this phase exists
 
@@ -73,24 +73,22 @@ Before writing any real feature code, you need to confirm three things:
 
 ### What to do, step by step
 
-#### 1. Define TypeScript interfaces (data shapes)
+#### 1. Preview core interfaces (roadmap — read, don't implement yet)
 
-Create the TypeScript `interface` definitions that the rest of the project will use. These are *contracts* — they describe the shape of data without implementing any behavior yet.
+Review this table as a high-level map of where the project is heading. We follow a **just-in-time** strategy: we will define each interface in the specific phase where it is first needed so the reason for each field is concrete and clear.
 
-| Interface | Purpose | Key fields |
-|-----------|---------|------------|
-| `IImageCandidate` | Describes one image found in a notebook | cell index, image type (Markdown/output), MIME type, existing alt text, image data |
-| `IContextPackage` | Describes the notebook context selected for one image | strategy name, candidate, selected cells, why each cell was chosen, total input size |
-| `ISemanticResult` | The AI's judgment about an image's alt text | `hasConcern` (boolean), `reason` (string), `suggestedText` (string) |
-| `IValidationResult` | Quality check on a suggestion | `status` ("pass" / "revise" / "manual-review"), reason |
-| `IModelClient` | How the app talks to any AI model | methods like `analyzeAltText(...)`, `validateSuggestion(...)` |
-| `IEvaluationCase` | One test case for the final experiment | image info, required facts, prohibited claims, expected judgment |
-| `IEvaluationRecord` | Recorded result of running one test case | context used, AI response, timing, token count, errors |
+| Interface | Purpose | Defined & Used In |
+|-----------|---------|-------------------|
+| `IImageCandidate` | Describes one image found in a notebook | Phase 2 (Extraction) |
+| `IModelClient` | How the app talks to any AI model | Phase 3 (Minimal E2E) |
+| `ISemanticResult` | The AI's judgment about an image's alt text | Phase 3 (Minimal E2E) |
+| `IContextPackage` | Describes the notebook context selected for one image | Phase 4 (Context Strategies) |
+| `IValidationResult` | Quality check on a suggestion | Phase 5 (Validation) |
+| `IEvaluationCase` | One test case for the final experiment | Phase 5 (Benchmark freeze) |
+| `IEvaluationRecord` | Recorded result of running one test case | Phase 7 (Experiment) |
 
 > [!TIP]
-> Put these in `packages/core/src/types.ts` or a nearby file. The existing `ICellIssue` and `IGeneralCell` are already there — follow the same style.
-
-**Don't** implement any logic behind these interfaces yet. Just define the shapes.
+> Do not add these to `packages/core/src/types.ts` right now. We will introduce and write each interface step by step as we build the feature that requires it.
 
 #### 2. Confirm the AI model works
 
@@ -116,12 +114,12 @@ Build 6 small notebook examples by hand:
 
 | # | Alt-text state | Example |
 |---|----------------|---------|
-| 1 | Missing | `![](chart.png)` — no alt attribute at all |
-| 2 | Empty | `![""]( chart.png)` — alt is an empty string |
-| 3 | Weak | `![graph](chart.png)` — alt is "graph" (too generic) |
-| 4 | Weak | `![output](plot.png)` — alt is "output" |
-| 5 | Acceptable | `![Line chart showing quarterly revenue increasing from Q1 to Q4](chart.png)` |
-| 6 | Acceptable | `![Bar chart comparing enrollment by department for 2024](enrollment.png)` |
+| 1 | Missing | `<img src="sales_chart.png">` — HTML tag with no alt attribute at all |
+| 2 | Empty | `![](sales_chart.png)` — Markdown brackets with empty alt string |
+| 3 | Weak | `![graph](sales_chart.png)` — Markdown alt is "graph" (too generic) |
+| 4 | Weak | Code cell output plot with stored metadata (`a11y_metadata.altText: "histogram"`) |
+| 5 | Acceptable | `![Line chart showing quarterly revenue increasing steadily across five quarters.](sales_chart.png)` |
+| 6 | Acceptable | Code cell output plot with stored descriptive metadata (`a11y_metadata.altText: "Bar chart..."`) |
 
 For each case, write down:
 - **Evidence:** What's in the image? What does the surrounding notebook say?
@@ -131,11 +129,10 @@ For each case, write down:
 
 ### ✅ Phase 1 is done when
 
-- [ ] All interfaces are defined (code compiles, no logic needed).
-- [ ] One live AI API call succeeded (in a throwaway script, not committed).
-- [ ] You've demonstrated reading code-cell output images from a `.ipynb` file.
-- [ ] All 6 development cases have written-down reference annotations.
-- [ ] No API keys or sensitive content are in the repo.
+- [x] One live AI API call succeeded (in a throwaway script, not committed).
+- [x] You've demonstrated reading code-cell output images from a `.ipynb` file.
+- [x] All 6 development cases have written-down reference annotations.
+- [x] No API keys or sensitive content are in the repo.
 
 ---
 
@@ -672,15 +669,15 @@ Record or prepare a live demo covering:
 
 ## Quick Reference: Core Interfaces
 
-| Interface | One-line description | Defined in Phase |
-|-----------|---------------------|-----------------|
-| `IImageCandidate` | One image found in the notebook | Phase 1 (defined), Phase 2 (populated) |
-| `IContextPackage` | Notebook context selected for one image | Phase 1 (defined), Phase 4 (populated) |
-| `ISemanticResult` | AI's judgment: concern + suggestion | Phase 1 (defined), Phase 3 (populated) |
-| `IValidationResult` | Quality check: pass / revise / manual-review | Phase 1 (defined), Phase 5 (populated) |
-| `IModelClient` | API wrapper for any OpenAI-compatible model | Phase 1 (defined), Phase 3 (implemented) |
-| `IEvaluationCase` | One benchmark test case | Phase 1 (defined), Phase 5 (frozen) |
-| `IEvaluationRecord` | Recorded result of one experiment run | Phase 1 (defined), Phase 7 (populated) |
+| Interface | One-line description | Defined & Used In |
+|-----------|---------------------|-------------------|
+| `IImageCandidate` | One image found in the notebook | Phase 2 (Extraction) |
+| `IModelClient` | API wrapper for any OpenAI-compatible model | Phase 3 (Minimal E2E) |
+| `ISemanticResult` | AI's judgment: concern + suggestion | Phase 3 (Minimal E2E) |
+| `IContextPackage` | Notebook context selected for one image | Phase 4 (Context Strategies) |
+| `IValidationResult` | Quality check: pass / revise / manual-review | Phase 5 (Validation) |
+| `IEvaluationCase` | One benchmark test case | Phase 5 (Benchmark freeze) |
+| `IEvaluationRecord` | Recorded result of one experiment run | Phase 7 (Experiment) |
 | `ICellIssue` | Structural finding (already exists) | Already in the codebase |
 
 ---
