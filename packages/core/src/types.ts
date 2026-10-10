@@ -24,6 +24,8 @@ export interface IGeneralCell {
   type: "markdown" | "code" | "raw";
   source: string;
   attachments?: { [key: string]: { [mimeType: string]: string } };
+  outputs?: ICellOutput[];
+  metadata?: ICellMetadata;
 }
 
 export interface IIssueInformation {
@@ -61,4 +63,28 @@ export interface IImageCandidate {
   };
   /** Content hash of output images to detect when outputs change/rerun */
   dataHash?: string;
+}
+
+export interface ICellOutput {
+  output_type?: string;
+  data?: { [mimeType: string]: any };
+  metadata?: any;
+  [key: string]: any;
+}
+
+export interface IOutputA11yMetadata {
+  dataHash: string;
+  altText: string;
+}
+
+export interface IA11yMetadata {
+  altText?: string; // Legacy cell-level fallback
+  dataHash?: string;
+  outputs?: Record<string, IOutputA11yMetadata>;
+  [key: string]: any;
+}
+
+export interface ICellMetadata {
+  a11y_metadata?: IA11yMetadata;
+  [key: string]: any;
 }

@@ -2,6 +2,14 @@
  * Shared image-finding utilities used by image and color detection.
  */
 
+import {
+  IGeneralCell,
+  IImageCandidate,
+  AltTextState,
+  IA11yMetadata,
+  IOutputA11yMetadata,
+} from "../types.js";
+
 /**
  * Find all <img ...> tags using indexOf-based scanning (no ReDoS).
  */
@@ -39,6 +47,37 @@ export function findImgTags(
     searchFrom = end;
   }
   return results;
+}
+
+export interface IParsedImgTag {
+  src: string;
+  existingAltText?: string;
+  hasAlt: boolean;
+}
+
+export function parseHtmlImgTag(tag: string): IParsedImgTag | null {
+  // Use (?:^|[\s<]) instead of \b so that data-src or my-src are never matched
+  const srcMatch = tag.match(
+    /(?:^|[\s<])src\s*=\s*(?:["']([^"']*)["']|([^\s>]+))/i,
+  );
+  const src = srcMatch ? (srcMatch[1] ?? srcMatch[2] ?? "").trim() : "";
+
+  if (!src) {
+    return null;
+  }
+
+  // Use (?:^|[\s<]) so data-alt or aria-alt are never matched
+  const hasAlt = /(?:^|[\s<])alt(\s*=\s*|\s|>|\/)/i.test(tag);
+  let existingAltText: string | undefined = undefined;
+
+  if (hasAlt) {
+    const altMatch = tag.match(
+      /(?:^|[\s<])alt\s*=\s*(?:["']([^"']*)["']|([^\s>]+))/i,
+    );
+    existingAltText = altMatch ? (altMatch[1] ?? altMatch[2] ?? "") : "";
+  }
+
+  return { src, existingAltText, hasAlt };
 }
 
 /**
@@ -121,9 +160,148 @@ export function getNotebookDirectory(notebookPath: string): string {
  * Join a notebook-relative directory and an image path without producing an
  * empty segment when the directory is "" (notebook at the root).
  */
-export function joinNotebookPath(
-  directory: string,
-  imagePath: string,
-): string {
+export function joinNotebookPath(directory: string, imagePath: string): string {
   return directory ? `${directory}/${imagePath}` : imagePath;
+}
+
+export function computeImageHash(str: string): string {
+  let hash = 5381;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) + hash + str.charCodeAt(i);
+    hash |= 0; // Convert to 32-bit integer
+  }
+  return (hash >>> 0).toString(16);
+}
+
+function findOutputMetadata(
+  a11y: IA11yMetadata | undefined,
+  outputIndex: number,
+  dataHash: string,
+): IOutputA11yMetadata | undefined {
+  const metadata = a11y?.outputs?.[String(outputIndex)];
+
+  if (!metadata || metadata.dataHash !== dataHash) {
+    return undefined;
+  }
+
+  return metadata;
+}
+
+export function extractImageCandidates(
+  cells: IGeneralCell[],
+): IImageCandidate[] {
+  const candidates: IImageCandidate[] = [];
+
+  for (const cell of cells) {
+    if (cell.type === "markdown") {
+      // 1. Markdown inline images: ![alt](url)
+      const markdownMatches = findMarkdownImages(cell.source);
+      for (const m of markdownMatches) {
+        const bracketClose = m.match.indexOf("](");
+        const altText = m.match.slice(2, bracketClose);
+        const src = extractImageUrl(m.match) ?? "";
+        const isAttachment = src.startsWith("attachment:");
+        let mimeType: string | undefined = undefined;
+        if (isAttachment && cell.attachments) {
+          const filename = src.replace("attachment:", "");
+          const attachmentEntry = cell.attachments[filename];
+          if (attachmentEntry) {
+            mimeType = Object.keys(attachmentEntry)[0]; // e.g. "image/png"
+          }
+        }
+
+        const candidate: IImageCandidate = {
+          cellIndex: cell.cellIndex,
+          sourceType: isAttachment ? "attachment" : "markdown-inline",
+          src,
+          mimeType,
+          existingAltText: altText,
+          altState: altText === "" ? "empty" : "present",
+          offsets: { start: m.start, end: m.end },
+        };
+        candidates.push(candidate);
+      }
+
+      // 2. HTML image tags: <img src="..." alt="...">
+      const htmlMatches = findImgTags(cell.source);
+      for (const m of htmlMatches) {
+        const parsed = parseHtmlImgTag(m.tag);
+        if (!parsed) {
+          continue;
+        }
+
+        candidates.push({
+          cellIndex: cell.cellIndex,
+          sourceType: "markdown-html",
+          src: parsed.src,
+          existingAltText: parsed.existingAltText,
+          altState: !parsed.hasAlt
+            ? "missing"
+            : parsed.existingAltText === ""
+              ? "empty"
+              : "present",
+          offsets: { start: m.start, end: m.end },
+        });
+      }
+    } else if (cell.type === "code" && cell.outputs) {
+      let totalImageOutputs = 0;
+      for (const out of cell.outputs) {
+        if (out.data && (out.data["image/png"] || out.data["image/jpeg"])) {
+          totalImageOutputs++;
+        }
+      }
+
+      for (
+        let outputIndex = 0;
+        outputIndex < cell.outputs.length;
+        outputIndex++
+      ) {
+        const output = cell.outputs[outputIndex];
+        if (!output.data) {
+          continue;
+        }
+        // Check image format
+        let mimeType: string | null = null;
+        if (output.data["image/png"]) {
+          mimeType = "image/png";
+        } else if (output.data["image/jpeg"]) {
+          mimeType = "image/jpeg";
+        }
+        if (!mimeType) {
+          continue;
+        }
+
+        const rawData = output.data[mimeType];
+        const dataHash = computeImageHash(rawData);
+        let storedAlt: string | undefined = undefined;
+        const a11y = cell.metadata?.a11y_metadata;
+        const perOutputMeta = findOutputMetadata(a11y, outputIndex, dataHash);
+
+        if (perOutputMeta) {
+          storedAlt = perOutputMeta.altText;
+        } else if (totalImageOutputs === 1 && a11y?.altText !== undefined) {
+          if (!a11y.dataHash || a11y.dataHash === dataHash) {
+            storedAlt = a11y.altText;
+          }
+        }
+        let altState: AltTextState = "missing";
+        if (storedAlt === "") {
+          altState = "empty";
+        } else if (storedAlt !== undefined) {
+          altState = "present";
+        }
+        candidates.push({
+          cellIndex: cell.cellIndex,
+          outputIndex,
+          sourceType: "code-output",
+          src: rawData,
+          mimeType,
+          existingAltText: storedAlt,
+          altState,
+          dataHash,
+        });
+      }
+    }
+  }
+  return candidates;
 }

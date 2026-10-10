@@ -9,3 +9,4 @@ export * from "./detection/category/table.js";
 export * from "./detection/category/heading.js";
 export * from "./utils/sanitize.js";
 // Export others if needed, using glob patterns or directories if possible, but specific files for now.
+export * from "./utils/image-utils.js";

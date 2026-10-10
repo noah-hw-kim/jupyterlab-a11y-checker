@@ -6,6 +6,9 @@
 > [!NOTE]
 > **Schedule revised (Sep 30, 2026):** Work started Oct 1 instead of Sep 24 (start slipped). Phases 2–6 trimmed to 6 days and Phase 8 to 8 days to protect the 10-day experiment window. The Nov 21 deadline is unchanged.
 
+> [!NOTE]
+> **Midterm milestone added (Oct 3, 2026):** The midterm report is due October 23. Report drafting runs alongside development, with a complete draft by October 19 and target submission October 22. Reserve October 20–22 for report review and submission. The November 4–13 experiment window and November 21 final deadline remain unchanged.
+
 ---
 
 ## What is this project?
@@ -36,9 +39,12 @@ A11yLens adds **context-aware, AI-assisted image alt-text analysis**. In plain E
 
 You will answer this by running a controlled experiment with 24 test cases across four context strategies.
 
-### Deadline
+### Deadlines
 
-**November 21, 2026.** Dates per phase are targets; you advance when the phase's checklist ("gate") is done, not when a calendar date arrives.
+- **Midterm report:** October 23, 2026; target submission October 22.
+- **Final delivery:** November 21, 2026.
+
+Dates per development phase are targets; you advance when the phase's checklist ("gate") is done, not when a calendar date arrives. Submit the midterm on time with an accurate account of progress even if a development gate is unfinished.
 
 ---
 
@@ -56,6 +62,70 @@ Phase 8  Fix bugs, write documentation, deliver everything
 ```
 
 Each phase builds on the one before it. **Do not skip ahead.**
+
+Report writing runs in parallel with these development phases. Describing a planned feature in the report does not require implementing it early; clearly distinguish proposed design, completed implementation, and observed results.
+
+---
+
+## Midterm Report — October 23 Submission
+
+**Goal:** Submit a report in the department's final-report format, with every intended chapter and substantive preliminary content. The supplied midterm instructions explicitly allow incomplete results; they require a credible path to completing the approved proposal. **No midterm presentation is required.**
+
+### Requirements and items to clarify
+
+- Obtain the department's current Master's Project Guidelines and Appendix F approval-cover template. Use the final-report cover, not the proposal cover; verify layout and other formatting rules against those documents.
+- Include all intended chapter and section titles, with a matching table of contents. Include the required lists of tables, figures, and appendices as applicable.
+- Provide meaningful content in every chapter. For unfinished work, explain its purpose, planned approach, acceptance criteria, and scheduled completion instead of leaving only “TBD.”
+- Explain how the work follows the approved proposal. Distinguish the existing checker and published work from your own A11yLens contribution, with citations where claims and comparisons appear.
+- Use consistent references, original writing, careful reasoning, and checked grammar/spelling. Do not present proposed behavior or expected experiment outcomes as observed results.
+- The stated late penalty is **−1 per day**. Confirm the submission method and exact cutoff time from the course instructions.
+- **Page count is pending instructor clarification.** The general policy mentions a 30-page minimum and a recommended maximum of 100, but its application to the midterm and which pages count are unclear. Ask whether the minimum applies and whether front matter, references, and appendices count. Record the answer and budget writing time accordingly; do not assume an exemption or pad the report.
+
+### Writing schedule and development tradeoff
+
+| Dates (2026) | Report milestone |
+|-------------|------------------|
+| October 3–7 | Obtain the required template, clarify page count, and create the cover, front matter, full ToC, and every intended chapter/section heading. |
+| October 8–16 | Draft every chapter alongside Phases 2–3. Incorporate Phase 1 evidence, requirements, architecture, related-work comparison, and current implementation/tests. |
+| October 17–19 | Complete the first full draft. Add available Phase 4 progress, figures, citations, and a realistic remaining-work schedule. |
+| October 20–21 | Prioritize report review: technical accuracy, proposal alignment, formatting, citations, grammar, and ToC consistency. |
+| October 22 | Check the exported PDF, submit, and retain submission confirmation. |
+| October 23 | Official deadline; contingency time, not the planned first submission. |
+
+Reserve writing time throughout October 3–19; it is part of the workload, not an extra task after coding. A tested **Phase 3 end-to-end flow** is the recommended software milestone for the midterm, not an instructor-mandated completion threshold. Report whatever is actually verified.
+
+At the October 16 checkpoint, compare remaining Phase 4 work with the writing workload. October 20–22 are reserved for report completion, so Phase 4's October 17–22 target has reduced development capacity. If it cannot fit, explicitly revise the remaining development dates and report the unfinished work; do not silently skip a gate or claim all strategies are complete. Protect the November 4–13 experiment window and November 21 deadline, and raise any forecast conflict early.
+
+### Report structure and midterm content
+
+Follow the department's exact formatting requirements when the guidelines are available. Use this chapter structure, based on the supplied development-project example:
+
+| Report section | Content to prepare for the midterm |
+|----------------|-----------------------------------|
+| Front matter | Required approval cover; short abstract reflecting current progress; keywords; ToC; applicable lists of tables, figures, and appendices. |
+| **1. Introduction** | **1.1 Description of the Problem; 1.2 Project Objectives; 1.3 Development Environment; 1.4 Operational Environment.** Describe actual software/hardware, scope, research question, and context from related work. |
+| **2. Requirements Description** | External functions and interfaces; supported images; alt-text presence versus quality; author review; failure behavior; acceptance criteria. |
+| **3. Design Description** | Architecture diagram, package boundaries, internal functions/interfaces, candidate-to-review flow, context selection, and planned validation. Mark proposed components clearly. |
+| **4. Implementation** | Source-file organization and a reference list of important files/functions; current implementation status; your additions versus inherited behavior; remaining work and schedule. |
+| **5. Test and Integration** | Test plan and available results; Phase 1 feasibility evidence; development cases; integration approach; planned held-out experiment, metrics, and limitations. Keep future results explicitly pending. |
+| **6. Installation Instructions** | Reproducible setup/build/configuration steps for the current version, with planned additions identified and credentials excluded. |
+| **7. Operating Instructions** | Current user workflow and useful screenshots; label unimplemented A11yLens interactions as planned. |
+| **8. Recommendations for Enhancement** | Extensions beyond required scope. Required unfinished work belongs in Chapter 4's remaining-work schedule. |
+| **9. Bibliography** | Consistently formatted references cited in the main text, including relevant publications and existing software. |
+| Appendices, as needed | Supporting benchmark annotations, test details, or other evidence referenced from the main text. |
+
+### Midterm submission gate
+
+- [ ] Department guidelines and the correct final-report cover have been checked.
+- [ ] The instructor's page-count clarification is recorded and followed.
+- [ ] Front matter, every intended chapter/section, and applicable appendices are present; headings match the ToC.
+- [ ] Every chapter has substantive preliminary content; completed, in-progress, and planned work are clearly distinguished.
+- [ ] The report explains proposal alignment, the existing-work comparison, and the student's own contribution.
+- [ ] Current claims/results have supporting evidence; the remaining schedule explains how final delivery will be achieved.
+- [ ] References and in-text citations are consistent; grammar, spelling, figures, tables, and PDF formatting have been reviewed.
+- [ ] The report was submitted by the deadline and confirmation retained. Submit the best available version on time even if another checklist item remains unresolved.
+
+After submission, record each advisor comment with its planned correction and resolution. Explain any comment that cannot be addressed. Incorporate feedback as development continues, respond promptly to instructor correspondence, and update the report with Phase 5–7 evidence; Phase 8 finalizes the report rather than starting it.
 
 ---
 
@@ -629,6 +699,8 @@ Only fix bugs that:
 
 #### 3. Write documentation
 
+Finalize the report drafted for the midterm: resolve advisor comments (or explain unresolved items), replace planned-work descriptions with verified implementation details, and add the experiment results and limitations. Recheck consistency across chapters and the final formatting requirements.
+
 Document:
 - **Architecture:** How the system is organized (which files do what).
 - **Model configuration:** Which model, what settings, how to set it up.
@@ -664,6 +736,7 @@ Record or prepare a live demo covering:
 - [ ] A reviewer can clone the repo, follow setup instructions, and see the extension working.
 - [ ] A reviewer can look at the saved outputs and reproduce every number in the report.
 - [ ] Every claim in the report has traceable evidence.
+- [ ] Midterm feedback has been addressed, or each unresolved item has an explanation.
 - [ ] The demo shows the complete workflow.
 
 ---
@@ -709,7 +782,8 @@ Record or prepare a live demo covering:
 
 ## Assumptions
 
-- **Deadline:** November 21, 2026.
+- **Deadlines:** Midterm report October 23, 2026 (target submission October 22); final delivery November 21, 2026.
+- **Midterm page count:** Applicability of the general 30-page minimum and which pages count await instructor clarification; no exemption is assumed.
 - **AI model:** One Berkeley-hosted OpenAI-compatible multimodal model.
 - **You (the author)** write the benchmark cases and do the blinded scoring.
 - **One AI run per condition** is acceptable for a course project. Document model nondeterminism as a limitation.

@@ -16,12 +16,16 @@ export function notebookToGeneralCells(panel: NotebookPanel): IGeneralCell[] {
     // cell.model.toJSON() returns an ICell object which might have attachments
     const cellData = cell.model.toJSON() as any;
     const attachments = cellData.attachments;
+    const outputs = cellData.outputs;
+    const metadata = cellData.metadata;
 
     return {
       cellIndex: index,
       type,
       source,
-      attachments
+      attachments,
+      outputs,
+      metadata
     };
   });
 }

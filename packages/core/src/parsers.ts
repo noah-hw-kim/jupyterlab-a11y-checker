@@ -1,4 +1,4 @@
-import { IGeneralCell } from './types.js';
+import { IGeneralCell } from "./types.js";
 
 /**
  * Converts raw .ipynb JSON content into an environment-agnostic array of accessible cells.
@@ -12,26 +12,28 @@ export function rawIpynbToGeneralCells(ipynbContent: any): IGeneralCell[] {
 
   return ipynbContent.cells.map((cell: any, index: number) => {
     // .ipynb source is usually an array of strings, but can be a string
-    let source = '';
+    let source = "";
     if (Array.isArray(cell.source)) {
-      source = cell.source.join('');
-    } else if (typeof cell.source === 'string') {
+      source = cell.source.join("");
+    } else if (typeof cell.source === "string") {
       source = cell.source;
     }
 
     // Normalize cell type
     const type =
-      cell.cell_type === 'markdown' ||
-      cell.cell_type === 'code' ||
-      cell.cell_type === 'raw'
+      cell.cell_type === "markdown" ||
+      cell.cell_type === "code" ||
+      cell.cell_type === "raw"
         ? cell.cell_type
-        : 'raw'; // Fallback
+        : "raw"; // Fallback
 
     return {
       cellIndex: index,
       type,
       source,
-      attachments: cell.attachments
+      attachments: cell.attachments,
+      outputs: cell.outputs,
+      metadata: cell.metadata,
     };
   });
 }
