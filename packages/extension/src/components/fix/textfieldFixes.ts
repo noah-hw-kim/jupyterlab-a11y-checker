@@ -9,13 +9,18 @@ import {
   escapeHtmlText,
   stripHtmlTags,
   analyzeHeadingHierarchy,
-  detectHeadingOneIssue
+  detectHeadingOneIssue,
+  extractImageCandidates,
+  findImageCandidateForIssue,
+  analyzeImageCandidate,
+  OpenAICompatibleModelClient
 } from '@berkeley-dsep-infra/a11y-checker-core';
 
 import { Cell, ICellModel } from '@jupyterlab/cells';
 import { NotebookPanel } from '@jupyterlab/notebook';
 import { TextFieldFixWidget } from './base.js';
 import { notebookToGeneralCells } from '../../adapter.js';
+import { resolveSemanticImageDataUrl } from '../../semantic-image-resolver.js';
 
 export class ImageAltFixWidget extends TextFieldFixWidget {
   private visionSettings: IModelSettings;
@@ -112,6 +117,18 @@ export class ImageAltFixWidget extends TextFieldFixWidget {
       return;
     }
 
+    let status = this.node.querySelector<HTMLDivElement>('.image-ai-status');
+
+    if (!status) {
+      status = document.createElement('div');
+      status.className = 'image-ai-status';
+      status.setAttribute('role', 'status');
+      status.setAttribute('aria-atomic', 'true');
+      this.node.appendChild(status);
+    }
+
+    status.textContent = '';
+
     // Save the original placeholder text
     const originalPlaceholder = altTextInput.placeholder;
 
@@ -136,32 +153,91 @@ export class ImageAltFixWidget extends TextFieldFixWidget {
     altTextInput.placeholder = ''; // Clear placeholder while showing loading overlay
 
     try {
-      const result = await getImageAltSuggestion(
+      const notebookPanel = this.cell.parent?.parent as NotebookPanel;
+
+      if (!notebookPanel) {
+        status.textContent =
+          'Notebook panel unavailable. Please reopen the notebook and try again.';
+        return;
+      }
+
+      // Cell reordering can make the finding's saved index outdated.
+      const currentIndex = notebookPanel.content.widgets.indexOf(this.cell);
+      if (currentIndex === -1) {
+        status.textContent =
+          'This cell is no longer in the notebook. Please reopen the notebook and try again.';
+        return;
+      }
+
+      const generalCells = notebookToGeneralCells(notebookPanel);
+      const currentCell = generalCells[currentIndex];
+
+      const candidates = extractImageCandidates([currentCell]);
+
+      const candidate = findImageCandidateForIssue(
         this.issue,
-        this.cell.node.querySelector('img')?.src || '',
-        this.visionSettings
+        currentCell,
+        candidates
       );
-      if (result.ok) {
-        // Extract alt text from the suggestion, handling both single and double quotes
-        const altMatch = result.text.match(/alt=['"]([^'"]*)['"]/);
-        if (altMatch && altMatch[1]) {
-          altTextInput.value = altMatch[1];
-        } else {
-          altTextInput.value = result.text; // Fallback to full suggestion if no alt text found
+
+      // Stop rather than send an image that no longer matches the finding.
+      if (!candidate) {
+        status.textContent =
+          'This finding is outdated. Run the accessibility check again.';
+        return;
+      }
+
+      const client = new OpenAICompatibleModelClient(this.visionSettings);
+      const analysis = await analyzeImageCandidate(
+        candidate,
+        currentCell,
+        client,
+        {
+          modelName: this.visionSettings.model,
+          contextStrategy: 'minimal',
+          resolveImageDataUrl: imageCandidate =>
+            resolveSemanticImageDataUrl(
+              imageCandidate.src,
+              notebookPanel.context.urlResolver
+            )
         }
+      );
+
+      if (!analysis.metadata.success) {
+        status.textContent = 'AI analysis failed. Please try again.';
+        return;
+      }
+
+      const semanticResult = analysis.result;
+
+      if (semanticResult === null) {
+        status.textContent =
+          'AI analysis returned no result. Please try again.';
+        return;
+      }
+
+      if (semanticResult.concern) {
+        if (!semanticResult.suggestion) {
+          status.textContent =
+            'AI analysis found a concern but returned no replacement. Please try again.';
+          return;
+        }
+
+        altTextInput.value = semanticResult.suggestion;
+        status.textContent =
+          'Suggestion ready. Review the text before choosing Apply.';
       } else {
-        altTextInput.placeholder = result.text;
+        status.textContent =
+          'The existing alt text does not need a replacement.';
       }
     } catch (error) {
       console.error(error);
-      altTextInput.placeholder = 'Error getting suggestions. Please try again.';
+      status.textContent = 'Error getting suggestions. Please try again.';
     } finally {
       altTextInput.disabled = false;
       altTextInput.style.color = ''; // Restore text color
       loadingOverlay.remove(); // Remove loading overlay
-      if (altTextInput.value) {
-        altTextInput.placeholder = originalPlaceholder;
-      }
+      altTextInput.placeholder = originalPlaceholder;
     }
   }
 }

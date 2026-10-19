@@ -242,7 +242,7 @@ describe("extractImageCandidates", () => {
     expect(candidates[2].sourceType).toBe("code-output");
   });
 
-  it("extracts exactly 6 candidates from the benchmark dev cases notebook fixture", () => {
+  it("extracts the six benchmark cases independently of manual test cells", () => {
     const fixturePath = fileURLToPath(
       new URL(
         "../../../../test_files/dev_benchmark_cases.ipynb",
@@ -251,8 +251,12 @@ describe("extractImageCandidates", () => {
     );
     const rawJson = JSON.parse(fs.readFileSync(fixturePath, "utf-8"));
     const cells = rawIpynbToGeneralCells(rawJson);
+    const benchmarkCells = cells.filter((cell) =>
+      /^dev-case-0[1-6]$/.test(cell.metadata?.id ?? ""),
+    );
 
-    const candidates = extractImageCandidates(cells);
+    expect(benchmarkCells).toHaveLength(6);
+    const candidates = extractImageCandidates(benchmarkCells);
 
     expect(candidates).toHaveLength(6);
 
@@ -294,6 +298,35 @@ describe("extractImageCandidates", () => {
     );
     expect(candidates[5].altState).toBe("present");
     expect(candidates[5].dataHash).toBeDefined();
+  });
+
+  it("extracts the Phase 3 Markdown, attachment, and output fixtures", () => {
+    const fixturePath = fileURLToPath(
+      new URL(
+        "../../../../test_files/dev_benchmark_cases.ipynb",
+        import.meta.url,
+      ),
+    );
+    const rawJson = JSON.parse(fs.readFileSync(fixturePath, "utf-8"));
+    const cells = rawIpynbToGeneralCells(rawJson).filter((cell) =>
+      ["phase3-two-markdown-images", "phase3-missing-alt-png-output"].includes(
+        cell.metadata?.id,
+      ),
+    );
+
+    expect(cells).toHaveLength(2);
+    const candidates = extractImageCandidates(cells);
+    expect(candidates).toHaveLength(3);
+    expect(candidates.map((candidate) => candidate.sourceType)).toEqual([
+      "markdown-inline",
+      "attachment",
+      "code-output",
+    ]);
+    expect(candidates[0].cellIndex).toBe(candidates[1].cellIndex);
+    expect(candidates[0].offsets).not.toEqual(candidates[1].offsets);
+    expect(candidates[1].src).toBe("attachment:phase3-age-histogram.png");
+    expect(candidates[2].outputIndex).toBe(0);
+    expect(candidates[2].dataHash).toBeDefined();
   });
 
   it("does not assign legacy cell-level alt text when cell has multiple image outputs", () => {

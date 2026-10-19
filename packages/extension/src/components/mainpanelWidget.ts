@@ -8,7 +8,8 @@ import { PageConfig } from '@jupyterlab/coreutils';
 
 import {
   ICellIssue,
-  IModelSettings
+  IModelSettings,
+  extractImageCandidates
 } from '@berkeley-dsep-infra/a11y-checker-core';
 import {
   issueToCategory,
@@ -18,6 +19,7 @@ import {
 } from '@berkeley-dsep-infra/a11y-checker-core';
 
 import { CellIssueWidget } from './issueWidget.js';
+import { CodeOutputImageWidget } from './codeOutputImageWidget.js';
 import { notebookToGeneralCells } from '../adapter.js';
 
 /** Maximum time (ms) to wait for a full analysis before timing out. */
@@ -36,8 +38,8 @@ export class MainPanelWidget extends Widget {
   private languageModelSettings: IModelSettings;
   private visionModelSettings: IModelSettings;
 
-  /** Track child CellIssueWidget instances for proper disposal. */
-  private _childIssueWidgets: CellIssueWidget[] = [];
+  /** Track child finding and output-analysis widgets for disposal. */
+  private _childIssueWidgets: Widget[] = [];
 
   /** Stored reference for the reanalysis handler so we can remove it on dispose. */
   private _reanalysisHandler: EventListener | null = null;
@@ -172,6 +174,9 @@ export class MainPanelWidget extends Widget {
       try {
         // Convert widgets to accessible cells
         const accessibleCells = notebookToGeneralCells(this.currentNotebook);
+        const outputCandidates = extractImageCandidates(accessibleCells).filter(
+          candidate => candidate.sourceType === 'code-output'
+        );
 
         // Run analysis with a timeout guard
         const analysisPromise = analyzeCellsAccessibility(
@@ -224,7 +229,7 @@ export class MainPanelWidget extends Widget {
           console.log('Summary Unavailable');
         }
 
-        if (notebookIssues.length === 0) {
+        if (notebookIssues.length === 0 && outputCandidates.length === 0) {
           issuesContainer.innerHTML =
             '<div class="no-issues">No issues found</div>';
           return;
@@ -290,6 +295,36 @@ export class MainPanelWidget extends Widget {
             this._childIssueWidgets.push(issueWidget);
             issuesList.appendChild(issueWidget.node);
           });
+        }
+
+        if (outputCandidates.length > 0) {
+          const section = document.createElement('div');
+          section.className = 'category';
+          const title = document.createElement('h2');
+          title.className = 'category-title';
+          title.textContent = 'Code-output images';
+          const description = document.createElement('p');
+          description.textContent =
+            'Enable Use AI to request recommendations. Analysis does not change the notebook.';
+          section.append(title, description);
+
+          for (const candidate of outputCandidates) {
+            const cell =
+              this.currentNotebook.content.widgets[candidate.cellIndex];
+            if (!cell) {
+              continue;
+            }
+            const widget = new CodeOutputImageWidget(
+              this.currentNotebook,
+              cell,
+              candidate,
+              this.aiEnabled,
+              this.visionModelSettings
+            );
+            this._childIssueWidgets.push(widget);
+            section.appendChild(widget.node);
+          }
+          issuesContainer.appendChild(section);
         }
       } catch (error) {
         issuesContainer.innerHTML =
@@ -521,7 +556,7 @@ export class MainPanelWidget extends Widget {
     issuesContainer.innerHTML = '';
   }
 
-  /** Dispose all tracked child CellIssueWidgets. */
+  /** Track child finding and output-analysis widgets for disposal. */
   private disposeChildWidgets(): void {
     for (const widget of this._childIssueWidgets) {
       widget.dispose();

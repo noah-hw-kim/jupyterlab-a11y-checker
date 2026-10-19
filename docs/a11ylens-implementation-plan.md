@@ -287,13 +287,24 @@ Add tests that verify:
 
 ### ✅ Phase 2 is done when
 
-- [ ] `IGeneralCell` has the `outputs` field; existing code still compiles and passes.
-- [ ] Both adapters populate outputs.
-- [ ] Candidate extraction finds Markdown images, attachments, and code-output images.
-- [ ] Multiple images per cell are distinguished.
-- [ ] New tests pass; existing 52 tests still pass.
+- [x] `IGeneralCell` has the `outputs` field; existing code still compiles and passes.
+- [x] Both adapters populate outputs.
+- [x] Candidate extraction finds Markdown images, attachments, and code-output images.
+- [x] Multiple images per cell are distinguished.
+- [x] New tests pass; existing 52 tests still pass.
 
 ---
+
+## Phase Delivery Levels
+
+For Phases 3–8, work in this order:
+
+1. **Working minimum:** implement the required behavior using existing components where practical.
+2. **Focused verification:** check normal use, important failure paths, and regressions that could invalidate the feature or experiment. This belongs in the required gate; do not claim untested behavior works.
+3. **Additional coverage:** add cases when the acceptance fixtures, experiment, or observed failures require them. It does not mean exhaustive coverage of every format or environment.
+4. **Optional enhancements:** use the backlog below; these do not block a phase or final delivery unless explicitly promoted into required scope.
+
+The checklists below are required functional gates, not comprehensive product-hardening checklists. Required functionality is not optional merely because its implementation or tests are deferred to a later phase. Do not expand a gate without an explicit scope decision.
 
 ## Phase 3 — Minimal End-to-End Flow
 
@@ -303,6 +314,22 @@ Add tests that verify:
 ### Why this phase exists
 
 This is the "vertical slice" — the minimum path to prove the whole pipeline works. You'll use only **minimal context** (just the image and the current cell's text) and a simple UI display. Phases 4–6 will make it smarter, more robust, and prettier.
+
+### Scope boundary and completion chunks
+
+Build the minimum working flow with clear boundaries, then expand it in the phase that owns the additional behavior. Correct image selection, structured-response validation, accurate call metadata, visible failure messages, loading cleanup, and no automatic notebook edits belong in Phase 3. Exhaustive source-format coverage and a polished review interface do not.
+
+Keep the existing candidate, model-client, and orchestrator boundaries. Browser/JupyterLab file access belongs in an extension resolver passed through `resolveImageDataUrl`; reuse the notebook context's URL resolver rather than constructing server file URLs manually. Complete and review these chunks as units:
+
+1. **Prove one local Markdown image end to end.** Finish the browser image resolver, connect it to the image suggestion widget, and verify that a real provider response appears as editable suggestion text. Use only the image and its current cell's text. Keep status messages separate from replacement alt text.
+2. **Meet the required image coverage.** Select a small development notebook as the Phase 3 acceptance fixture: two Markdown images in one cell and a PNG code output. Provide the minimum selection/display path needed to analyze each image separately. Reuse existing development assets where suitable; do not use the held-out experiment cases for debugging or prompt tuning.
+3. **Verify the completion gate and stop expanding scope.** Check the correct image is sent, provider and image-loading failures leave structural findings visible, loading always clears, notebook content is not automatically changed, and per-call metadata is available for inspection. Record the fixture, checks, and observed results before marking the gate complete. Add focused tests for important regression risks and failures found during integration.
+
+The first chunk is an intermediate milestone, not completion of Phase 3. The Markdown/code-output and multi-image requirements below remain in force. Generation/evaluation routing must remain covered; the current missing-alt-text findings alone do not establish a user path for evaluating existing alt text.
+
+**Defer explicitly:** four context strategies to Phase 4; semantic-quality validation to Phase 5 (automatic revision is optional); the full accept/edit/reject interface, persistent code-output alt text, and rendered-output application to Phase 6. Optional remote-host support, unusual URL/path variants, additional image formats, and handling edits during an in-flight AI request should not expand Phase 3 unless needed by the acceptance fixture or approved requirements. Unsupported sources must fail visibly rather than target another image.
+
+Use the October 16 checkpoint to compare this bounded remaining work with the midterm writing workload. If the gate cannot fit, revise the forecast explicitly and report verified progress; do not silently drop completion criteria or displace the October 20–22 report review/submission period or November 4–13 experiment window.
 
 ### What to do, step by step
 
@@ -332,9 +359,9 @@ If alt text is MISSING or EMPTY:
   → Go straight to remediation (ask AI to generate alt text)
 
 If alt text EXISTS but might be weak:
-  → Ask AI: "Is this alt text good enough?"
-  → If AI says concern=true → ask for a better suggestion
-  → If AI says concern=false → no action needed
+  → Ask AI to evaluate it and include a replacement when needed
+  → concern=true → return the suggestion in the same structured response
+  → concern=false → no replacement needed
 ```
 
 #### 3. Record metadata about each AI call
@@ -348,7 +375,7 @@ For every AI request, save:
 - Number of API requests made.
 - Whether it succeeded or failed.
 
-This data is needed for the Phase 7 experiment.
+This data is needed for the Phase 7 experiment. In Phase 3, make metadata inspectable and record the effective model settings without credentials; a persistent history UI, database, or export system is not required. Phase 7 adds the durable experiment records.
 
 #### 4. Display one recommendation in JupyterLab
 
@@ -379,6 +406,14 @@ Test with a notebook that has at least 2–3 images (some in Markdown, some as c
 ### Why this phase exists
 
 This is **the core research question** of the project. You want to compare whether giving the AI more (or smarter) context produces better alt-text suggestions. You need four strategies to compare:
+
+### Working minimum, verification, and deferrals
+
+Implement minimal and structure-aware selection first to exercise the shared pipeline, then add fixed-window and largest-practical baselines before closing this phase. All four remain required comparison strategies. Functions and a small shared output type are sufficient; do not build a strategy plugin framework.
+
+Use one configurable character budget and deterministic priority rules. Preserve current-cell context first, include eligible context up to the limit, and record omissions/truncation. State the supported notebook/image representation. Do not add tokenizer integration, advanced relevance scoring, dependency tracing, or a context-inspection UI.
+
+Focused verification covers a representative result for each strategy, first/last-cell window boundaries, section boundaries, and an exceeded budget. Add more cases for observed failures or benchmark needs, not to achieve an arbitrary coverage percentage.
 
 ### The four strategies
 
@@ -477,15 +512,15 @@ AI models sometimes produce bad output: hallucinated numbers, overly long text, 
 
 #### Type 1: Deterministic validation (code-based checks)
 
-These are simple, fast checks you write in code:
+Reuse the parsing, field/type, and nonempty-suggestion checks implemented in Phase 3; do not rebuild a second parser. Add the configured length check and a validation outcome that the UI can display:
 
 | Check | Example failure |
 |-------|----------------|
-| Required JSON fields exist | AI returned `{}` with no `suggestedText` |
-| Types are correct | `suggestedText` is a number instead of a string |
-| Suggestion is not empty | `suggestedText: ""` |
+| Required JSON fields exist | AI returned `{}` with no `suggestion` |
+| Types are correct | `suggestion` is a number instead of a string or null |
+| Suggestion is not empty when concern is true | `suggestion: ""` |
 | Suggestion can be parsed | Response isn't valid JSON |
-| Word count ≤ 40 | Suggestion is 200 words long |
+| Configured word limit (initially 40) | Suggestion exceeds that limit |
 
 #### Type 2: Model-assisted validation (AI checks AI)
 
@@ -501,14 +536,14 @@ Use a **separate AI call** (same model, different prompt) to check:
 
 #### Validation outcomes
 
-Each suggestion gets one of three statuses:
+The working minimum uses one separate validation request and two outcomes:
 
-- **`pass`** — Good to show to the user.
-- **`revise`** — Ask the AI to try again (allow **at most one** retry).
-- **`manual-review`** — Flag it for the user with a warning that the suggestion may be unreliable.
+- **`pass`** — Passed the configured checks; still subject to author review, not a guarantee of accuracy.
+- **`manual-review`** — Flag the suggestion for additional author review. Malformed output is an error, not a valid suggestion; validator failure must not be reported as a pass.
 
-> [!CAUTION]
-> Do not create an open-ended loop where the AI keeps retrying. One retry maximum, then it goes to manual-review.
+Automatic revision is optional. If added later, introduce a `revise` state and allow at most one regeneration/validation cycle. No retry machinery is needed to close this phase.
+
+Focused verification covers a valid suggestion, malformed output using the existing parser tests, a length violation, a failed quality judgment, and a validator request failure. Use mocks for repeatable behavior and a development-case provider smoke check; do not tune on held-out results.
 
 ### Also in this phase: freeze the benchmark
 
@@ -531,21 +566,25 @@ Additional requirements:
 ### ✅ Phase 5 is done when
 
 - [ ] Deterministic validation catches malformed/empty/too-long suggestions.
-- [ ] Model-assisted validation runs as a separate AI call and returns pass/revise/manual-review.
-- [ ] At most one revision is attempted.
+- [ ] Model-assisted validation runs once as a separate AI call and returns pass/manual-review; failures never become passes.
+- [ ] Validation outcomes and failures are recorded; the default flow does not regenerate suggestions.
 - [ ] All 24 benchmark cases are finalized with reference annotations.
 - [ ] The 18 held-out cases are frozen and untouched.
 
 ---
 
-## Phase 6 — Build the Full JupyterLab Review UI
+## Phase 6 — Complete the Minimal JupyterLab Author Review Flow
 
 **Target dates:** October 29 – November 3  
 **One-sentence goal:** Build the user interface where notebook authors review, edit, accept, or reject AI suggestions.
 
 ### Why this phase exists
 
-Everything built so far is plumbing. This phase creates the **user-facing experience** — what the notebook author actually sees and interacts with.
+Extend the simple suggestion display built in Phase 3. Reuse the existing input, Apply button, and findings panel rather than building a new review application.
+
+The working minimum lets authors request analysis for images with existing alt text as well as missing/empty alt text, see the outcome, edit a suggestion, explicitly apply it, or dismiss it without changing the notebook. The current missing-alt finding list alone does not provide the existing-alt evaluation entry point.
+
+Accept and Edit may use the same editable input plus Apply; Reject may be a simple dismissal control. Separate buttons, custom visual badges, batch review, recommendation history, and persistence of rejected suggestions are optional. Keep ordinary keyboard operation, visible status, and structural findings available.
 
 ### What the UI should show
 
@@ -553,11 +592,11 @@ For each image finding, display:
 
 | Element | Description |
 |---------|-------------|
-| **Type badge** | "Structural" (deterministic) vs. "Recommendation" (AI-assisted) |
+| **Finding type** | Plain text distinguishing structural findings from AI recommendations; decorative badges are optional |
 | **Current alt text** | What the image's alt text is right now |
-| **Concern** | Why the AI flagged this (e.g., "Alt text says 'graph' but doesn't describe the trend") |
+| **Concern** | Whether improvement is recommended; a generated prose explanation is optional and does not require expanding the model schema |
 | **Suggestion** | The AI's proposed new alt text |
-| **Validation status** | pass ✅ / revise 🔄 / manual-review ⚠️ |
+| **Validation status** | pass / manual-review in plain text; icons and revision states are optional |
 
 ### User actions
 
@@ -582,17 +621,19 @@ Code-output images (like matplotlib plots) are special — you can't add alt tex
   - MIME type
   - Image content hash
 - While A11yLens is active, apply this stored alt text to the rendered `<img>` element in the DOM.
-- If the user re-runs the code cell and the output changes (different hash), **discard the stale metadata**.
+- If the user re-runs the code cell and the output changes (different hash), **reject stale alt text for that output**. Automatic deletion of old metadata is optional; never apply it to changed image data.
 
 ### ✅ Phase 6 is done when
 
 - [ ] AI recommendations display separately from structural violations.
-- [ ] Accept, Edit, and Reject buttons work correctly.
+- [ ] Authors can request evaluation of existing alt text and accept, edit, or reject a recommendation using simple controls.
 - [ ] Nothing is auto-applied to the notebook.
 - [ ] The entire review flow works with keyboard only.
 - [ ] Code-output alt text is stored in cell metadata and applied to the DOM.
 - [ ] Stale metadata is rejected when outputs change.
-- [ ] Save → reopen → recommendations are still accessible.
+- [ ] Accepted code-output alt text survives save/reopen and is applied only to matching image data. Persisting recommendation history is optional.
+
+Focused verification is one Markdown review/application, one existing-alt evaluation, one code-output metadata round trip, rejection of a changed output, and a keyboard walkthrough. These check required behavior; broad UI automation and visual polish do not block the phase.
 
 ---
 
@@ -600,6 +641,14 @@ Code-output images (like matplotlib plots) are special — you can't add alt tex
 
 **Target dates:** November 4–13  
 **One-sentence goal:** Use your 24 test cases to answer the research question: does structure-aware context help?
+
+### Working minimum and optional infrastructure
+
+Use a straightforward script and saved JSON/JSONL records, plus a scoring sheet or small analysis script. Reuse the shared semantic pipeline. Do not build a dashboard, database service, job scheduler, or multi-provider evaluation platform.
+
+Keep the agreed 24 cases (6 development, 18 held-out), four comparison strategies, blinded scoring, and validation comparison. Freeze case annotations and experiment configuration before held-out generation. Save raw outputs and failures, and regenerate reported metrics from saved records without new model calls. Small development-only trial runs can check the runner before the held-out run.
+
+Optional additions include repeated trials, more models/providers, parameter sweeps, advanced plots, and formal statistical testing. They must not displace the required runs, scoring, or report.
 
 ### The experiment has two parts
 
@@ -662,13 +711,13 @@ Code-output images (like matplotlib plots) are special — you can't add alt tex
 | **No improvement** | Neither metric improves |
 
 > [!IMPORTANT]
-> With only 18 test cases, you cannot claim statistical significance. Report exact counts and differences. Say "in our 18-case benchmark, structure-aware covered 2.1 more facts on average" — **not** "structure-aware is significantly better."
+> This project uses a small, single-rater benchmark with one generation per condition. Report exact counts, descriptive differences, and these limitations; do not claim general superiority. Statistical significance is not determined by case count alone, but formal inference is outside the planned analysis. Do not call a difference statistically significant without an appropriate justified analysis.
 
 ### ✅ Phase 7 is done when
 
 - [ ] All 72 runs (4 strategies × 18 cases) are complete and saved.
 - [ ] Manual scoring was done blinded (you didn't know which strategy produced which output).
-- [ ] All metrics are calculated and recorded.
+- [ ] Required quality and efficiency metrics are calculated from saved records; unavailable optional provider token counts are explicitly marked unavailable, not invented.
 - [ ] You can reproduce every number from the saved outputs (no re-running the AI).
 - [ ] Important failures are analyzed individually (not just averaged away).
 
@@ -712,7 +761,8 @@ Document:
 
 #### 4. Prepare the demo
 
-Record or prepare a live demo covering:
+Use one reliable live walkthrough or a simple recording, according to submission requirements. Elaborate video editing, both a live and a recorded version, or extra scenarios are not required unless the course instructions request them. Cover:
+
 1. Structural detection (existing feature — "this image has no alt text").
 2. Semantic analysis ("this alt text says 'graph' but should be more descriptive").
 3. Structure-aware context ("I used the section heading and nearby code to understand this image").
@@ -741,6 +791,22 @@ Record or prepare a live demo covering:
 
 ---
 
+## Optional Enhancement Backlog — Does Not Block Required Phases
+
+Only start these after the required working flow, experiment, and report are secure:
+
+- Additional image formats, external hosts, and unusual URL/path variants beyond the declared supported fixtures.
+- Automatic revision after validation (at most one controlled cycle if implemented).
+- Cancellation, automatic retries, and comprehensive handling of notebook edits during in-flight analysis. Keep the supported workflow explicit and reject known stale targets before writing accepted text; comprehensive concurrent-edit support can wait.
+- Visual redesign, decorative badges/icons, batch review, recommendation history, and persistence of dismissed suggestions.
+- Token-aware budgeting, advanced context relevance, and dependency tracing.
+- Experiment dashboards, databases, multiple models/providers, parameter sweeps, and repeated trials.
+- Additional installation targets, release automation, and demo production polish.
+
+Broader coverage becomes required only when an approved acceptance case, experiment input, consequential defect, or course requirement needs it. Record that decision instead of silently enlarging a phase.
+
+---
+
 ## Quick Reference: Core Interfaces
 
 | Interface | One-line description | Defined & Used In |
@@ -749,7 +815,7 @@ Record or prepare a live demo covering:
 | `IModelClient` | API wrapper for any OpenAI-compatible model | Phase 3 (Minimal E2E) |
 | `ISemanticResult` | AI's judgment: concern + suggestion | Phase 3 (Minimal E2E) |
 | `IContextPackage` | Notebook context selected for one image | Phase 4 (Context Strategies) |
-| `IValidationResult` | Quality check: pass / revise / manual-review | Phase 5 (Validation) |
+| `IValidationResult` | Quality check: pass / manual-review; optional revision later | Phase 5 (Validation) |
 | `IEvaluationCase` | One benchmark test case | Phase 5 (Benchmark freeze) |
 | `IEvaluationRecord` | Recorded result of one experiment run | Phase 7 (Experiment) |
 | `ICellIssue` | Structural finding (already exists) | Already in the codebase |
@@ -762,18 +828,18 @@ Record or prepare a live demo covering:
 |-----------|---------------|------|
 | **Unit tests** | Candidate extraction, context selection, response parsing, validation rules | Phases 2–5 |
 | **Integration tests** | Full pipeline with mocked AI responses | Phases 3–5 |
-| **Manual JupyterLab tests** | UI flow, keyboard nav, accept/edit/reject | Phase 6 |
-| **Live provider test** | One real API call to confirm the model works | Phase 1 only |
-| **Regression tests** | Existing 52 tests still pass | Every phase |
+| **Manual JupyterLab tests** | Thin image flow in Phase 3; complete author review and keyboard operation in Phase 6 | Phases 3 and 6 |
+| **Live provider checks** | Feasibility, integrated image flow, and validation smoke checks using development cases; avoid redundant calls | Phases 1, 3, and 5 |
+| **Regression tests** | Existing behavior remains covered; use the current suite rather than a fixed historical test count | Every phase |
 | **Reproducibility** | Saved experiment data regenerates all reported numbers | Phase 7 |
 
 ---
 
 ## Rules That Apply to Every Phase
 
-1. **Don't skip a gate.** If a phase's checklist isn't done, don't start the next one.
+1. **Meet required gates.** Complete the working minimum and focused verification before dependent work. Additional coverage and backlog items do not block progress. Keep report writing and benchmark annotation preparation parallel; freeze annotations before held-out generation. Record any approved change to required scope.
 2. **Keep diffs small.** Each phase should be a reviewable set of changes, not a massive rewrite.
-3. **Preserve existing behavior.** The 52 existing tests must keep passing.
+3. **Preserve existing behavior.** Run focused checks for each chunk and the broader existing suite at integration milestones. Do not weaken checks or leave known consequential regressions merely to pass a gate.
 4. **Don't commit secrets.** No API keys in code, tests, or notebooks.
 5. **Don't auto-apply AI output.** The user always decides.
 6. **Document your decisions.** For each phase, write down what you chose and why.

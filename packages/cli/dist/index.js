@@ -42296,7 +42296,9 @@ function rawIpynbToGeneralCells(ipynbContent) {
       cellIndex: index,
       type,
       source,
-      attachments: cell.attachments
+      attachments: cell.attachments,
+      outputs: cell.outputs,
+      metadata: cell.metadata
     };
   });
 }
@@ -42305,7 +42307,7 @@ function rawIpynbToGeneralCells(ipynbContent) {
 init_cjs_shims();
 var import_axe_core = __toESM(require_axe());
 
-// ../../node_modules/marked/lib/marked.esm.js
+// ../core/node_modules/marked/lib/marked.esm.js
 init_cjs_shims();
 function _getDefaults() {
   return {
@@ -45203,6 +45205,24 @@ init_cjs_shims();
 init_cjs_shims();
 
 // ../core/src/utils/metadata.ts
+init_cjs_shims();
+
+// ../core/src/utils/semantic.ts
+init_cjs_shims();
+
+// ../core/src/utils/semantic-model-client.ts
+init_cjs_shims();
+
+// ../core/src/utils/semantic-routing.ts
+init_cjs_shims();
+
+// ../core/src/utils/semantic-image-data.ts
+init_cjs_shims();
+
+// ../core/src/utils/semantic-orchestrator.ts
+init_cjs_shims();
+
+// ../core/src/utils/image-candidate-selection.ts
 init_cjs_shims();
 
 // src/ruleDescriptions.ts

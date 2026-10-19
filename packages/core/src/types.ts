@@ -3,7 +3,10 @@ export type ImageSourceType =
   | "markdown-html"
   | "attachment"
   | "code-output";
+
 export type AltTextState = "missing" | "empty" | "present";
+
+export type ContextStrategy = "minimal" | "preceding" | "surrounding" | "full";
 
 export interface ICellIssue {
   cellIndex: number;
@@ -39,6 +42,24 @@ export interface IIssueInformation {
 export interface IImageProcessor {
   loadImage(src: string): Promise<any>;
   createCanvas(width: number, height: number): any;
+}
+
+export type SemanticTask = "generate" | "evaluate";
+
+export interface ISemanticRequest {
+  task: SemanticTask;
+  imageDataUrl: string;
+  cellText: string;
+  existingAltText?: string;
+}
+
+export interface ISemanticResult {
+  concern: boolean;
+  suggestion: string | null;
+}
+
+export interface IModelClient {
+  analyzeImage(request: ISemanticRequest): Promise<ISemanticResult>;
 }
 
 export interface IImageCandidate {
@@ -87,4 +108,22 @@ export interface IA11yMetadata {
 export interface ICellMetadata {
   a11y_metadata?: IA11yMetadata;
   [key: string]: any;
+}
+
+export interface ISemanticCallMetadata {
+  contextStrategy: ContextStrategy;
+  includeCellIndices: number[];
+  inputCharacterCount: number;
+  model: string;
+  latencyMs: number;
+  requestCount: number;
+  success: boolean;
+  errorMessage?: string;
+}
+
+export interface ISemanticAnalysisResult {
+  candidate: IImageCandidate;
+  task: SemanticTask;
+  result: ISemanticResult | null;
+  metadata: ISemanticCallMetadata;
 }
