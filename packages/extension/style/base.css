@@ -115,6 +115,34 @@
   margin-bottom: 24px;
 }
 
+.semantic-context-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  margin: 0 16px 24px;
+  padding: 12px;
+  border: 1px solid var(--jp-border-color2);
+}
+
+.semantic-context-controls select,
+.semantic-context-controls input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 6px;
+  color: var(--jp-ui-font-color1);
+  background: var(--jp-input-background);
+  border: 1px solid var(--jp-border-color1);
+}
+
+.semantic-context-controls p {
+  margin: 0;
+}
+
+.semantic-context-controls [aria-invalid='true'] {
+  border-color: var(--jp-error-color1);
+}
+
 .control-button {
   background-color: var(--primary-blue);
   color: #fff;

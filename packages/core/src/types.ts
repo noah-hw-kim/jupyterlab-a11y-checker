@@ -6,7 +6,11 @@ export type ImageSourceType =
 
 export type AltTextState = "missing" | "empty" | "present";
 
-export type ContextStrategy = "minimal" | "preceding" | "surrounding" | "full";
+export type ContextStrategy =
+  | "minimal"
+  | "fixed-window"
+  | "structure-aware"
+  | "largest-practical";
 
 export interface ICellIssue {
   cellIndex: number;
@@ -119,6 +123,9 @@ export interface ISemanticCallMetadata {
   requestCount: number;
   success: boolean;
   errorMessage?: string;
+  contextCharacterBudget?: number;
+  contextTruncated?: boolean;
+  selectedSourceCharacterCount?: number;
 }
 
 export interface ISemanticAnalysisResult {
@@ -126,4 +133,15 @@ export interface ISemanticAnalysisResult {
   task: SemanticTask;
   result: ISemanticResult | null;
   metadata: ISemanticCallMetadata;
+}
+
+export interface IContextPackage {
+  strategy: ContextStrategy;
+  cells: Array<{
+    cellIndex: number;
+    text: string;
+    reason: string;
+  }>;
+  truncated: boolean;
+  characterCount: number;
 }

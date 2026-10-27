@@ -45222,6 +45222,12 @@ init_cjs_shims();
 // ../core/src/utils/semantic-orchestrator.ts
 init_cjs_shims();
 
+// ../core/src/utils/context-selection.ts
+init_cjs_shims();
+
+// ../core/src/utils/context-formatting.ts
+init_cjs_shims();
+
 // ../core/src/utils/image-candidate-selection.ts
 init_cjs_shims();
 

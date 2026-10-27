@@ -2,7 +2,6 @@ import {
   ICellIssue,
   getIssueOffsets,
   replaceSlice,
-  getImageAltSuggestion,
   getTableCaptionSuggestion,
   IModelSettings,
   escapeHtmlAttr,
@@ -21,6 +20,7 @@ import { NotebookPanel } from '@jupyterlab/notebook';
 import { TextFieldFixWidget } from './base.js';
 import { notebookToGeneralCells } from '../../adapter.js';
 import { resolveSemanticImageDataUrl } from '../../semantic-image-resolver.js';
+import type { ISemanticContextSettings } from '../../semantic-context-settings.js';
 
 export class ImageAltFixWidget extends TextFieldFixWidget {
   private visionSettings: IModelSettings;
@@ -33,7 +33,10 @@ export class ImageAltFixWidget extends TextFieldFixWidget {
     issue: ICellIssue,
     cell: Cell<ICellModel>,
     aiEnabled: boolean,
-    visionSettings: IModelSettings
+    visionSettings: IModelSettings,
+    private readonly getContextSettings: () => ISemanticContextSettings = () => ({
+      contextStrategy: 'minimal'
+    })
   ) {
     super(issue, cell, aiEnabled);
     this.visionSettings = visionSettings;
@@ -153,6 +156,13 @@ export class ImageAltFixWidget extends TextFieldFixWidget {
     altTextInput.placeholder = ''; // Clear placeholder while showing loading overlay
 
     try {
+      let contextSettings: ISemanticContextSettings;
+      try {
+        contextSettings = this.getContextSettings();
+      } catch {
+        status.textContent = 'Check the AI image context settings above.';
+        return;
+      }
       const notebookPanel = this.cell.parent?.parent as NotebookPanel;
 
       if (!notebookPanel) {
@@ -194,7 +204,8 @@ export class ImageAltFixWidget extends TextFieldFixWidget {
         client,
         {
           modelName: this.visionSettings.model,
-          contextStrategy: 'minimal',
+          ...contextSettings,
+          notebookCells: generalCells,
           resolveImageDataUrl: imageCandidate =>
             resolveSemanticImageDataUrl(
               imageCandidate.src,
@@ -204,7 +215,9 @@ export class ImageAltFixWidget extends TextFieldFixWidget {
       );
 
       if (!analysis.metadata.success) {
-        status.textContent = 'AI analysis failed. Please try again.';
+        status.textContent =
+          analysis.metadata.errorMessage ||
+          'AI analysis failed. Please try again.';
         return;
       }
 

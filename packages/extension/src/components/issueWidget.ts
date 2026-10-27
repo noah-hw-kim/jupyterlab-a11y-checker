@@ -185,7 +185,8 @@ export class CellIssueWidget extends Widget {
         this.issue,
         this.cell,
         this.aiEnabled,
-        this.mainPanel.getVisionModelSettings()
+        this.mainPanel.getVisionModelSettings(),
+        () => this.mainPanel.getSemanticContextSettings()
       );
       fixWidgetContainer.appendChild(this._fixWidget.node);
     } else if (this.issue.violationId === 'table-missing-caption') {

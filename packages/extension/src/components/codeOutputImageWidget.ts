@@ -10,6 +10,7 @@ import {
   OpenAICompatibleModelClient
 } from '@berkeley-dsep-infra/a11y-checker-core';
 import { notebookToGeneralCells } from '../adapter.js';
+import type { ISemanticContextSettings } from '../semantic-context-settings.js';
 
 /** Analysis-only output review; accepting output alt text belongs to Phase 6. */
 export class CodeOutputImageWidget extends Widget {
@@ -22,7 +23,10 @@ export class CodeOutputImageWidget extends Widget {
     private readonly cell: Cell<ICellModel>,
     private readonly selected: IImageCandidate,
     aiEnabled: boolean,
-    private readonly settings: IModelSettings
+    private readonly settings: IModelSettings,
+    private readonly getContextSettings: () => ISemanticContextSettings = () => ({
+      contextStrategy: 'minimal'
+    })
   ) {
     super();
     this.addClass('issue-widget');
@@ -109,9 +113,17 @@ export class CodeOutputImageWidget extends Widget {
     this.suggestion.hidden = true;
 
     try {
+      let contextSettings: ISemanticContextSettings;
+      try {
+        contextSettings = this.getContextSettings();
+      } catch {
+        this.status.textContent = 'Check the AI image context settings above.';
+        return;
+      }
       // Step A: Re-fetch the live cell and verify output hasn't changed
       const currentIndex = this.notebook.content.widgets.indexOf(this.cell);
-      const currentCell = notebookToGeneralCells(this.notebook)[currentIndex];
+      const generalCells = notebookToGeneralCells(this.notebook);
+      const currentCell = generalCells[currentIndex];
       const candidate = currentCell
         ? findCurrentCodeOutputCandidate(this.selected, currentCell)
         : undefined;
@@ -127,7 +139,11 @@ export class CodeOutputImageWidget extends Widget {
         candidate,
         currentCell,
         new OpenAICompatibleModelClient(this.settings),
-        { modelName: this.settings.model, contextStrategy: 'minimal' }
+        {
+          modelName: this.settings.model,
+          ...contextSettings,
+          notebookCells: generalCells
+        }
       );
 
       // Step C: Check if widget was closed while waiting
@@ -135,7 +151,9 @@ export class CodeOutputImageWidget extends Widget {
         return;
       }
       if (!analysis.metadata.success || !analysis.result) {
-        this.status.textContent = 'AI analysis failed. Please try again.';
+        this.status.textContent =
+          analysis.metadata.errorMessage ||
+          'AI analysis failed. Please try again.';
         return;
       }
 

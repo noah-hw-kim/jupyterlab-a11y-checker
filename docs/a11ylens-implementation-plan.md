@@ -390,11 +390,11 @@ Test with a notebook that has at least 2–3 images (some in Markdown, some as c
 
 ### ✅ Phase 3 is done when
 
-- [ ] A real notebook image → gets sent to the AI → returns a structured recommendation → displays in JupyterLab.
-- [ ] Multi-image cases work (each image analyzed separately).
-- [ ] No notebook content is automatically changed.
-- [ ] If the AI call fails, existing structural findings (like "missing alt text") still appear.
-- [ ] Metadata (latency, input size, etc.) is recorded for each call.
+- [x] A real notebook image → gets sent to the AI → returns a structured recommendation → displays in JupyterLab.
+- [x] Multi-image cases work (each image analyzed separately).
+- [x] No notebook content is automatically changed.
+- [x] If the AI call fails, existing structural findings (like "missing alt text") still appear.
+- [x] Metadata (latency, input size, etc.) is recorded for each call.
 
 ---
 
@@ -436,7 +436,7 @@ Send the AI:
 Send the AI:
 - The image itself.
 - The current cell.
-- The **nearest section heading** above this cell.
+- The **nearest preceding section heading**, including a heading before the image within its own Markdown cell.
 - Up to **2 nearby Markdown cells** in the same section.
 - The **code that produced** this image (for code outputs), or **nearby code** (for Markdown images).
 
@@ -445,7 +445,7 @@ Send the AI:
 #### 4. Largest-Practical Context
 Send the AI:
 - The image itself.
-- **As many notebook cells as fit** within the model's context window.
+- **As many notebook cells as fit** within the configured notebook-text character budget. This is a practical text limit, not a measurement of the model's total token capacity.
 
 *This tests whether "more is better" — maybe just sending everything works fine.*
 
@@ -491,11 +491,21 @@ These tests don't need the AI model. They verify:
 
 ### ✅ Phase 4 is done when
 
-- [ ] All four strategies are implemented.
-- [ ] They all produce `IContextPackage` objects.
-- [ ] Context budgets are respected; truncation drops low-priority content first.
-- [ ] Deterministic unit tests pass for all four strategies.
-- [ ] Switching strategy doesn't break any other part of the pipeline.
+- [x] All four strategies are implemented.
+- [x] They all produce `IContextPackage` objects.
+- [x] Context budgets are respected; truncation drops low-priority content first.
+- [x] Deterministic unit tests pass for all four strategies.
+- [x] Switching strategy doesn't break any other part of the pipeline.
+
+### Completion record — October 27, 2026
+
+- All four selectors return `IContextPackage` and use the shared formatter and model-request pipeline. The JupyterLab sidebar exposes strategy and character-budget controls for Markdown and code-output image analysis.
+- Fixed-window, structure-aware, and largest-practical require an explicit nonnegative character budget. Minimal permits a blank budget to preserve full current-cell text. Selection gives the current cell first priority; fixed-window and largest-practical return selected entries in notebook order.
+- Per-call metadata preserves the effective budget, truncation flag, selected source character count, selected cell indices, and formatted context character count, including provider failures. Selection metadata remains absent when selection does not complete.
+- Automated verification: 203 core tests and 17 extension settings tests passed, along with core/extension TypeScript checks, focused extension lint, formatting, and CLI bundle rebuild checks.
+- Browser acceptance: the author reported verifying the Phase 4 workflow in JupyterLab on October 27. This confirmation closes the remaining browser gate; browser checks were not independently rerun during the commit audit.
+- Supported structure signals are top-level Markdown headings, including Setext headings and headings before an image in the same cell. HTML and nested-block headings are deferred. Full current-cell text remains eligible even when it spans multiple sections; nearby code for Markdown images is a heuristic rather than a proven producing-code relationship.
+- Budgets count selected notebook source text. Formatting labels/separators, image data, and the remaining model prompt are outside that budget. Record these limits when interpreting later experiment results; strategy quality has not yet been experimentally compared.
 
 ---
 

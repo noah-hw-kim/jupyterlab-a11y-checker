@@ -1,5 +1,6 @@
 import type {
   ContextStrategy,
+  IContextPackage,
   IGeneralCell,
   IImageCandidate,
   IModelClient,
@@ -11,6 +12,13 @@ import {
   attachmentCandidateToDataUrl,
 } from "./semantic-image-data.js";
 import { buildSemanticRequest } from "./semantic-routing.js";
+import {
+  selectFixedWindowContext,
+  selectLargestPracticalContext,
+  selectMinimalContext,
+  selectStructureAwareContext,
+} from "./context-selection.js";
+import { formatContext } from "./context-formatting.js";
 
 export interface IAnalyzeCandidateOptions {
   modelName: string;
@@ -20,6 +28,9 @@ export interface IAnalyzeCandidateOptions {
     candidate: IImageCandidate,
     cell: IGeneralCell,
   ) => Promise<string> | string;
+  contextCharacterBudget?: number;
+  /** Notebook-order cells, required for structure-aware selection. */
+  notebookCells?: IGeneralCell[];
 }
 
 /**
@@ -45,8 +56,125 @@ export async function analyzeImageCandidate(
   const task: SemanticTask =
     candidate.altState === "present" ? "evaluate" : "generate";
   let requestCount = 0;
+  let inputCharacterCount = 0;
+  let contextStrategy = options.contextStrategy ?? "minimal";
+  let includeCellIndices: number[] = [];
+  let contextCharacterBudget: number | undefined;
+  let contextTruncated: boolean | undefined;
+  let selectedSourceCharacterCount: number | undefined;
 
   try {
+    let context: IContextPackage;
+
+    switch (contextStrategy) {
+      case "minimal":
+        context = selectMinimalContext(
+          candidate,
+          [cell],
+          options.contextCharacterBudget ?? cell.source.length,
+        );
+        break;
+
+      case "fixed-window": {
+        if (!options.notebookCells) {
+          throw new Error("Fixed-window context requires notebookCells");
+        }
+        if (options.contextCharacterBudget === undefined) {
+          throw new Error(
+            "Fixed-window context requires contextCharacterBudget",
+          );
+        }
+        if (
+          !options.notebookCells.some(
+            (entry) => entry.cellIndex === cell.cellIndex,
+          )
+        ) {
+          throw new Error("The current cell is missing from notebookCells");
+        }
+
+        const notebookCells = options.notebookCells.map((entry) =>
+          entry.cellIndex === cell.cellIndex ? cell : entry,
+        );
+
+        context = selectFixedWindowContext(
+          candidate,
+          notebookCells,
+          options.contextCharacterBudget,
+        );
+        break;
+      }
+
+      case "structure-aware": {
+        if (!options.notebookCells) {
+          throw new Error("Structure-aware context requires notebookCells");
+        }
+        if (options.contextCharacterBudget === undefined) {
+          throw new Error(
+            "Structure-aware context requires contextCharacterBudget",
+          );
+        }
+        if (
+          !options.notebookCells.some(
+            (entry) => entry.cellIndex === cell.cellIndex,
+          )
+        ) {
+          throw new Error("The current cell is missing from notebookCells");
+        }
+
+        const notebookCells = options.notebookCells.map((entry) =>
+          entry.cellIndex === cell.cellIndex ? cell : entry,
+        );
+        context = selectStructureAwareContext(
+          candidate,
+          notebookCells,
+          options.contextCharacterBudget,
+        );
+        break;
+      }
+
+      case "largest-practical": {
+        if (!options.notebookCells) {
+          throw new Error("Largest-practical context requires notebookCells");
+        }
+        if (options.contextCharacterBudget === undefined) {
+          throw new Error(
+            "Largest-practical context requires contextCharacterBudget",
+          );
+        }
+        if (
+          !options.notebookCells.some(
+            (entry) => entry.cellIndex === cell.cellIndex,
+          )
+        ) {
+          throw new Error("The current cell is missing from notebookCells");
+        }
+
+        const notebookCells = options.notebookCells.map((entry) =>
+          entry.cellIndex === cell.cellIndex ? cell : entry,
+        );
+
+        context = selectLargestPracticalContext(
+          candidate,
+          notebookCells,
+          options.contextCharacterBudget,
+        );
+        break;
+      }
+
+      default:
+        throw new Error(
+          `Context strategy is not implemented: ${contextStrategy}`,
+        );
+    }
+
+    contextStrategy = context.strategy;
+    includeCellIndices = context.cells.map((entry) => entry.cellIndex);
+    contextTruncated = context.truncated;
+    selectedSourceCharacterCount = context.characterCount;
+    contextCharacterBudget =
+      options.contextCharacterBudget ??
+      (contextStrategy === "minimal" ? cell.source.length : undefined);
+
     let imageDataUrl: string;
 
     if (candidate.sourceType === "code-output") {
@@ -62,22 +190,30 @@ export async function analyzeImageCandidate(
     }
 
     const semanticRequest = buildSemanticRequest(candidate, cell, imageDataUrl);
+    semanticRequest.cellText = formatContext(context);
+    inputCharacterCount = semanticRequest.cellText.length;
+
     requestCount = 1;
     const semanticResult = await client.analyzeImage(semanticRequest);
-
     const latencyMs = Date.now() - startTime;
+
     return {
       candidate,
       task,
       result: semanticResult,
       metadata: {
-        contextStrategy: options.contextStrategy ?? "minimal",
-        includeCellIndices: [cell.cellIndex],
-        inputCharacterCount: semanticRequest.cellText.length,
+        contextStrategy,
+        includeCellIndices,
+        inputCharacterCount: inputCharacterCount,
         model: options.modelName,
         latencyMs,
         requestCount,
         success: true,
+        ...(contextCharacterBudget !== undefined && { contextCharacterBudget }),
+        ...(contextTruncated !== undefined && { contextTruncated }),
+        ...(selectedSourceCharacterCount !== undefined && {
+          selectedSourceCharacterCount,
+        }),
       },
     };
   } catch (error) {
@@ -88,14 +224,19 @@ export async function analyzeImageCandidate(
       task,
       result: null,
       metadata: {
-        contextStrategy: options.contextStrategy ?? "minimal",
-        includeCellIndices: [cell.cellIndex],
-        inputCharacterCount: cell.source.length,
+        contextStrategy,
+        includeCellIndices,
+        inputCharacterCount: inputCharacterCount,
         model: options.modelName,
         latencyMs,
         requestCount,
         success: false,
         errorMessage: error instanceof Error ? error.message : String(error),
+        ...(contextCharacterBudget !== undefined && { contextCharacterBudget }),
+        ...(contextTruncated !== undefined && { contextTruncated }),
+        ...(selectedSourceCharacterCount !== undefined && {
+          selectedSourceCharacterCount,
+        }),
       },
     };
   }

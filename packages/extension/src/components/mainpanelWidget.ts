@@ -21,6 +21,10 @@ import {
 import { CellIssueWidget } from './issueWidget.js';
 import { CodeOutputImageWidget } from './codeOutputImageWidget.js';
 import { notebookToGeneralCells } from '../adapter.js';
+import {
+  type ISemanticContextSettings,
+  parseSemanticContextSettings
+} from '../semantic-context-settings.js';
 
 /** Maximum time (ms) to wait for a full analysis before timing out. */
 const ANALYSIS_TIMEOUT_MS = 60_000;
@@ -104,6 +108,21 @@ export class MainPanelWidget extends Widget {
                 Analyze Notebook
               </button>
           </div>
+          <fieldset class="semantic-context-controls">
+              <legend>AI image context</legend>
+              <label for="a11y-context-strategy">Context strategy</label>
+              <select id="a11y-context-strategy" aria-describedby="a11y-context-help a11y-context-status">
+                  <option value="minimal">Minimal</option>
+                  <option value="fixed-window">Fixed-window</option>
+                  <option value="structure-aware">Structure-aware</option>
+                  <option value="largest-practical">Largest-practical</option>
+              </select>
+              <label for="a11y-context-budget">Notebook text budget (characters)</label>
+              <input id="a11y-context-budget" type="number" min="0" step="1"
+                  placeholder="Enter a character limit" aria-describedby="a11y-context-help a11y-context-status">
+              <p id="a11y-context-help">Minimal uses the current cell. Fixed-window adds ±2 neighbor cells. Structure-aware adds section context. Largest-practical includes all notebook cells that fit. Leave the budget blank for full current-cell text in Minimal; a budget is required for Fixed-window, Structure-aware, and Largest-practical. Labels and separators add to the selected text size. Changes apply to the next image request.</p>
+              <p id="a11y-context-status" class="semantic-context-status" role="status" aria-atomic="true"></p>
+          </fieldset>
           <div class="issues-container"></div>
       </div>
         `;
@@ -319,7 +338,8 @@ export class MainPanelWidget extends Widget {
               cell,
               candidate,
               this.aiEnabled,
-              this.visionModelSettings
+              this.visionModelSettings,
+              () => this.getSemanticContextSettings()
             );
             this._childIssueWidgets.push(widget);
             section.appendChild(widget.node);
@@ -542,6 +562,46 @@ export class MainPanelWidget extends Widget {
 
   getVisionModelSettings(): IModelSettings {
     return this.visionModelSettings;
+  }
+
+  /** Read at request time so existing image cards use the latest controls. */
+  getSemanticContextSettings(): ISemanticContextSettings {
+    const strategy = this.node.querySelector<HTMLSelectElement>(
+      '#a11y-context-strategy'
+    )!;
+    const budget = this.node.querySelector<HTMLInputElement>(
+      '#a11y-context-budget'
+    )!;
+    const status = this.node.querySelector<HTMLParagraphElement>(
+      '.semantic-context-status'
+    )!;
+
+    status.textContent = '';
+    strategy.removeAttribute('aria-invalid');
+    budget.removeAttribute('aria-invalid');
+    try {
+      // A browser can expose invalid numeric input as an empty value.
+      if (!budget.validity.valid) {
+        throw new Error(
+          'The context budget must be a nonnegative whole number.'
+        );
+      }
+      return parseSemanticContextSettings(strategy.value, budget.value);
+    } catch (error) {
+      if (
+        strategy.value !== 'minimal' &&
+        strategy.value !== 'fixed-window' &&
+        strategy.value !== 'structure-aware' &&
+        strategy.value !== 'largest-practical'
+      ) {
+        strategy.setAttribute('aria-invalid', 'true');
+      } else {
+        budget.setAttribute('aria-invalid', 'true');
+      }
+      status.textContent =
+        error instanceof Error ? error.message : 'Check the context settings.';
+      throw error;
+    }
   }
 
   setNotebook(notebook: NotebookPanel) {
