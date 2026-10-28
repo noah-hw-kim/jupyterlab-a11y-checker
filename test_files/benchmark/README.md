@@ -49,11 +49,13 @@ Expected judgments are reference hypotheses for evaluation, not guarantees about
 what a model must return. "Prohibited claims" concern unsupported facts; concern
 classification accuracy is recorded separately by `shouldImprove`.
 
-The current sidebar offers AI suggestions for missing/empty Markdown findings
-and analysis cards for code outputs. Weak/acceptable Markdown cases require the
-core pipeline or the later evaluation runner until the broader candidate-review
-UI is implemented. Do not change their alt text to manufacture a structural
-finding and then treat the modified input as the same frozen case.
+The sidebar offers AI suggestions for missing/empty Markdown findings and AI
+review cards for existing-alt Markdown images and code outputs. Review cards
+support editing, explicit application, and dismissal. Accepted output alt text
+is stored in metadata and restored only for matching rendered image data. Use
+development cases for manual checks; keep held-out cases untouched until the
+controlled evaluation. Do not apply changes to frozen inputs and then treat the
+modified notebooks as the same benchmark revision.
 
 ## Review and freeze
 

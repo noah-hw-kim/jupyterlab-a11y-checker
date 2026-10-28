@@ -9,7 +9,9 @@ environments in `jupyterlab-a11y-checker`:
 
 Phase 1 established that both environments expose image data. Phase 2
 implements the shared cell contract, adapters, and image-candidate extraction.
-Applying accepted alt text to notebook content remains planned for Phase 6.
+Phase 6 implements explicit acceptance of Markdown and code-output alt text.
+Code-output acceptance writes per-output cell metadata and restores matching
+rendered image alt attributes when notebooks open or outputs render.
 
 ---
 
@@ -117,6 +119,20 @@ While JupyterLab is open, rendered plot images exist directly in the browser DOM
   ```
 
   and persisted into the cell's metadata (`cell.model.setMetadata('a11y_metadata', ...)`).
+
+The implemented review path is `ImageReviewWidget.applyRecommendation()` →
+`buildOutputAltMetadata()` → `cell.model.setMetadata()`. This updates metadata
+without rewriting code source or output pixels; normal notebook saving persists
+it. The per-output record contains `dataHash`, `mimeType`, and `altText`.
+
+`installOutputAltRestoration()` attaches through JupyterLab's notebook tracker.
+It checks output index, stored MIME/hash, and actual rendered data URL before
+setting `alt`. Output rerenders and model changes trigger a refresh; notebook
+disposal disconnects listeners. A changed image loses any stale description
+previously applied by this extension. Ambiguous/truncated renderings are skipped.
+Older hash-matched records remain readable by the extractor, while automatic DOM
+restoration requires a complete per-output MIME/hash record from the review flow.
+
 
 ---
 

@@ -141,6 +141,8 @@ export interface ICellOutput {
 }
 
 export interface IOutputA11yMetadata {
+  /** Written by the author review flow; optional for older notebooks. */
+  mimeType?: string;
   dataHash: string;
   altText: string;
 }

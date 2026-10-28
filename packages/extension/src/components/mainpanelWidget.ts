@@ -8,8 +8,7 @@ import { PageConfig } from '@jupyterlab/coreutils';
 
 import {
   ICellIssue,
-  IModelSettings,
-  extractImageCandidates
+  IModelSettings
 } from '@berkeley-dsep-infra/a11y-checker-core';
 import {
   issueToCategory,
@@ -19,7 +18,8 @@ import {
 } from '@berkeley-dsep-infra/a11y-checker-core';
 
 import { CellIssueWidget } from './issueWidget.js';
-import { CodeOutputImageWidget } from './codeOutputImageWidget.js';
+import { ImageReviewWidget } from './imageReviewWidget.js';
+import { selectImageReviewCandidates } from '../semantic-image-review.js';
 import { notebookToGeneralCells } from '../adapter.js';
 import {
   type ISemanticContextSettings,
@@ -193,9 +193,7 @@ export class MainPanelWidget extends Widget {
       try {
         // Convert widgets to accessible cells
         const accessibleCells = notebookToGeneralCells(this.currentNotebook);
-        const outputCandidates = extractImageCandidates(accessibleCells).filter(
-          candidate => candidate.sourceType === 'code-output'
-        );
+        const reviewCandidates = selectImageReviewCandidates(accessibleCells);
 
         // Run analysis with a timeout guard
         const analysisPromise = analyzeCellsAccessibility(
@@ -248,7 +246,7 @@ export class MainPanelWidget extends Widget {
           console.log('Summary Unavailable');
         }
 
-        if (notebookIssues.length === 0 && outputCandidates.length === 0) {
+        if (notebookIssues.length === 0 && reviewCandidates.length === 0) {
           issuesContainer.innerHTML =
             '<div class="no-issues">No issues found</div>';
           return;
@@ -316,24 +314,24 @@ export class MainPanelWidget extends Widget {
           });
         }
 
-        if (outputCandidates.length > 0) {
+        if (reviewCandidates.length > 0) {
           const section = document.createElement('div');
           section.className = 'category';
           const title = document.createElement('h2');
           title.className = 'category-title';
-          title.textContent = 'Code-output images';
+          title.textContent = 'AI image review';
           const description = document.createElement('p');
           description.textContent =
             'Enable Use AI to request recommendations. Analysis does not change the notebook.';
           section.append(title, description);
 
-          for (const candidate of outputCandidates) {
+          for (const candidate of reviewCandidates) {
             const cell =
               this.currentNotebook.content.widgets[candidate.cellIndex];
             if (!cell) {
               continue;
             }
-            const widget = new CodeOutputImageWidget(
+            const widget = new ImageReviewWidget(
               this.currentNotebook,
               cell,
               candidate,

@@ -2,7 +2,8 @@ import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
-import { NotebookPanel } from '@jupyterlab/notebook';
+import { NotebookPanel, INotebookTracker } from '@jupyterlab/notebook';
+import { installOutputAltRestoration } from './output-alt-restoration.js';
 import { ILabShell } from '@jupyterlab/application';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 import { MainPanelWidget } from './components/mainpanelWidget.js';
@@ -16,12 +17,23 @@ import { BrowserImageProcessor } from './image-processor.js';
 const extension: JupyterFrontEndPlugin<void> = {
   id: 'jupyterlab-a11y-checker:plugin',
   autoStart: true,
-  requires: [ILabShell, ISettingRegistry],
+  requires: [ILabShell, ISettingRegistry, INotebookTracker],
   activate: (
     app: JupyterFrontEnd,
     labShell: ILabShell,
-    settingRegistry: ISettingRegistry
+    settingRegistry: ISettingRegistry,
+    notebookTracker: INotebookTracker
   ) => {
+    const tracked = new WeakSet<NotebookPanel>();
+    const track = (notebook: NotebookPanel) => {
+      if (!tracked.has(notebook)) {
+        tracked.add(notebook);
+        installOutputAltRestoration(notebook);
+      }
+    };
+    notebookTracker.forEach(track);
+    notebookTracker.widgetAdded.connect((_, notebook) => track(notebook));
+
     const panel = new MainPanelWidget(settingRegistry);
 
     labShell.add(panel, 'right');

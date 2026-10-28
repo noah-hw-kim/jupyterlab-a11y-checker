@@ -122,6 +122,21 @@ describe("validateSuggestion", () => {
     },
   );
 
+  it("requests a final judgment with failure reasons consistent with its checks", async () => {
+    const client = new OpenAICompatibleModelClient(settings);
+    await client.validateSuggestion(request);
+
+    const [, body] = vi.mocked(http.post).mock.calls[0];
+    const prompt = body.messages[0].content;
+    expect(prompt).toContain(
+      "final judgment only; omit deliberation and self-corrections",
+    );
+    expect(prompt).toContain("correspond to a check marked false");
+    expect(prompt).toContain(
+      "If your final assessment finds no failure, mark every check true and return an empty reasons array",
+    );
+  });
+
   it.each([null, "", "not JSON", "{}"])(
     "rejects missing or malformed validator content %j",
     async (content) => {

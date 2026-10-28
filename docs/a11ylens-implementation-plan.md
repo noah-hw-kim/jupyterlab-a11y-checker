@@ -654,15 +654,42 @@ Code-output images (like matplotlib plots) are special — you can't add alt tex
 
 ### ✅ Phase 6 is done when
 
-- [ ] AI recommendations display separately from structural violations.
-- [ ] Authors can request evaluation of existing alt text and accept, edit, or reject a recommendation using simple controls.
-- [ ] Nothing is auto-applied to the notebook.
-- [ ] The entire review flow works with keyboard only.
-- [ ] Code-output alt text is stored in cell metadata and applied to the DOM.
-- [ ] Stale metadata is rejected when outputs change.
-- [ ] Accepted code-output alt text survives save/reopen and is applied only to matching image data. Persisting recommendation history is optional.
+- [x] AI recommendations display separately from structural violations.
+- [x] Authors can request evaluation of existing alt text and accept, edit, or reject a recommendation using simple controls.
+- [x] Nothing is auto-applied to the notebook.
+- [x] The entire review flow works with keyboard only.
+- [x] Code-output alt text is stored in cell metadata and applied to the DOM.
+- [x] Stale metadata is rejected when outputs change.
+- [x] Accepted code-output alt text survives save/reopen and is applied only to matching image data. Persisting recommendation history is optional.
 
 Focused verification is one Markdown review/application, one existing-alt evaluation, one code-output metadata round trip, rejection of a changed output, and a keyboard walkthrough. These check required behavior; broad UI automation and visual polish do not block the phase.
+
+
+**Completed October 28, 2026.** AI image review cards now support existing-alt
+Markdown images and static PNG/JPEG outputs. Authors can edit, explicitly apply,
+or dismiss recommendations. Edits replace the original validation message with
+an indication that the edited text has not been AI-validated. Application
+rechecks image identity; dismissal leaves notebook content unchanged.
+
+Accepted output descriptions are stored in per-output cell metadata with image
+hash and MIME type. A notebook-tracker integration restores matching alt text
+when notebooks open or outputs render, and removes managed stale descriptions.
+Ambiguous or truncated output renderings are skipped rather than matched by
+position alone. Older metadata remains readable for analysis; automatic DOM
+restoration requires the complete per-output record written by this flow.
+
+Verification: 280 core tests and 33 extension tests passed, with TypeScript
+compilation and focused lint/format checks. The author reported that Markdown
+edit/Apply and Dismiss, output save/reopen restoration, changed-plot rejection,
+and keyboard-only review all passed in JupyterLab. These are user-reported
+browser observations, distinct from automated test evidence.
+
+Known limits: adding Markdown alt text through a structural fix requires another
+notebook check before a review card appears; automatic card refresh is deferred.
+The model validator can still return contradictory judgments. Its prompt requests
+a consistent final assessment, while failed checks remain manual-review outcomes
+and all suggestions require explicit author acceptance. Recommendation history
+is not persisted. The frozen benchmark inputs and annotations are unchanged.
 
 ---
 

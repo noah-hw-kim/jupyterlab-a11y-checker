@@ -177,10 +177,15 @@ function findOutputMetadata(
   a11y: IA11yMetadata | undefined,
   outputIndex: number,
   dataHash: string,
+  mimeType: string,
 ): IOutputA11yMetadata | undefined {
   const metadata = a11y?.outputs?.[String(outputIndex)];
 
-  if (!metadata || metadata.dataHash !== dataHash) {
+  if (
+    !metadata ||
+    metadata.dataHash !== dataHash ||
+    (metadata.mimeType !== undefined && metadata.mimeType !== mimeType)
+  ) {
     return undefined;
   }
 
@@ -275,7 +280,12 @@ export function extractImageCandidates(
         const dataHash = computeImageHash(rawData);
         let storedAlt: string | undefined = undefined;
         const a11y = cell.metadata?.a11y_metadata;
-        const perOutputMeta = findOutputMetadata(a11y, outputIndex, dataHash);
+        const perOutputMeta = findOutputMetadata(
+          a11y,
+          outputIndex,
+          dataHash,
+          mimeType,
+        );
 
         if (perOutputMeta) {
           storedAlt = perOutputMeta.altText;
