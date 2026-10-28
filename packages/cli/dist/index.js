@@ -45210,6 +45210,9 @@ init_cjs_shims();
 // ../core/src/utils/semantic.ts
 init_cjs_shims();
 
+// ../core/src/utils/semantic-validation.ts
+init_cjs_shims();
+
 // ../core/src/utils/semantic-model-client.ts
 init_cjs_shims();
 

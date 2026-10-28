@@ -62,8 +62,51 @@ export interface ISemanticResult {
   suggestion: string | null;
 }
 
+export interface IWordLimitCheck {
+  wordCount: number;
+  maxWords: number;
+  withinLimit: boolean;
+}
+
+export type ValidationOutcome = "pass" | "manual-review";
+
+/** Overall outcome, assembled after the applicable validation checks. */
+export interface IValidationResult {
+  outcome: ValidationOutcome;
+  reasons: string[];
+  wordLimit: IWordLimitCheck;
+  qualityCheck?: IQualityCheckResult;
+  modelCheckStatus: "not-run" | "succeeded" | "failed";
+  /** Number of quality-validator requests attempted; excludes generation. */
+  requestCount: number;
+  latencyMs: number;
+  errorMessage?: string;
+}
+
 export interface IModelClient {
   analyzeImage(request: ISemanticRequest): Promise<ISemanticResult>;
+}
+
+export interface IQualityValidationRequest {
+  imageDataUrl: string;
+  /** The exact formatted context used for generation. */
+  cellText: string;
+  suggestion: string;
+}
+
+export interface IQualityCheckResult {
+  grounded: boolean;
+  contextConsistent: boolean;
+  informative: boolean;
+  concise: boolean;
+  noUnsupportedClaims: boolean;
+  reasons: string[];
+}
+
+export interface IModelValidator {
+  validateSuggestion(
+    request: IQualityValidationRequest,
+  ): Promise<IQualityCheckResult>;
 }
 
 export interface IImageCandidate {
@@ -120,7 +163,9 @@ export interface ISemanticCallMetadata {
   inputCharacterCount: number;
   model: string;
   latencyMs: number;
+  /** Total generation and quality-validator requests attempted. */
   requestCount: number;
+  /** Preparation/generation success; inspect validation for the quality outcome. */
   success: boolean;
   errorMessage?: string;
   contextCharacterBudget?: number;
@@ -132,6 +177,7 @@ export interface ISemanticAnalysisResult {
   candidate: IImageCandidate;
   task: SemanticTask;
   result: ISemanticResult | null;
+  validation?: IValidationResult;
   metadata: ISemanticCallMetadata;
 }
 
@@ -144,4 +190,35 @@ export interface IContextPackage {
   }>;
   truncated: boolean;
   characterCount: number;
+}
+
+/** Reference-only benchmark data; never pass this record to a model. */
+export interface IEvaluationCase {
+  id: string;
+  split: "development" | "held-out";
+  category: "missing-empty" | "weak" | "acceptable";
+  sourceType: "markdown-inline" | "markdown-html" | "code-output";
+  notebookPath: string;
+  imagePath: string;
+  cellIndex: number;
+  outputIndex?: number;
+  contextCellIndices: number[];
+  contextSensitive: boolean;
+  expectedAltState: AltTextState;
+  existingAltText?: string;
+  shouldImprove: boolean;
+  requiredFacts: string[];
+  prohibitedClaims: string[];
+  evidence: {
+    context: string;
+    image: string;
+    sourceValues: number[];
+    sourceX: Array<string | number>;
+  };
+  annotationStatus: "draft" | "reviewed";
+  provenance?: {
+    notebook: string;
+    cellIndex: number;
+    note: string;
+  };
 }

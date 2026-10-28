@@ -46,16 +46,22 @@ export function parseSemanticResult(value: unknown): ISemanticResult {
 export function parseSemanticResponseText(
   responseText: string,
 ): ISemanticResult {
-  const trimmedResponse = responseText.trim();
+  let cleaned = responseText.trim();
+  if (cleaned.startsWith("```")) {
+    cleaned = cleaned
+      .replace(/^```(?:json)?\s*\n?/i, "")
+      .replace(/\n?```\s*$/, "");
+  }
+  cleaned = cleaned.trim();
 
-  if (!trimmedResponse) {
+  if (!cleaned) {
     throw new Error("Semantic response must not be empty");
   }
 
   let value: unknown;
 
   try {
-    value = JSON.parse(trimmedResponse);
+    value = JSON.parse(cleaned);
   } catch {
     throw new Error("Semantic response must be valid JSON");
   }

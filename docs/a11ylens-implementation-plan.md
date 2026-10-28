@@ -575,11 +575,30 @@ Additional requirements:
 
 ### ✅ Phase 5 is done when
 
-- [ ] Deterministic validation catches malformed/empty/too-long suggestions.
-- [ ] Model-assisted validation runs once as a separate AI call and returns pass/manual-review; failures never become passes.
-- [ ] Validation outcomes and failures are recorded; the default flow does not regenerate suggestions.
-- [ ] All 24 benchmark cases are finalized with reference annotations.
-- [ ] The 18 held-out cases are frozen and untouched.
+- [x] Deterministic validation catches malformed/empty/too-long suggestions.
+- [x] Model-assisted validation runs once as a separate AI call and returns pass/manual-review; failures never become passes.
+- [x] Validation outcomes and failures are recorded; the default flow does not regenerate suggestions.
+- [x] All 24 benchmark cases are finalized with reference annotations.
+- [x] The 18 held-out cases are frozen and untouched.
+
+
+**Completed October 28, 2026.** Deterministic checks and one separate
+model-assisted validation request are implemented, with pass/manual-review
+outcomes, recorded failures, and no automatic regeneration. The author previously
+reported successful browser testing with `dev_benchmark_cases.ipynb`; that is
+user-reported runtime evidence, separate from today's automated checks.
+
+All 24 reference annotations were reviewed and accepted by the author, with AI
+assistance limited to annotation checking. The six development and 18 held-out
+cases are frozen in `test_files/benchmark/references/freeze.json`. The author
+confirmed no held-out system outputs were generated or used for tuning; held-out
+evaluation has not started and no strategy-quality results are claimed.
+
+Verification: 277 core tests (including 27 benchmark fixture checks) and 21
+extension tests passed. The frozen snapshot matches all 24 notebooks, 24 images,
+and the reviewed manifest. Later benchmark corrections require a documented
+new dataset revision. Commit the frozen inputs and references before held-out
+generation.
 
 ---
 

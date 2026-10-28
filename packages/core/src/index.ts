@@ -11,6 +11,7 @@ export * from "./utils/sanitize.js";
 // Export others if needed, using glob patterns or directories if possible, but specific files for now.
 export * from "./utils/image-utils.js";
 export * from "./utils/semantic.js";
+export * from "./utils/semantic-validation.js";
 export * from "./utils/semantic-model-client.js";
 export * from "./utils/semantic-routing.js";
 export * from "./utils/semantic-image-data.js";

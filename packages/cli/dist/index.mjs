@@ -45222,6 +45222,9 @@ init_esm_shims();
 // ../core/src/utils/semantic.ts
 init_esm_shims();
 
+// ../core/src/utils/semantic-validation.ts
+init_esm_shims();
+
 // ../core/src/utils/semantic-model-client.ts
 init_esm_shims();
 

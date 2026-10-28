@@ -143,4 +143,15 @@ describe("parseSemanticResponseText", () => {
       suggestion: null,
     });
   });
+
+  it("strips markdown code fences before parsing", () => {
+    expect(
+      parseSemanticResponseText(
+        '```json\n{"concern":false,"suggestion":null}\n```',
+      ),
+    ).toEqual({
+      concern: false,
+      suggestion: null,
+    });
+  });
 });

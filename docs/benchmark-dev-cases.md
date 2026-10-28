@@ -1,5 +1,11 @@
 # A11yLens Development Benchmark Cases (Phase 1)
 
+> Phase 5 adds a [standalone 24-case benchmark](../test_files/benchmark/README.md).
+> Its per-case notebooks separate model-visible content from reference labels and
+> manual verification instructions. This document describes the original six
+> development cases; use the standalone manifest for the controlled experiment.
+> All 24 reference annotations were author-reviewed and frozen on October 28, 2026.
+
 This document defines the **6 development benchmark test cases** used to build, tune, and test the A11yLens pipeline.
 
 All 6 test cases are concretely implemented as live notebook cells in the fixture notebook:  

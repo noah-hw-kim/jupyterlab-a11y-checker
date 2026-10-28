@@ -4,6 +4,7 @@ import type {
   IGeneralCell,
   IImageCandidate,
   IModelClient,
+  IModelValidator,
   ISemanticAnalysisResult,
   SemanticTask,
 } from "../types.js";
@@ -19,6 +20,11 @@ import {
   selectStructureAwareContext,
 } from "./context-selection.js";
 import { formatContext } from "./context-formatting.js";
+import { parseSemanticResult } from "./semantic.js";
+import {
+  checkSuggestionLength,
+  validateGeneratedSuggestion,
+} from "./semantic-validation.js";
 
 export interface IAnalyzeCandidateOptions {
   modelName: string;
@@ -31,6 +37,9 @@ export interface IAnalyzeCandidateOptions {
   contextCharacterBudget?: number;
   /** Notebook-order cells, required for structure-aware selection. */
   notebookCells?: IGeneralCell[];
+  /** Omit only for generation-only callers; suggestions then require manual review. */
+  validator?: IModelValidator;
+  maxSuggestionWords?: number;
 }
 
 /**
@@ -64,6 +73,8 @@ export async function analyzeImageCandidate(
   let selectedSourceCharacterCount: number | undefined;
 
   try {
+    // Validate configuration before incurring any provider request.
+    checkSuggestionLength("", options.maxSuggestionWords ?? 40);
     let context: IContextPackage;
 
     switch (contextStrategy) {
@@ -194,13 +205,29 @@ export async function analyzeImageCandidate(
     inputCharacterCount = semanticRequest.cellText.length;
 
     requestCount = 1;
-    const semanticResult = await client.analyzeImage(semanticRequest);
+    const semanticResult = parseSemanticResult(
+      await client.analyzeImage(semanticRequest),
+    );
+    const validation =
+      semanticResult.suggestion === null
+        ? undefined
+        : await validateGeneratedSuggestion(
+            {
+              imageDataUrl: semanticRequest.imageDataUrl,
+              cellText: semanticRequest.cellText,
+              suggestion: semanticResult.suggestion,
+            },
+            options.validator,
+            options.maxSuggestionWords ?? 40,
+          );
+    requestCount += validation?.requestCount ?? 0;
     const latencyMs = Date.now() - startTime;
 
     return {
       candidate,
       task,
       result: semanticResult,
+      ...(validation && { validation }),
       metadata: {
         contextStrategy,
         includeCellIndices,

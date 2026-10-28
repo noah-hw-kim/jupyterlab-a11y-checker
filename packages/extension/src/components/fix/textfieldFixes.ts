@@ -21,6 +21,7 @@ import { TextFieldFixWidget } from './base.js';
 import { notebookToGeneralCells } from '../../adapter.js';
 import { resolveSemanticImageDataUrl } from '../../semantic-image-resolver.js';
 import type { ISemanticContextSettings } from '../../semantic-context-settings.js';
+import { describeSuggestionValidation } from '../../semantic-validation-status.js';
 
 export class ImageAltFixWidget extends TextFieldFixWidget {
   private visionSettings: IModelSettings;
@@ -204,6 +205,7 @@ export class ImageAltFixWidget extends TextFieldFixWidget {
         client,
         {
           modelName: this.visionSettings.model,
+          validator: client,
           ...contextSettings,
           notebookCells: generalCells,
           resolveImageDataUrl: imageCandidate =>
@@ -237,8 +239,7 @@ export class ImageAltFixWidget extends TextFieldFixWidget {
         }
 
         altTextInput.value = semanticResult.suggestion;
-        status.textContent =
-          'Suggestion ready. Review the text before choosing Apply.';
+        status.textContent = describeSuggestionValidation(analysis.validation);
       } else {
         status.textContent =
           'The existing alt text does not need a replacement.';

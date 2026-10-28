@@ -11,6 +11,7 @@ import {
 } from '@berkeley-dsep-infra/a11y-checker-core';
 import { notebookToGeneralCells } from '../adapter.js';
 import type { ISemanticContextSettings } from '../semantic-context-settings.js';
+import { describeSuggestionValidation } from '../semantic-validation-status.js';
 
 /** Analysis-only output review; accepting output alt text belongs to Phase 6. */
 export class CodeOutputImageWidget extends Widget {
@@ -134,13 +135,15 @@ export class CodeOutputImageWidget extends Widget {
         return;
       }
 
-      // Step B: Send to AI model
+      // Step B: Generate and validate before displaying the suggestion.
+      const client = new OpenAICompatibleModelClient(this.settings);
       const analysis = await analyzeImageCandidate(
         candidate,
         currentCell,
-        new OpenAICompatibleModelClient(this.settings),
+        client,
         {
           modelName: this.settings.model,
+          validator: client,
           ...contextSettings,
           notebookCells: generalCells
         }
@@ -165,8 +168,9 @@ export class CodeOutputImageWidget extends Widget {
         }
         this.suggestion.value = analysis.result.suggestion;
         this.suggestion.hidden = false;
-        this.status.textContent =
-          'Suggestion ready for review. The notebook has not been changed.';
+        this.status.textContent = describeSuggestionValidation(
+          analysis.validation
+        );
       } else {
         this.status.textContent =
           'The existing alt text does not need a replacement.';
