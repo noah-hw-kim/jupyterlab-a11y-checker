@@ -1,0 +1,30 @@
+{
+  "dryRun": true,
+  "plannedJobs": [
+    {
+      "job": {
+        "caseId": "case-01",
+        "strategy": "minimal",
+        "stage": "generation"
+      },
+      "input": {
+        "task": "generate",
+        "existingAltText": null,
+        "imagePath": "assets/case-01.png",
+        "imageSha256": "466faf2d57cdae24b77e66d8d8741dafc453954939684cbbe48bfdc16ec22631",
+        "imageMimeType": "image/png",
+        "formattedContext": "<img src=\"../assets/case-01.png\">",
+        "includedCellIndices": [
+          4
+        ],
+        "selectedSourceCharacterCount": 33,
+        "formattedContextCharacterCount": 33,
+        "messageTextCharacterCount": 1362,
+        "truncated": false,
+        "sourceGenerationAttemptId": null,
+        "suggestionToValidate": null
+      }
+    }
+  ],
+  "requests": 0
+}

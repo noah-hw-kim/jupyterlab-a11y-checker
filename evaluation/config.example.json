@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "model": "gemini-3.5-flash-lite",
+  "endpointEnv": "A11YLENS_MODEL_ENDPOINT",
+  "apiKeyEnv": "A11YLENS_API_KEY",
+  "split": "development",
+  "strategies": [
+    "minimal",
+    "fixed-window",
+    "structure-aware",
+    "largest-practical"
+  ],
+  "contextCharacterBudget": 2000,
+  "reasoningEffort": "provider-default",
+  "temperature": "provider-default",
+  "maxOutputTokens": 2048,
+  "maxSuggestionWords": 40,
+  "imageMimeType": "image/png",
+  "concurrency": 1,
+  "requestTimeoutMs": 120000,
+  "retry": {
+    "mode": "manual",
+    "maxAttempts": 2,
+    "minimumDelayMs": 30000,
+    "httpStatuses": [408, 429, 500, 502, 503, 504]
+  },
+  "orderSeed": 20261028,
+  "batchSize": 4,
+  "minimumRequestIntervalMs": 15000
+}

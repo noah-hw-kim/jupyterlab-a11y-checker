@@ -1,0 +1,1104 @@
+{
+  "schemaVersion": 1,
+  "annotationStatus": "reviewed",
+  "description": "Synthetic controlled benchmark; no model calls made by this builder.",
+  "cases": [
+    {
+      "id": "case-01",
+      "split": "development",
+      "category": "missing-empty",
+      "sourceType": "markdown-html",
+      "notebookPath": "development/case-01.ipynb",
+      "imagePath": "assets/case-01.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": false,
+      "expectedAltState": "missing",
+      "shouldImprove": true,
+      "requiredFacts": [
+        "A line chart.",
+        "Quarterly revenue.",
+        "Revenue increases across five quarters."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "The chart shows quarterly revenue in thousands of dollars across five consecutive quarters.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          12,
+          18,
+          24,
+          31,
+          40
+        ],
+        "sourceX": [
+          "Q1",
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5"
+        ]
+      },
+      "annotationStatus": "reviewed",
+      "provenance": {
+        "notebook": "test_files/dev_benchmark_cases.ipynb",
+        "cellIndex": 1,
+        "note": "Standalone neutral-context derivative; original manual notebook is unchanged."
+      }
+    },
+    {
+      "id": "case-02",
+      "split": "development",
+      "category": "missing-empty",
+      "sourceType": "markdown-inline",
+      "notebookPath": "development/case-02.ipynb",
+      "imagePath": "assets/case-02.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": false,
+      "expectedAltState": "empty",
+      "shouldImprove": true,
+      "requiredFacts": [
+        "A line chart.",
+        "Quarterly revenue.",
+        "Revenue increases across five quarters."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "The chart shows quarterly revenue in thousands of dollars across five consecutive quarters.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          12,
+          18,
+          24,
+          31,
+          40
+        ],
+        "sourceX": [
+          "Q1",
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5"
+        ]
+      },
+      "annotationStatus": "reviewed",
+      "existingAltText": "",
+      "provenance": {
+        "notebook": "test_files/dev_benchmark_cases.ipynb",
+        "cellIndex": 2,
+        "note": "Standalone neutral-context derivative; original manual notebook is unchanged."
+      }
+    },
+    {
+      "id": "case-03",
+      "split": "development",
+      "category": "weak",
+      "sourceType": "markdown-inline",
+      "notebookPath": "development/case-03.ipynb",
+      "imagePath": "assets/case-03.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": false,
+      "expectedAltState": "present",
+      "shouldImprove": true,
+      "requiredFacts": [
+        "A line chart.",
+        "Quarterly revenue.",
+        "Revenue increases across five quarters."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "The chart shows quarterly revenue in thousands of dollars across five consecutive quarters.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          12,
+          18,
+          24,
+          31,
+          40
+        ],
+        "sourceX": [
+          "Q1",
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5"
+        ]
+      },
+      "annotationStatus": "reviewed",
+      "existingAltText": "graph",
+      "provenance": {
+        "notebook": "test_files/dev_benchmark_cases.ipynb",
+        "cellIndex": 3,
+        "note": "Standalone neutral-context derivative; original manual notebook is unchanged."
+      }
+    },
+    {
+      "id": "case-04",
+      "split": "development",
+      "category": "weak",
+      "sourceType": "code-output",
+      "notebookPath": "development/case-04.ipynb",
+      "imagePath": "assets/case-04.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": false,
+      "expectedAltState": "present",
+      "shouldImprove": true,
+      "requiredFacts": [
+        "A histogram.",
+        "Customer ages in years.",
+        "Most observations lie between ages 22 and 34."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "The histogram summarizes customer ages in years from ten synthetic observations.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          22,
+          25,
+          29,
+          31,
+          34,
+          28,
+          45,
+          52,
+          27,
+          33
+        ],
+        "sourceX": []
+      },
+      "annotationStatus": "reviewed",
+      "outputIndex": 0,
+      "existingAltText": "histogram",
+      "provenance": {
+        "notebook": "test_files/dev_benchmark_cases.ipynb",
+        "cellIndex": 4,
+        "note": "Standalone neutral-context derivative; original manual notebook is unchanged."
+      }
+    },
+    {
+      "id": "case-05",
+      "split": "development",
+      "category": "acceptable",
+      "sourceType": "markdown-inline",
+      "notebookPath": "development/case-05.ipynb",
+      "imagePath": "assets/case-05.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": false,
+      "expectedAltState": "present",
+      "shouldImprove": false,
+      "requiredFacts": [
+        "A line chart.",
+        "Quarterly revenue.",
+        "Revenue increases across five quarters."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "The chart shows quarterly revenue in thousands of dollars across five consecutive quarters.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          12,
+          18,
+          24,
+          31,
+          40
+        ],
+        "sourceX": [
+          "Q1",
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5"
+        ]
+      },
+      "annotationStatus": "reviewed",
+      "existingAltText": "Line chart showing quarterly revenue increasing steadily across five quarters.",
+      "provenance": {
+        "notebook": "test_files/dev_benchmark_cases.ipynb",
+        "cellIndex": 5,
+        "note": "Standalone neutral-context derivative; original manual notebook is unchanged."
+      }
+    },
+    {
+      "id": "case-06",
+      "split": "development",
+      "category": "acceptable",
+      "sourceType": "code-output",
+      "notebookPath": "development/case-06.ipynb",
+      "imagePath": "assets/case-06.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": false,
+      "expectedAltState": "present",
+      "shouldImprove": false,
+      "requiredFacts": [
+        "A bar chart.",
+        "2026 department enrollment.",
+        "Computer Science has the highest enrollment."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "The chart compares 2026 department enrollment. CS means Computer Science; counts represent students.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          1200,
+          850,
+          600,
+          400
+        ],
+        "sourceX": [
+          "CS",
+          "Bio",
+          "Math",
+          "History"
+        ]
+      },
+      "annotationStatus": "reviewed",
+      "outputIndex": 0,
+      "existingAltText": "Bar chart comparing 2026 department enrollment with Computer Science highest at 1,200 students.",
+      "provenance": {
+        "notebook": "test_files/dev_benchmark_cases.ipynb",
+        "cellIndex": 6,
+        "note": "Standalone neutral-context derivative; original manual notebook is unchanged."
+      }
+    },
+    {
+      "id": "case-07",
+      "split": "held-out",
+      "category": "missing-empty",
+      "sourceType": "markdown-html",
+      "notebookPath": "held-out/case-07.ipynb",
+      "imagePath": "assets/case-07.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": true,
+      "expectedAltState": "missing",
+      "shouldImprove": true,
+      "requiredFacts": [
+        "A line chart.",
+        "Daily building energy consumption in kWh.",
+        "Energy use increases across all four days."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "The observations measure daily building energy consumption in kilowatt-hours (kWh), ordered from day 1 to day 4.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          12,
+          16,
+          20,
+          24
+        ],
+        "sourceX": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "annotationStatus": "reviewed"
+    },
+    {
+      "id": "case-08",
+      "split": "held-out",
+      "category": "missing-empty",
+      "sourceType": "markdown-inline",
+      "notebookPath": "held-out/case-08.ipynb",
+      "imagePath": "assets/case-08.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": false,
+      "expectedAltState": "empty",
+      "shouldImprove": true,
+      "requiredFacts": [
+        "A bar chart.",
+        "Water sample volumes in liters.",
+        "Container B has the greatest volume.",
+        "Container C has the smallest volume."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "The three containers A, B, and C hold water samples; volumes are measured in liters.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          18,
+          30,
+          12
+        ],
+        "sourceX": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      "annotationStatus": "reviewed",
+      "existingAltText": ""
+    },
+    {
+      "id": "case-09",
+      "split": "held-out",
+      "category": "missing-empty",
+      "sourceType": "code-output",
+      "notebookPath": "held-out/case-09.ipynb",
+      "imagePath": "assets/case-09.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": true,
+      "expectedAltState": "missing",
+      "shouldImprove": true,
+      "requiredFacts": [
+        "A line chart.",
+        "Query latency measured in milliseconds.",
+        "Latency decreases across the four observations."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "Each point measures the latency of one query execution in a synthetic trial, rather than cumulative processing time. The vertical axis shows query latency in milliseconds. The horizontal axis numbers four successive query executions; collection times and intervals are not specified.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          240,
+          200,
+          160,
+          120
+        ],
+        "sourceX": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "annotationStatus": "reviewed",
+      "outputIndex": 0
+    },
+    {
+      "id": "case-10",
+      "split": "held-out",
+      "category": "missing-empty",
+      "sourceType": "code-output",
+      "notebookPath": "held-out/case-10.ipynb",
+      "imagePath": "assets/case-10.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": true,
+      "expectedAltState": "empty",
+      "shouldImprove": true,
+      "requiredFacts": [
+        "A bar chart.",
+        "Counts of collected samples by site.",
+        "Site B has the highest count.",
+        "Site A has the lowest count."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "A, B, and C identify collection sites. Values are the number of samples collected at each site.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          8,
+          20,
+          12
+        ],
+        "sourceX": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      "annotationStatus": "reviewed",
+      "outputIndex": 0,
+      "existingAltText": ""
+    },
+    {
+      "id": "case-11",
+      "split": "held-out",
+      "category": "missing-empty",
+      "sourceType": "code-output",
+      "notebookPath": "held-out/case-11.ipynb",
+      "imagePath": "assets/case-11.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": false,
+      "expectedAltState": "missing",
+      "shouldImprove": true,
+      "requiredFacts": [
+        "A scatter plot.",
+        "Rainfall in millimeters versus runoff in liters.",
+        "Higher rainfall is associated with greater runoff in these observations."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "Each point represents a separate synthetic rainfall event. The horizontal axis shows total rainfall for that event in millimeters, and the vertical axis shows the corresponding total runoff volume in liters. These observations do not establish causation.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          2,
+          4,
+          5,
+          8
+        ],
+        "sourceX": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "annotationStatus": "reviewed",
+      "outputIndex": 0
+    },
+    {
+      "id": "case-12",
+      "split": "held-out",
+      "category": "missing-empty",
+      "sourceType": "code-output",
+      "notebookPath": "held-out/case-12.ipynb",
+      "imagePath": "assets/case-12.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": true,
+      "expectedAltState": "empty",
+      "shouldImprove": true,
+      "requiredFacts": [
+        "A line chart.",
+        "Remaining battery charge as a percentage.",
+        "Charge decreases steadily across the observations."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "All four points measure the same battery during one synthetic discharge session. The vertical axis shows remaining battery charge as a percentage. The horizontal axis numbers measurements in chronological order; elapsed times and intervals between measurements are not specified.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          90,
+          70,
+          50,
+          30
+        ],
+        "sourceX": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "annotationStatus": "reviewed",
+      "outputIndex": 0,
+      "existingAltText": ""
+    },
+    {
+      "id": "case-13",
+      "split": "held-out",
+      "category": "weak",
+      "sourceType": "markdown-inline",
+      "notebookPath": "held-out/case-13.ipynb",
+      "imagePath": "assets/case-13.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": true,
+      "expectedAltState": "present",
+      "shouldImprove": true,
+      "requiredFacts": [
+        "A bar chart.",
+        "Ticket counts across helpdesk queues.",
+        "Queue A has the highest count.",
+        "Queue C has the lowest count."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "A, B, and C identify helpdesk queues. Each value is a count of tickets received during one synthetic observation period.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          24,
+          12,
+          6
+        ],
+        "sourceX": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      "annotationStatus": "reviewed",
+      "existingAltText": "chart"
+    },
+    {
+      "id": "case-14",
+      "split": "held-out",
+      "category": "weak",
+      "sourceType": "markdown-inline",
+      "notebookPath": "held-out/case-14.ipynb",
+      "imagePath": "assets/case-14.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": false,
+      "expectedAltState": "present",
+      "shouldImprove": true,
+      "requiredFacts": [
+        "A line chart.",
+        "Daily irrigation demand in liters.",
+        "Demand increases across all four days."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "Daily irrigation water demand is measured in liters over four consecutive days.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          5,
+          10,
+          15,
+          20
+        ],
+        "sourceX": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "annotationStatus": "reviewed",
+      "existingAltText": "plot"
+    },
+    {
+      "id": "case-15",
+      "split": "held-out",
+      "category": "weak",
+      "sourceType": "markdown-inline",
+      "notebookPath": "held-out/case-15.ipynb",
+      "imagePath": "assets/case-15.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": true,
+      "expectedAltState": "present",
+      "shouldImprove": true,
+      "requiredFacts": [
+        "A scatter plot.",
+        "Elapsed walking time in minutes versus cumulative distance in kilometers during one walk.",
+        "Cumulative distance increases as the walk progresses."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "Each point records progress during one synthetic walk. The horizontal axis shows elapsed time since the walk began, in minutes. The vertical axis shows cumulative distance traveled since the walk began, in kilometers.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "sourceX": [
+          10,
+          20,
+          30,
+          40
+        ]
+      },
+      "annotationStatus": "reviewed",
+      "existingAltText": "data"
+    },
+    {
+      "id": "case-16",
+      "split": "held-out",
+      "category": "weak",
+      "sourceType": "code-output",
+      "notebookPath": "held-out/case-16.ipynb",
+      "imagePath": "assets/case-16.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": true,
+      "expectedAltState": "present",
+      "shouldImprove": true,
+      "requiredFacts": [
+        "A line chart.",
+        "Processing queue waiting time in seconds.",
+        "Waiting time decreases steadily across the observations."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "Each point measures how long one job waited in a processing queue before processing began, rather than accumulated waiting time across jobs. The vertical axis shows that job's waiting time in seconds. The horizontal axis numbers four jobs in order of observation; collection timestamps and intervals are not specified.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          30,
+          24,
+          18,
+          12
+        ],
+        "sourceX": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "annotationStatus": "reviewed",
+      "outputIndex": 0,
+      "existingAltText": "line chart"
+    },
+    {
+      "id": "case-17",
+      "split": "held-out",
+      "category": "weak",
+      "sourceType": "code-output",
+      "notebookPath": "held-out/case-17.ipynb",
+      "imagePath": "assets/case-17.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": false,
+      "expectedAltState": "present",
+      "shouldImprove": true,
+      "requiredFacts": [
+        "A bar chart.",
+        "Parcel counts across depots.",
+        "Depot B has the highest count.",
+        "Depot C has the lowest count."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "A, B, and C identify depots. Values are parcel counts for one synthetic collection period.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          14,
+          28,
+          7
+        ],
+        "sourceX": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      "annotationStatus": "reviewed",
+      "outputIndex": 0,
+      "existingAltText": "bars"
+    },
+    {
+      "id": "case-18",
+      "split": "held-out",
+      "category": "weak",
+      "sourceType": "code-output",
+      "notebookPath": "held-out/case-18.ipynb",
+      "imagePath": "assets/case-18.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": true,
+      "expectedAltState": "present",
+      "shouldImprove": true,
+      "requiredFacts": [
+        "A scatter plot.",
+        "Input size in megabytes versus execution time in seconds.",
+        "Larger inputs are associated with longer execution times."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "Each point represents a separate execution of a synthetic workload. The horizontal axis shows the input size for that execution in megabytes, and the vertical axis shows its execution duration in seconds. Durations are not accumulated across executions.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          1,
+          3,
+          5,
+          7
+        ],
+        "sourceX": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "annotationStatus": "reviewed",
+      "outputIndex": 0,
+      "existingAltText": "scatter plot"
+    },
+    {
+      "id": "case-19",
+      "split": "held-out",
+      "category": "acceptable",
+      "sourceType": "markdown-inline",
+      "notebookPath": "held-out/case-19.ipynb",
+      "imagePath": "assets/case-19.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": true,
+      "expectedAltState": "present",
+      "shouldImprove": false,
+      "requiredFacts": [
+        "A line chart.",
+        "Reservoir water level in centimeters.",
+        "The level increases steadily across the four observations."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "The vertical axis shows reservoir water level in centimeters above a fixed local reference. The horizontal axis numbers four observations in chronological order; observation times and intervals are not specified.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          20,
+          30,
+          40,
+          50
+        ],
+        "sourceX": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "annotationStatus": "reviewed",
+      "existingAltText": "Line chart showing reservoir water level increasing steadily from 20 to 50 centimeters across four observations."
+    },
+    {
+      "id": "case-20",
+      "split": "held-out",
+      "category": "acceptable",
+      "sourceType": "markdown-inline",
+      "notebookPath": "held-out/case-20.ipynb",
+      "imagePath": "assets/case-20.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": false,
+      "expectedAltState": "present",
+      "shouldImprove": false,
+      "requiredFacts": [
+        "A bar chart.",
+        "Processed laboratory sample counts by station.",
+        "Station B has the highest count.",
+        "Station A has the lowest count."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "A, B, and C identify laboratory stations. Values are counts of processed samples.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          6,
+          18,
+          12
+        ],
+        "sourceX": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      "annotationStatus": "reviewed",
+      "existingAltText": "Bar chart of processed laboratory sample counts for stations A, B, and C, with B highest and A lowest."
+    },
+    {
+      "id": "case-21",
+      "split": "held-out",
+      "category": "acceptable",
+      "sourceType": "markdown-inline",
+      "notebookPath": "held-out/case-21.ipynb",
+      "imagePath": "assets/case-21.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": true,
+      "expectedAltState": "present",
+      "shouldImprove": false,
+      "requiredFacts": [
+        "A scatter plot.",
+        "Elapsed reading time in minutes versus cumulative completed page count in one session.",
+        "Cumulative completed pages increase as the session progresses."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "Each point records progress during one synthetic reading session. The horizontal axis shows elapsed time since the session began, in minutes. The vertical axis shows the cumulative number of pages completed by that time.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          2,
+          4,
+          6,
+          8
+        ],
+        "sourceX": [
+          5,
+          10,
+          15,
+          20
+        ]
+      },
+      "annotationStatus": "reviewed",
+      "existingAltText": "Scatter plot showing more pages completed at longer reading durations, from two pages at five minutes to eight pages at twenty minutes."
+    },
+    {
+      "id": "case-22",
+      "split": "held-out",
+      "category": "acceptable",
+      "sourceType": "code-output",
+      "notebookPath": "held-out/case-22.ipynb",
+      "imagePath": "assets/case-22.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": true,
+      "expectedAltState": "present",
+      "shouldImprove": false,
+      "requiredFacts": [
+        "A line chart.",
+        "Test throughput in jobs per minute.",
+        "Throughput increases steadily across four observations."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "The vertical axis shows synthetic test throughput in jobs per minute. The horizontal axis numbers four successive observations; collection times and intervals are not specified.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          10,
+          20,
+          30,
+          40
+        ],
+        "sourceX": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "annotationStatus": "reviewed",
+      "outputIndex": 0,
+      "existingAltText": "Line chart showing test throughput increasing steadily from 10 to 40 jobs per minute across four observations."
+    },
+    {
+      "id": "case-23",
+      "split": "held-out",
+      "category": "acceptable",
+      "sourceType": "code-output",
+      "notebookPath": "held-out/case-23.ipynb",
+      "imagePath": "assets/case-23.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": false,
+      "expectedAltState": "present",
+      "shouldImprove": false,
+      "requiredFacts": [
+        "A bar chart.",
+        "Stored item counts across bins.",
+        "Bin A has the highest count.",
+        "Bin B has the lowest count."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "A, B, and C identify storage bins. Values are counts of stored items.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          15,
+          5,
+          10
+        ],
+        "sourceX": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      "annotationStatus": "reviewed",
+      "outputIndex": 0,
+      "existingAltText": "Bar chart comparing stored item counts across bins A, B, and C, with A highest at 15 and B lowest at 5."
+    },
+    {
+      "id": "case-24",
+      "split": "held-out",
+      "category": "acceptable",
+      "sourceType": "code-output",
+      "notebookPath": "held-out/case-24.ipynb",
+      "imagePath": "assets/case-24.png",
+      "cellIndex": 4,
+      "contextCellIndices": [
+        0,
+        1
+      ],
+      "contextSensitive": true,
+      "expectedAltState": "present",
+      "shouldImprove": false,
+      "requiredFacts": [
+        "A scatter plot.",
+        "Payload size in megabytes versus transfer duration in seconds.",
+        "Larger payloads are associated with longer transfer durations."
+      ],
+      "prohibitedClaims": [
+        "Invented causes, forecasts, or conclusions beyond the displayed observations.",
+        "Unshown measurements or numeric values inconsistent with the plotted data.",
+        "Treating the separate inventory study as the subject of this image."
+      ],
+      "evidence": {
+        "context": "Each point represents a separate synthetic transfer over a fixed link. The horizontal axis shows the payload size for that transfer in megabytes, and the vertical axis shows its transfer duration in seconds. Durations are not accumulated across transfers.",
+        "image": "Chart geometry and labeled axes; source values are recorded below when available.",
+        "sourceValues": [
+          2,
+          4,
+          6,
+          8
+        ],
+        "sourceX": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "annotationStatus": "reviewed",
+      "outputIndex": 0,
+      "existingAltText": "Scatter plot showing transfer duration increasing with payload size, from two seconds for one megabyte to eight seconds for four megabytes."
+    }
+  ]
+}

@@ -1,0 +1,276 @@
+--- /dev/null	2026-11-01 14:51:46.013234728 -0800
++++ evaluation/task-evidence/P7-SCORING-003/export-scoring.mjs	2026-11-01 16:31:07.452373170 -0800
+@@ -0,0 +1,189 @@
++import { createHash } from "node:crypto";
++import { promises as fs } from "node:fs";
++import { dirname, join, relative, resolve, sep } from "node:path";
++import { fileURLToPath } from "node:url";
++import { parseEvaluationConfig, planEvaluationResume } from "../../../packages/core/dist/index.js";
++
++export class ScoringExporterError extends Error {}
++const fail = (message) => { throw new ScoringExporterError(message); };
++const key = (job) => JSON.stringify([job.caseId, job.strategy, job.stage]);
++const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
++const inside = (parent, child) => {
++  const p = resolve(parent);
++  const c = resolve(child);
++  return c === p || c.startsWith(p + sep);
++};
++
++async function json(path) {
++  try { return JSON.parse(await fs.readFile(path, "utf8")); }
++  catch (cause) { throw new ScoringExporterError(`Invalid JSON: ${path}`, { cause }); }
++}
++
++function seedValue(value) {
++  if (typeof value !== "string" && typeof value !== "number") fail("Seed must be an unsigned 32-bit integer.");
++  if (typeof value === "string" && !/^(0|[1-9]\d*)$/.test(value)) fail("Seed must be an unsigned 32-bit integer.");
++  const result = Number(value);
++  if (!Number.isSafeInteger(result) || result < 0 || result > 0xffffffff) fail("Seed must be an unsigned 32-bit integer.");
++  return result;
++}
++
++function shuffle(items, seed) {
++  let state = seed >>> 0;
++  const result = [...items];
++  for (let i = result.length - 1; i > 0; i--) {
++    state = Math.imul(state + 0x6d2b79f5, 1);
++    let mixed = Math.imul(state ^ (state >>> 15), 1 | state);
++    mixed ^= mixed + Math.imul(mixed ^ (mixed >>> 7), 61 | mixed);
++    const j = Math.floor((((mixed ^ (mixed >>> 14)) >>> 0) / 2 ** 32) * (i + 1));
++    [result[i], result[j]] = [result[j], result[i]];
++  }
++  return result;
++}
++
++function fenced(text) {
++  const runs = String(text ?? "").match(/`+/g) ?? [];
++  const fence = "`".repeat(Math.max(3, ...runs.map((run) => run.length + 1)));
++  return `${fence}text\n${String(text ?? "")}\n${fence}`;
++}
++
++function tableCell(text) {
++  return String(text ?? "").replaceAll("|", "\\|").replaceAll("\n", "<br>");
++}
++
++export function packetMarkdown(items) {
++  let output = "# Blinded Human Scoring Packet\n\n";
++  output += "Strategy-masked single-rater scoring; familiarity and repeated images limit masking.\n\n";
++  for (const item of items) {
++    output += `---\n\n## Review Item: ${item.scoringId}\n\n![Chart](${item.assetPath})\n\n`;
++    output += `**Approved context**\n\n${fenced(item.context)}\n\n**Description to score**\n\n`;
++    output += item.description === "" ? "*(Empty description)*\n\n" : `${fenced(item.description)}\n\n`;
++    output += "| Fact | Conveyed? Yes / No / Unsure | Exact supporting words or explanation |\n| --- | --- | --- |\n";
++    for (const fact of item.requiredFacts) output += `| ${tableCell(fact)} | | |\n`;
++    output += "\n### Unsupported factual assertions\n\n| Quoted assertion | Evidence showing it is unsupported/incorrect |\n| --- | --- |\n| | |\n";
++    output += "\n### Other defects for validation analysis\n\n| Defect | Present? Yes / No / Unsure | Evidence |\n| --- | --- | --- |\n";
++    for (const defect of ["Visual claim conflicts with the image", "Description contradicts approved notebook context", "Important image content is missing", "Wording is unnecessarily repetitive or irrelevant"]) output += `| ${defect} | | |\n`;
++    output += "\n### Finalization\n\n- Uncertainties and resolution: \n- Reviewer identifier: \n- Finalized date: \n- All Unsure entries resolved before unblinding: \n\n";
++  }
++  return output;
++}
++
++async function existingAncestor(path) {
++  let current = resolve(path);
++  while (true) {
++    try { await fs.stat(current); return current; }
++    catch (error) {
++      if (error.code !== "ENOENT") throw error;
++      const parent = dirname(current);
++      if (parent === current) fail("No existing output ancestor.");
++      current = parent;
++    }
++  }
++}
++
++async function protectPaths(source, frozen, output) {
++  if (inside(source, output) || inside(output, source) || inside(frozen, output) || inside(output, frozen)) fail("Protected paths overlap.");
++  const ancestor = await existingAncestor(dirname(output));
++  const realAncestor = await fs.realpath(ancestor);
++  if (inside(source, realAncestor) || inside(frozen, realAncestor)) fail("Output is beneath a protected symlinked parent.");
++}
++
++async function frozenInventory(frozen, freeze) {
++  const files = {};
++  for (const [relativePath, expected] of Object.entries(freeze.files ?? {})) {
++    const path = resolve(frozen, relativePath);
++    if (!inside(frozen, path) || hash(await fs.readFile(path)) !== expected) fail(`Frozen file hash mismatch: ${relativePath}`);
++    files[relativePath] = expected;
++  }
++  return files;
++}
++
++function validateEvents(snapshot, records) {
++  const config = parseEvaluationConfig(snapshot.config);
++  const context = { experimentId: snapshot.experimentId, fingerprint: snapshot.fingerprint, config, jobs: snapshot.generationJobs };
++  let plan;
++  try { plan = planEvaluationResume(context, config, records, Date.now() + 10 ** 12); }
++  catch (cause) { throw new ScoringExporterError("Source event validation failed.", { cause }); }
++  const byJob = new Map();
++  for (const record of records) {
++    const list = byJob.get(key(record.job)) ?? [];
++    list.push(record);
++    byJob.set(key(record.job), list);
++  }
++  for (const entry of plan.jobs) {
++    if (entry.status === "pending" || entry.status === "retryable-error" || entry.status === "response-recorded" || entry.status === "interrupted-unknown") fail(`Source is incomplete: ${key(entry.job)}`);
++    if (!["succeeded", "model-output-error", "exhausted-error", "blocked-error"].includes(entry.status)) fail(`Unsupported source state: ${entry.status}`);
++  }
++  return { plan, byJob };
++}
++
++export async function exportScoring({ sourceDir, frozenDir, outputDir, seed }) {
++  if (!sourceDir || !frozenDir || !outputDir) fail("sourceDir, frozenDir, and outputDir are required.");
++  const source = resolve(sourceDir);
++  const frozen = resolve(frozenDir);
++  const output = resolve(outputDir);
++  await protectPaths(source, frozen, output);
++  try {
++    if ((await fs.readdir(output)).length) fail("Output directory exists and is nonempty.");
++  } catch (error) { if (error.code !== "ENOENT") throw error; }
++  const snapshotPath = join(source, "experiment.json");
++  const attemptsPath = join(source, "attempts.jsonl");
++  const manifestPath = join(frozen, "references/manifest.json");
++  const freezePath = join(frozen, "references/freeze.json");
++  const [snapshotBytes, attemptsBytes, snapshot, manifest, freeze] = await Promise.all([
++    fs.readFile(snapshotPath), fs.readFile(attemptsPath), json(snapshotPath), json(manifestPath), json(freezePath),
++  ]);
++  if (snapshot.benchmarkFreezeSha256 !== hash(await fs.readFile(freezePath))) fail("Benchmark freeze does not match source.");
++  const frozenHashes = await frozenInventory(frozen, freeze);
++  for (const stage of ["generation", "validation"]) {
++    const prompt = snapshot.prompts?.[stage];
++    if (!prompt?.path || !prompt.sha256 || hash(await fs.readFile(join(source, prompt.path))) !== prompt.sha256) fail(`Missing or changed ${stage} prompt.`);
++  }
++  const records = String(attemptsBytes).split("\n").map((line, index, lines) => {
++    if (!line && index === lines.length - 1) return null;
++    if (!line) fail(`Blank source event at line ${index + 1}.`);
++    try { return JSON.parse(line); } catch (cause) { throw new ScoringExporterError(`Invalid source JSONL at line ${index + 1}.`, { cause }); }
++  }).filter(Boolean);
++  const { plan, byJob } = validateEvents(snapshot, records);
++  const cases = new Map(manifest.cases.filter((entry) => entry.split === snapshot.config.split).map((entry) => [entry.id, entry]));
++  if (snapshot.generationJobs.length !== cases.size * snapshot.config.strategies.length) fail("Source schedule is incomplete.");
++  const numericSeed = seedValue(seed ?? snapshot.config.orderSeed);
++  const items = snapshot.generationJobs.map((job) => {
++    const entry = cases.get(job.caseId);
++    if (!entry || !snapshot.config.strategies.includes(job.strategy)) fail("Source job is outside the frozen schedule.");
++    const status = plan.jobs.find((candidate) => key(candidate.job) === key(job)).status;
++    const finish = (byJob.get(key(job)) ?? []).filter((record) => record.event === "attempt-finished").at(-1);
++    const start = (byJob.get(key(job)) ?? []).filter((record) => record.event === "attempt-started").at(-1);
++    if (!finish || !start) fail("Source job lacks a terminal event.");
++    const sourceAlt = start.input.existingAltText || null;
++    if ((entry.existingAltText || null) !== sourceAlt) fail(`Existing alt mismatch for ${entry.id}.`);
++    const parsed = finish.parsed?.value;
++    let description = "";
++    let effectiveSource = "missed-improvement-empty";
++    let availability = "available";
++    if (status === "succeeded" && parsed.concern === true) { description = parsed.suggestion ?? ""; effectiveSource = "proposed-replacement"; }
++    else if (status === "succeeded" && entry.expectedAltState === "present") { description = sourceAlt ?? ""; effectiveSource = "retained-existing-alt"; }
++    else if (status !== "succeeded") { availability = "unavailable"; effectiveSource = "unavailable"; }
++    return { caseId: entry.id, strategy: job.strategy, attemptId: finish.attemptId, modelConcern: parsed?.concern ?? null, description, effectiveSource, availability, shouldImprove: entry.shouldImprove, context: entry.evidence.context, requiredFacts: entry.requiredFacts, imagePath: entry.imagePath };
++  });
++  const staged = `${output}.tmp-${process.pid}-${Date.now()}`;
++  try {
++    await fs.mkdir(join(staged, "reviewer/assets"), { recursive: true, mode: 0o700 });
++    const mapping = [];
++    const packet = [];
++    for (const [index, item] of shuffle(items, numericSeed).entries()) {
++      const scoringId = `ITEM-${String(index + 1).padStart(2, "0")}`;
++      await fs.copyFile(join(frozen, item.imagePath), join(staged, "reviewer/assets", `${scoringId}.png`));
++      mapping.push({ scoringId, caseId: item.caseId, strategy: item.strategy, sourceAttemptId: item.attemptId, modelConcern: item.modelConcern, effectiveDescription: item.description, effectiveSource: item.effectiveSource, availability: item.availability, shouldImprove: item.shouldImprove });
++      if (item.availability === "available") packet.push({ scoringId, assetPath: `assets/${scoringId}.png`, context: item.context, description: item.description, requiredFacts: item.requiredFacts });
++    }
++    await fs.writeFile(join(staged, "reviewer/scoring-packet.md"), packetMarkdown(packet));
++    await fs.writeFile(join(staged, "private-mapping.json"), JSON.stringify({ schemaVersion: 1, sourceExperimentId: snapshot.experimentId, sourceFingerprint: snapshot.fingerprint, sourceSnapshotSha256: hash(snapshotBytes), sourceAttemptsSha256: hash(attemptsBytes), frozenHashes, seed: numericSeed, items: mapping }, null, 2) + "\n", { mode: 0o600 });
++    if (hash(await fs.readFile(snapshotPath)) !== hash(snapshotBytes) || hash(await fs.readFile(attemptsPath)) !== hash(attemptsBytes)) fail("Source changed during export.");
++    await fs.writeFile(join(staged, "COMPLETE"), "complete\n", { mode: 0o600 });
++    await fs.rename(staged, output);
++    return { output, itemCount: packet.length, unavailableCount: mapping.length - packet.length };
++  } catch (error) {
++    await fs.rm(staged, { recursive: true, force: true });
++    throw error;
++  }
++}
+--- /dev/null	2026-11-01 14:51:46.013234728 -0800
++++ evaluation/task-evidence/P7-SCORING-003/export-scoring.test.mjs	2026-11-01 16:31:32.688365847 -0800
+@@ -0,0 +1,81 @@
++import test from "node:test";
++import assert from "node:assert/strict";
++import { cp, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
++import { join } from "node:path";
++import { tmpdir } from "node:os";
++import { exportScoring, packetMarkdown, ScoringExporterError } from "./export-scoring.mjs";
++
++const fixtureRoot = new URL("./fixtures/", import.meta.url);
++async function fixture(t) {
++  const root = await mkdtemp(join(tmpdir(), "scoring-"));
++  t.after(() => rm(root, { recursive: true, force: true }));
++  const source = join(root, "source");
++  const frozen = join(root, "frozen");
++  await cp(new URL("source/", fixtureRoot), source, { recursive: true });
++  await cp(new URL("frozen/", fixtureRoot), frozen, { recursive: true });
++  const attemptsPath = join(source, "attempts.jsonl");
++  const records = (await readFile(attemptsPath, "utf8")).trim().split("\n").map(JSON.parse);
++  const target = records.find((record) =>
++    record.event === "attempt-finished" &&
++    record.job.caseId === "case-02" &&
++    record.job.strategy === "minimal" &&
++    record.outcome === "succeeded"
++  );
++  const response = records.find((record) =>
++    record.event === "response-received" && record.attemptId === target.attemptId
++  );
++  const noImprovement = JSON.stringify({ concern: false, suggestion: null });
++  response.response.rawContent = noImprovement;
++  target.parsed.value = { concern: false, suggestion: null };
++  const unavailable = records.find((record) =>
++    record.event === "attempt-finished" &&
++    record.job.caseId === "case-06" &&
++    record.job.strategy === "largest-practical" &&
++    record.outcome === "succeeded"
++  );
++  unavailable.outcome = "model-output-error";
++  unavailable.parsed = null;
++  unavailable.error = {
++    kind: "parse", httpStatus: 200, message: "fixture unavailable", retryable: false,
++  };
++  await writeFile(attemptsPath, records.map((record) => JSON.stringify(record)).join("\n") + "\n");
++  return { root, source, frozen };
++}
++
++test("exports complete fixture with retry, exact text, empty route, and unavailable exclusion", async (t) => {
++  const paths = await fixture(t);
++  const output = join(paths.root, "out");
++  const result = await exportScoring({ sourceDir: paths.source, frozenDir: paths.frozen, outputDir: output, seed: "42" });
++  assert.equal(result.itemCount + result.unavailableCount, 24);
++  const mapping = JSON.parse(await readFile(join(output, "private-mapping.json"), "utf8"));
++  assert.equal(mapping.items.find((item) => item.caseId === "case-05" && item.strategy === "minimal").effectiveDescription, "Line chart showing quarterly revenue increasing steadily across five quarters.");
++  assert.equal(mapping.items.find((item) => item.caseId === "case-02" && item.strategy === "minimal").effectiveDescription, "");
++  assert.equal(result.unavailableCount, 1);
++  assert.equal((await stat(join(output, "COMPLETE"))).isFile(), true);
++});
++
++test("rejects incomplete/corrupt source and preserves source bytes", async (t) => {
++  const paths = await fixture(t);
++  const before = await readFile(join(paths.source, "attempts.jsonl"));
++  await assert.rejects(() => exportScoring({ sourceDir: paths.source, frozenDir: paths.frozen, outputDir: join(paths.root, "bad"), seed: "1.2" }), ScoringExporterError);
++  await writeFile(join(paths.source, "attempts.jsonl"), Buffer.concat([before, Buffer.from("{")]));
++  await assert.rejects(() => exportScoring({ sourceDir: paths.source, frozenDir: paths.frozen, outputDir: join(paths.root, "bad2") }), /Invalid source JSONL/);
++  assert.deepEqual(await readFile(join(paths.source, "experiment.json")), await readFile(new URL("source/experiment.json", fixtureRoot)));
++});
++
++test("renders supplied text as literal fenced content and escaped cells", () => {
++  const markdown = packetMarkdown([{ scoringId: "ITEM-01", assetPath: "assets/ITEM-01.png", context: "# heading\n<b>HTML</b>\n| pipe |", description: "text\n# not a heading\n`code`", requiredFacts: ["fact | pipe"] }]);
++  assert.match(markdown, /```text\n# heading\n<b>HTML<\/b>\n\| pipe \|\n```/);
++  assert.match(markdown, /```text\ntext\n# not a heading\n`code`\n```/);
++  assert.match(markdown, /\| fact \\| pipe \| \| \|/);
++});
++
++test("uses deterministic opaque assets, stable IDs, and protects existing output", async (t) => {
++  const paths = await fixture(t);
++  const first = await exportScoring({ sourceDir: paths.source, frozenDir: paths.frozen, outputDir: join(paths.root, "one"), seed: 7 });
++  const second = await exportScoring({ sourceDir: paths.source, frozenDir: paths.frozen, outputDir: join(paths.root, "two"), seed: 7 });
++  assert.equal(await readFile(join(first.output, "reviewer/scoring-packet.md"), "utf8"), await readFile(join(second.output, "reviewer/scoring-packet.md"), "utf8"));
++  assert.equal((await stat(join(first.output, "reviewer/assets/ITEM-01.png"))).isFile(), true);
++  await assert.rejects(() => exportScoring({ sourceDir: paths.source, frozenDir: paths.frozen, outputDir: first.output, seed: 7 }), /nonempty/);
++  for (const bad of ["-1", "1.2", "NaN", "4294967296"]) await assert.rejects(() => exportScoring({ sourceDir: paths.source, frozenDir: paths.frozen, outputDir: join(paths.root, `bad-${bad}`), seed: bad }), /unsigned 32-bit/);
++});

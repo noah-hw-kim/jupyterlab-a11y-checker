@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "experimentId": "dev-gemini35-v2-validation",
+  "createdAt": "2026-11-03T19:14:24.815Z",
+  "config": {
+    "schemaVersion": 1,
+    "model": "gemini-3.5-flash-lite",
+    "endpointEnv": "A11YLENS_MODEL_ENDPOINT",
+    "apiKeyEnv": "A11YLENS_API_KEY",
+    "split": "development",
+    "strategies": [
+      "minimal",
+      "fixed-window",
+      "structure-aware",
+      "largest-practical"
+    ],
+    "contextCharacterBudget": 2000,
+    "reasoningEffort": "provider-default",
+    "temperature": "provider-default",
+    "maxOutputTokens": 2048,
+    "maxSuggestionWords": 40,
+    "imageMimeType": "image/png",
+    "concurrency": 1,
+    "requestTimeoutMs": 120000,
+    "retry": {
+      "mode": "manual",
+      "maxAttempts": 2,
+      "minimumDelayMs": 30000,
+      "httpStatuses": [
+        408,
+        429,
+        500,
+        502,
+        503,
+        504
+      ]
+    },
+    "orderSeed": 20261028,
+    "batchSize": 4,
+    "minimumRequestIntervalMs": 15000
+  },
+  "resolvedEndpoint": "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+  "codeCommit": "865acec24d3d9f1d2d14b65d917a7907b6ebdeef",
+  "codeSnapshotSha256": "255f108c77d97891c9024d1ab44e4c1da6d50d3709963b1679d364b93ae15e2a",
+  "benchmarkFreezeSha256": "3ae902906f328f6378c5585db75acdfd6fe80535b4d49e877b767c6aa70d7ef8",
+  "prompts": {
+    "generation": {
+      "path": "prompts/generation.json",
+      "sha256": "98437795b1f58c31323ff36277efc304d9dacb48b34dd0f59b1e391a5acc349c"
+    },
+    "validation": {
+      "path": "prompts/validation.json",
+      "sha256": "073b5e463da200dc4f94d882ae052cf048ff7bdb41856c925eed3d6bdcf6b51c"
+    }
+  },
+  "generationJobs": [
+    {
+      "caseId": "case-01",
+      "strategy": "structure-aware",
+      "stage": "validation"
+    },
+    {
+      "caseId": "case-02",
+      "strategy": "structure-aware",
+      "stage": "validation"
+    },
+    {
+      "caseId": "case-03",
+      "strategy": "structure-aware",
+      "stage": "validation"
+    },
+    {
+      "caseId": "case-04",
+      "strategy": "structure-aware",
+      "stage": "validation"
+    }
+  ],
+  "sourceGeneration": {
+    "experimentId": "dev-gemini35-v2",
+    "fingerprint": "0e92239297cd94bd590ee07f320dcfe673f08e08f2065d35c63fd65a5f391578",
+    "snapshotSha256": "991c5ce3037c676ee31870a9d7981f6c0144159fbb9c1498774ddf534a6d0d75",
+    "attemptsSha256": "1a32ff06810f1e4349faceced3c05ca4881d1945b5d5592a968984c01ab137b7"
+  },
+  "exclusions": [
+    {
+      "caseId": "case-05",
+      "strategy": "structure-aware",
+      "stage": "validation",
+      "reason": "no-improvement",
+      "sourceGenerationAttemptId": "a84fc72e-e8d5-4dfc-b7ed-408953ccbfeb"
+    },
+    {
+      "caseId": "case-06",
+      "strategy": "structure-aware",
+      "stage": "validation",
+      "reason": "no-improvement",
+      "sourceGenerationAttemptId": "075eb7c3-cc21-4743-9ddb-8e46be4a04bf"
+    }
+  ],
+  "fingerprint": "b6d614676fc3f172f59fb565b2d89612c148c7c58cd557e3367b0a617c85e3d8"
+}

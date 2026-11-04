@@ -1,0 +1,1105 @@
+--- a/evaluation/runner.mjs
++++ b/evaluation/runner.mjs
+@@ -23,6 +23,7 @@
+   buildSemanticModelRequestBody,
+   buildQualityModelRequestBody,
+   parseSemanticResponseText,
++  parseQualityResponseText,
+   checkSuggestionLength,
+   selectMinimalContext,
+   selectFixedWindowContext,
+@@ -63,6 +64,73 @@
+       "Evaluation configuration or saved records are invalid; execution stopped.",
+     );
+   }
++}
++function liveSettings(env, config) {
++  const endpoint = safeEndpoint(env[config.endpointEnv]);
++  const apiKey = env[config.apiKeyEnv];
++  if (typeof apiKey !== "string" || !apiKey.trim() || /[\r\n]/.test(apiKey))
++    fail("Required API-key environment variable is missing or invalid.");
++  return { endpoint, apiKey };
++}
++function safeEndpoint(value) {
++  try {
++    const url = new URL(value);
++    if (
++      !["http:", "https:"].includes(url.protocol) ||
++      url.username ||
++      url.password ||
++      url.search ||
++      url.hash
++    )
++      throw new Error();
++    return url.href;
++  } catch {
++    return fail(
++      "Set the endpoint environment variable to a credential-free HTTP(S) URL.",
++    );
++  }
++}
++function validExperimentId(value) {
++  if (typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(value))
++    fail(
++      "Provide an explicit experiment ID using letters, numbers, dots, underscores, or hyphens.",
++    );
++  return value;
++}
++// Resolve existing symlink parents even when the destination has not been created.
++function canonicalDestination(path) {
++  if (existsSync(path)) return realpathSync(path);
++  const parent = dirname(path);
++  if (parent === path) fail("Cannot resolve evaluation output path.");
++  return join(canonicalDestination(parent), relative(parent, path));
++}
++function assertOutputDirectory(outDir, protectedDirs) {
++  const output = canonicalDestination(outDir);
++  for (const path of protectedDirs) {
++    const protectedPath = canonicalDestination(path);
++    if (
++      output === protectedPath ||
++      output.startsWith(protectedPath + sep) ||
++      protectedPath.startsWith(output + sep)
++    )
++      fail(
++        "Output directory must not overlap frozen inputs or source generation artifacts.",
++      );
++  }
++}
++function qualityDecision(finish) {
++  const value = finish.parsed?.value;
++  return finish.outcome === "succeeded" &&
++    value &&
++    [
++      "grounded",
++      "contextConsistent",
++      "informative",
++      "concise",
++      "noUnsupportedClaims",
++    ].every((field) => value[field] === true)
++    ? "pass"
++    : "manual-review";
+ }
+ function inside(root, path) {
+   const rel = relative(realpathSync(root), realpathSync(path));
+@@ -377,7 +445,11 @@
+       saved.codeCommit !== proposed.codeCommit ||
+       saved.codeSnapshotSha256 !== proposed.codeSnapshotSha256 ||
+       saved.benchmarkFreezeSha256 !== proposed.benchmarkFreezeSha256 ||
+-      JSON.stringify(saved.prompts) !== JSON.stringify(proposed.prompts)
++      JSON.stringify(saved.prompts) !== JSON.stringify(proposed.prompts) ||
++      JSON.stringify(saved.sourceGeneration ?? null) !==
++        JSON.stringify(proposed.sourceGeneration ?? null) ||
++      JSON.stringify(saved.exclusions ?? null) !==
++        JSON.stringify(proposed.exclusions ?? null)
+     )
+       fail(
+         "Existing experiment identity differs. Existing artifacts were not overwritten.",
+@@ -494,12 +566,22 @@
+     }
+     try {
+       if (typeof received.response.rawContent !== "string") throw new Error();
+-      const result = parseSemanticResponseText(received.response.rawContent);
+-      finish.parsed = { kind: "generation", value: result };
+-      finish.wordLimit =
+-        result.suggestion === null
+-          ? null
+-          : checkSuggestionLength(result.suggestion, config.maxSuggestionWords);
++      if (start.job.stage === "validation") {
++        finish.parsed = {
++          kind: "validation",
++          value: parseQualityResponseText(received.response.rawContent),
++        };
++      } else {
++        const result = parseSemanticResponseText(received.response.rawContent);
++        finish.parsed = { kind: "generation", value: result };
++        finish.wordLimit =
++          result.suggestion === null
++            ? null
++            : checkSuggestionLength(
++                result.suggestion,
++                config.maxSuggestionWords,
++              );
++      }
+     } catch {
+       finish.outcome = "model-output-error";
+       finish.error = {
+@@ -579,31 +661,8 @@
+     };
+   }
+   const now = dependencies.now ?? Date.now;
+-  const sleep =
+-    dependencies.sleep ??
+-    ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));
+-  const send = dependencies.send ?? sendModelRequest;
+   const env = dependencies.env ?? process.env;
+-  let endpoint;
+-  try {
+-    const url = new URL(env[config.endpointEnv]);
+-    if (
+-      !["https:", "http:"].includes(url.protocol) ||
+-      url.username ||
+-      url.password ||
+-      url.search ||
+-      url.hash
+-    )
+-      throw new Error();
+-    endpoint = url.href;
+-  } catch {
+-    return fail(
+-      "Set the endpoint environment variable to a credential-free HTTP(S) URL.",
+-    );
+-  }
+-  const apiKey = env[config.apiKeyEnv];
+-  if (typeof apiKey !== "string" || !apiKey.trim() || /[\r\n]/.test(apiKey))
+-    fail("Required API-key environment variable is missing or invalid.");
++  const { endpoint, apiKey } = liveSettings(env, config);
+   if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(options.experimentId ?? ""))
+     fail(
+       "Provide an explicit experiment ID using letters, numbers, dots, underscores, or hyphens.",
+@@ -611,11 +670,7 @@
+   const outDir = resolve(
+     options.outputDir ?? join(root, "evaluation/runs", options.experimentId),
+   );
+-  if (
+-    outDir === benchmark.directory ||
+-    outDir.startsWith(benchmark.directory + sep)
+-  )
+-    fail("Output directory must be outside frozen benchmark inputs.");
++  assertOutputDirectory(outDir, [benchmark.directory]);
+   const prompts = promptSnapshots(config);
+   const promptArtifacts = Object.fromEntries(
+     ["generation", "validation"].map((kind) => [
+@@ -638,7 +693,40 @@
+     ...identity,
+     fingerprint: sha(JSON.stringify(identity)),
+   };
++  return executeRun({
++    root,
++    config,
++    proposed,
++    prompts,
++    outDir,
++    selected,
++    prepareJob: (benchmark, job) => prepare(benchmark, config, job),
++    dependencies,
++    endpoint,
++    apiKey,
++  });
++}
++
++async function executeRun({
++  root,
++  config,
++  proposed,
++  prompts,
++  outDir,
++  selected,
++  prepareJob,
++  dependencies,
++  endpoint,
++  apiKey,
++  verifySource = () => {},
++}) {
++  const now = dependencies.now ?? Date.now;
++  const sleep =
++    dependencies.sleep ??
++    ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));
++  const send = dependencies.send ?? sendModelRequest;
+   return withLock(outDir, async () => {
++    verifySource();
+     const snapshot = ensureSnapshot(outDir, proposed, prompts);
+     const logPath = join(outDir, "attempts.jsonl");
+     const context = {
+@@ -687,7 +775,8 @@
+         continue;
+       }
+       // Verify current frozen inputs again immediately before preparing each request.
+-      const prepared = prepare(verifyBenchmark(root), config, item.job);
++      verifySource();
++      const prepared = prepareJob(verifyBenchmark(root), item.job);
+       const priorStart = loadRecords(logPath).find(
+         (event) =>
+           event.event === "attempt-started" && key(event.job) === key(item.job),
+@@ -759,6 +848,9 @@
+         attemptNumber: start.attemptNumber,
+         outcome: finished.outcome,
+         result: finished.parsed?.value ?? null,
++        ...(item.job.stage === "validation"
++          ? { reviewDecision: qualityDecision(finished) }
++          : {}),
+       });
+       if (received?.httpStatus === 429) {
+         stopped = "rate-limited";
+@@ -781,3 +873,355 @@
+     };
+   });
+ }
++
++/** Load historical evidence without comparing its code hash to today's code. */
++function validationSource(
++  benchmark,
++  config,
++  sourceId,
++  sourceDir,
++  prompts,
++  now,
++) {
++  if (existsSync(join(sourceDir, ".runner.lock")))
++    fail("Source generation is locked; finish it before validation.");
++  const snapshotPath = inside(sourceDir, join(sourceDir, "experiment.json"));
++  const logPath = inside(sourceDir, join(sourceDir, "attempts.jsonl"));
++  const snapshot = readJson(snapshotPath);
++  if (
++    snapshot.schemaVersion !== 1 ||
++    snapshot.experimentId !== sourceId ||
++    snapshot.sourceGeneration ||
++    !/^[a-f0-9]{64}$/.test(snapshot.codeSnapshotSha256 ?? "") ||
++    !/^[a-f0-9]{40,64}$/.test(snapshot.codeCommit ?? "") ||
++    !Number.isFinite(Date.parse(snapshot.createdAt))
++  )
++    fail("Source generation snapshot is invalid.");
++  const sourceConfig = coreCall(() => parseEvaluationConfig(snapshot.config));
++  if (JSON.stringify(sourceConfig) !== JSON.stringify(config))
++    fail(
++      "Validation configuration differs from source generation configuration.",
++    );
++  if (snapshot.benchmarkFreezeSha256 !== benchmark.freezeHash)
++    fail("Source generation benchmark identity differs.");
++  const cases = benchmark.manifest.cases.filter(
++    (c) => c.split === config.split,
++  );
++  const expectedJobs = shuffle(
++    cases.flatMap((c) =>
++      config.strategies.map((strategy) => ({
++        caseId: c.id,
++        strategy,
++        stage: "generation",
++      })),
++    ),
++    config.orderSeed,
++  );
++  if (
++    JSON.stringify(snapshot.generationJobs) !== JSON.stringify(expectedJobs) ||
++    !config.strategies.includes("structure-aware")
++  )
++    fail("Source generation schedule does not match the configured split.");
++  const endpoint = safeEndpoint(snapshot.resolvedEndpoint);
++  const identity = {
++    config: snapshot.config,
++    resolvedEndpoint: endpoint,
++    codeCommit: snapshot.codeCommit,
++    codeSnapshotSha256: snapshot.codeSnapshotSha256,
++    benchmarkFreezeSha256: snapshot.benchmarkFreezeSha256,
++    prompts: snapshot.prompts,
++    generationJobs: snapshot.generationJobs,
++  };
++  if (sha(JSON.stringify(identity)) !== snapshot.fingerprint)
++    fail("Source generation snapshot fingerprint is inconsistent.");
++  const boundFiles = new Map([
++    [snapshotPath, sha(readFileSync(snapshotPath))],
++    [logPath, sha(readFileSync(logPath))],
++  ]);
++  for (const kind of ["generation", "validation"]) {
++    const artifact = snapshot.prompts?.[kind];
++    if (
++      artifact?.path !== `prompts/${kind}.json` ||
++      !/^[a-f0-9]{64}$/.test(artifact.sha256 ?? "")
++    )
++      fail("Source prompt artifact is invalid.");
++    const path = inside(sourceDir, join(sourceDir, artifact.path));
++    if (sha(readFileSync(path)) !== artifact.sha256)
++      fail("Source prompt artifact has changed.");
++    boundFiles.set(path, artifact.sha256);
++  }
++  if (sha(prompts.validation) !== snapshot.prompts.validation.sha256)
++    fail("Validator prompt differs from the frozen source validator prompt.");
++  const verify = () => {
++    if (existsSync(join(sourceDir, ".runner.lock")))
++      fail("Source generation is locked; validation stopped.");
++    for (const [path, hash] of boundFiles)
++      if (sha(readFileSync(path)) !== hash)
++        fail("Source generation artifacts have changed; validation stopped.");
++  };
++  const records = loadRecords(logPath);
++  const plan = coreCall(() =>
++    planEvaluationResume(
++      {
++        experimentId: snapshot.experimentId,
++        fingerprint: snapshot.fingerprint,
++        config: sourceConfig,
++        jobs: snapshot.generationJobs,
++      },
++      sourceConfig,
++      records,
++      now(),
++    ),
++  );
++  if (plan.blocked)
++    fail("Source generation is blocked; resolve it before validation.");
++  const sources = new Map(),
++    jobs = [],
++    exclusions = [];
++  for (const entry of cases) {
++    const job = {
++      caseId: entry.id,
++      strategy: "structure-aware",
++      stage: "generation",
++    };
++    const state = plan.jobs.find((item) => key(item.job) === key(job));
++    if (
++      !state ||
++      !["succeeded", "model-output-error", "exhausted-error"].includes(
++        state.status,
++      )
++    )
++      fail(
++        "Source structure-aware generation must reach terminal states before validation.",
++      );
++    const finish = records.findLast(
++      (r) => r.event === "attempt-finished" && key(r.job) === key(job),
++    );
++    const exclude = (reason) =>
++      exclusions.push({
++        caseId: entry.id,
++        strategy: "structure-aware",
++        stage: "validation",
++        reason,
++        sourceGenerationAttemptId: finish.attemptId,
++      });
++    if (state.status !== "succeeded") {
++      exclude("source-unavailable");
++      continue;
++    }
++    const start = records.find(
++      (r) => r.event === "attempt-started" && r.attemptId === finish.attemptId,
++    );
++    const result = finish.parsed.value;
++    const expectedTask =
++      entry.expectedAltState === "present" ? "evaluate" : "generate";
++    if (
++      start.input.imagePath !== entry.imagePath ||
++      start.input.imageMimeType !== "image/png" ||
++      start.input.task !== expectedTask ||
++      start.input.existingAltText !==
++        (expectedTask === "evaluate" ? entry.existingAltText : null)
++    )
++      fail(
++        "Source image or existing alt identity differs from the frozen case.",
++      );
++    const bytes = readFileSync(
++      inside(
++        benchmark.directory,
++        resolve(benchmark.directory, entry.imagePath),
++      ),
++    );
++    if (
++      sha(bytes) !== start.input.imageSha256 ||
++      bytes.subarray(0, 8).toString("hex") !== "89504e470d0a1a0a"
++    )
++      fail("Source image bytes differ from the frozen PNG.");
++    const wordCheck =
++      result.suggestion === null
++        ? null
++        : checkSuggestionLength(result.suggestion, config.maxSuggestionWords);
++    if (JSON.stringify(wordCheck) !== JSON.stringify(finish.wordLimit))
++      fail("Source word-limit evidence is inconsistent with its suggestion.");
++    if (!result.concern) {
++      exclude("no-improvement");
++      continue;
++    }
++    if (!wordCheck.withinLimit) {
++      exclude("over-word-limit");
++      continue;
++    }
++    const validationJob = { ...job, stage: "validation" };
++    jobs.push(validationJob);
++    sources.set(key(validationJob), {
++      input: start.input,
++      suggestion: result.suggestion,
++      attemptId: finish.attemptId,
++    });
++  }
++  verify();
++  return {
++    jobs,
++    exclusions,
++    sources,
++    verify,
++    endpoint,
++    lineage: {
++      experimentId: sourceId,
++      fingerprint: snapshot.fingerprint,
++      snapshotSha256: boundFiles.get(snapshotPath),
++      attemptsSha256: boundFiles.get(logPath),
++    },
++  };
++}
++
++function prepareValidation(benchmark, config, job, source) {
++  if (!source) fail("Validation source record is missing.");
++  const bytes = readFileSync(
++    inside(
++      benchmark.directory,
++      resolve(benchmark.directory, source.input.imagePath),
++    ),
++  );
++  if (sha(bytes) !== source.input.imageSha256)
++    fail("Validation image differs from the source generation image.");
++  const body = buildQualityModelRequestBody(
++    {
++      imageDataUrl: `data:image/png;base64,${bytes.toString("base64")}`,
++      cellText: source.input.formattedContext,
++      suggestion: source.suggestion,
++    },
++    {
++      model: config.model,
++      ...(config.reasoningEffort === "low" ? { reasoningEffort: "low" } : {}),
++    },
++    config.maxOutputTokens,
++  );
++  const messageTextCharacterCount = body.messages.reduce(
++    (sum, message) =>
++      sum +
++      (typeof message.content === "string"
++        ? message.content.length
++        : message.content.reduce(
++            (count, part) =>
++              count + (part.type === "text" ? part.text.length : 0),
++            0,
++          )),
++    0,
++  );
++  return {
++    body,
++    input: {
++      ...source.input,
++      task: "quality-validation",
++      messageTextCharacterCount,
++      sourceGenerationAttemptId: source.attemptId,
++      suggestionToValidate: source.suggestion,
++    },
++  };
++}
++
++/** Part B: preserve generation evidence and screen exact saved suggestions. */
++export async function runValidation(options = {}, dependencies = {}) {
++  const root = resolve(options.root ?? ROOT);
++  const config = coreCall(() =>
++    parseEvaluationConfig(
++      readJson(
++        resolve(
++          options.configPath ?? join(root, "evaluation/config.example.json"),
++        ),
++      ),
++    ),
++  );
++  const benchmark = verifyBenchmark(root);
++  const sourceId = validExperimentId(options.sourceId);
++  const sourceDir = resolve(
++    options.sourceDir ?? join(root, "evaluation/runs", sourceId),
++  );
++  const now = dependencies.now ?? Date.now;
++  const prompts = promptSnapshots(config);
++  const source = validationSource(
++    benchmark,
++    config,
++    sourceId,
++    sourceDir,
++    prompts,
++    now,
++  );
++  const caseFilter = options.cases ?? [],
++    strategyFilter = options.strategies ?? [];
++  const cases = benchmark.manifest.cases.filter(
++    (c) => c.split === config.split,
++  );
++  if (
++    caseFilter.some((id) => !cases.some((c) => c.id === id)) ||
++    strategyFilter.some((strategy) => strategy !== "structure-aware")
++  )
++    fail("Unknown validation case/strategy filter for this split.");
++  const selected = (job) =>
++    !caseFilter.length || caseFilter.includes(job.caseId);
++  const experimentId = validExperimentId(
++    options.experimentId ?? `${sourceId}-validation`,
++  );
++  const outDir = resolve(
++    options.outputDir ?? join(root, "evaluation/runs", experimentId),
++  );
++  assertOutputDirectory(outDir, [sourceDir, benchmark.directory]);
++  const prepareJob = (bm, job) =>
++    prepareValidation(bm, config, job, source.sources.get(key(job)));
++  const summary = {
++    stage: "validation",
++    sourceGeneration: source.lineage,
++    exclusions: source.exclusions.filter(selected),
++  };
++  if (options.dryRun)
++    return {
++      ...summary,
++      dryRun: true,
++      requests: 0,
++      plannedJobs: source.jobs
++        .filter(selected)
++        .map((job) => ({ job, input: prepareJob(benchmark, job).input })),
++    };
++  const { endpoint, apiKey } = liveSettings(
++    dependencies.env ?? process.env,
++    config,
++  );
++  if (endpoint !== source.endpoint)
++    fail("Validation endpoint differs from source generation endpoint.");
++  const identity = {
++    config,
++    resolvedEndpoint: endpoint,
++    ...codeIdentity(root),
++    benchmarkFreezeSha256: benchmark.freezeHash,
++    prompts: Object.fromEntries(
++      ["generation", "validation"].map((kind) => [
++        kind,
++        { path: `prompts/${kind}.json`, sha256: sha(prompts[kind]) },
++      ]),
++    ),
++    generationJobs: source.jobs,
++    sourceGeneration: source.lineage,
++    exclusions: source.exclusions,
++  };
++  const proposed = {
++    schemaVersion: 1,
++    experimentId,
++    createdAt: iso(now()),
++    ...identity,
++    fingerprint: sha(JSON.stringify(identity)),
++  };
++  const result = await executeRun({
++    root,
++    config,
++    proposed,
++    prompts,
++    outDir,
++    selected,
++    prepareJob,
++    dependencies,
++    endpoint,
++    apiKey,
++    verifySource: source.verify,
++  });
++  return { ...result, ...summary };
++}
+--- a/evaluation/run.mjs
++++ b/evaluation/run.mjs
+@@ -1,6 +1,10 @@
+ #!/usr/bin/env node
+ import { parseArgs } from "node:util";
+-import { runEvaluation, EvaluationRunnerError } from "./runner.mjs";
++import {
++  runEvaluation,
++  runValidation,
++  EvaluationRunnerError,
++} from "./runner.mjs";
+ 
+ async function main() {
+   let values;
+@@ -10,6 +14,9 @@
+       options: {
+         config: { type: "string" },
+         experiment: { type: "string" },
++        source: { type: "string" },
++        "source-dir": { type: "string" },
++        validate: { type: "boolean", default: false },
+         output: { type: "string" },
+         case: { type: "string", multiple: true },
+         strategy: { type: "string", multiple: true },
+@@ -18,12 +25,20 @@
+     }));
+   } catch {
+     throw new EvaluationRunnerError(
+-      "Invalid arguments. Use --config, --experiment, --output, --case, --strategy, and/or --dry-run.",
++      "Invalid arguments. Use --config, --experiment, --source, --source-dir, --validate, --output, --case, --strategy, and/or --dry-run.",
+     );
+   }
+-  const result = await runEvaluation({
++  if (values["source-dir"] && !values.source)
++    throw new EvaluationRunnerError("--source-dir requires --source.");
++  const runner =
++    values.validate || values.source !== undefined
++      ? runValidation
++      : runEvaluation;
++  const result = await runner({
+     configPath: values.config,
+     experimentId: values.experiment,
++    sourceId: values.source,
++    sourceDir: values["source-dir"],
+     outputDir: values.output,
+     cases: values.case,
+     strategies: values.strategy,
+--- /dev/null
++++ b/evaluation/__tests__/validation-runner.test.mjs
+@@ -0,0 +1,466 @@
++import { test } from "node:test";
++import assert from "node:assert/strict";
++import {
++  mkdtempSync,
++  rmSync,
++  readFileSync,
++  writeFileSync,
++  appendFileSync,
++  existsSync,
++  symlinkSync,
++} from "node:fs";
++import { join, resolve } from "node:path";
++import { tmpdir } from "node:os";
++import { createHash } from "node:crypto";
++import {
++  runEvaluation,
++  runValidation,
++  selectProviderResponse,
++} from "../runner.mjs";
++
++const env = {
++  A11YLENS_MODEL_ENDPOINT: "https://example.test/v1/chat/completions",
++  A11YLENS_API_KEY: "offline-test-credential",
++};
++const passing = {
++  grounded: true,
++  contextConsistent: true,
++  informative: true,
++  concise: true,
++  noUnsupportedClaims: true,
++  reasons: [],
++};
++const sha = (value) => createHash("sha256").update(value).digest("hex");
++const readEvents = (dir) =>
++  readFileSync(join(dir, "attempts.jsonl"), "utf8")
++    .trim()
++    .split("\n")
++    .map(JSON.parse);
++const response = (value, httpStatus = 200) => ({
++  httpStatus,
++  retryAfter: null,
++  response: selectProviderResponse({
++    model: "gemini-3.5-flash-lite",
++    choices: [
++      { finish_reason: "stop", message: { content: JSON.stringify(value) } },
++    ],
++  }),
++});
++
++async function fixture(t, results = {}) {
++  const base = mkdtempSync(join(tmpdir(), "a11ylens-validation-"));
++  t.after(() => rmSync(base, { recursive: true, force: true }));
++  const sourceDir = join(base, "source"),
++    outputDir = join(base, "validation");
++  let clock = Date.parse("2026-11-01T12:00:00Z");
++  const starts = [],
++    bodies = [];
++  const dependencies = {
++    env,
++    now: () => clock,
++    sleep: async (ms) => {
++      clock += ms;
++    },
++    send: async ({ body }) => {
++      starts.push(clock);
++      bodies.push(body);
++      clock += 100;
++      return response(passing);
++    },
++  };
++  // Filtered calls preserve the complete seeded source schedule, while making
++  // mocked case identity explicit instead of guessing from natural-language text.
++  for (const id of [
++    "case-01",
++    "case-02",
++    "case-03",
++    "case-04",
++    "case-05",
++    "case-06",
++  ]) {
++    const result =
++      results[id] ??
++      (id === "case-05" || id === "case-06"
++        ? { concern: false, suggestion: null }
++        : { concern: true, suggestion: `Description for ${id}.` });
++    await runEvaluation(
++      {
++        experimentId: "synthetic-source",
++        outputDir: sourceDir,
++        cases: [id],
++        strategies: ["structure-aware"],
++      },
++      {
++        ...dependencies,
++        send: async () => {
++          clock += 100;
++          return response(result);
++        },
++      },
++    );
++  }
++  const sourceBefore = [
++    "experiment.json",
++    "attempts.jsonl",
++    "prompts/generation.json",
++    "prompts/validation.json",
++  ].map((p) => [p, sha(readFileSync(join(sourceDir, p)))]);
++  const options = {
++    sourceId: "synthetic-source",
++    sourceDir,
++    experimentId: "validation-test",
++    outputDir,
++  };
++  const run = (opts = {}, deps = {}) =>
++    runValidation({ ...options, ...opts }, { ...dependencies, ...deps });
++  const assertSourceUnchanged = () => {
++    for (const [p, h] of sourceBefore)
++      assert.equal(sha(readFileSync(join(sourceDir, p))), h);
++  };
++  return {
++    base,
++    sourceDir,
++    outputDir,
++    options,
++    dependencies,
++    run,
++    starts,
++    bodies,
++    assertSourceUnchanged,
++  };
++}
++
++test("validation preview is credential-free, write-free, and preserves exact saved inputs", async (t) => {
++  const f = await fixture(t);
++  const dry = await f.run(
++    { dryRun: true },
++    { env: {}, send: () => assert.fail("Unexpected request") },
++  );
++  assert.equal(dry.requests, 0);
++  assert.equal(dry.plannedJobs.length, 4);
++  assert.deepEqual(
++    dry.exclusions.map((x) => [x.caseId, x.reason]),
++    [
++      ["case-05", "no-improvement"],
++      ["case-06", "no-improvement"],
++    ],
++  );
++  const events = readEvents(f.sourceDir);
++  for (const { job, input } of dry.plannedJobs) {
++    const finish = events.find(
++      (e) => e.event === "attempt-finished" && e.job.caseId === job.caseId,
++    );
++    const start = events.find(
++      (e) => e.event === "attempt-started" && e.attemptId === finish.attemptId,
++    );
++    assert.equal(input.sourceGenerationAttemptId, finish.attemptId);
++    assert.equal(input.suggestionToValidate, finish.parsed.value.suggestion);
++    assert.equal(input.formattedContext, start.input.formattedContext);
++    assert.equal(input.imageSha256, start.input.imageSha256);
++  }
++  assert.equal(existsSync(f.outputDir), false);
++  assert.equal(f.starts.length, 0);
++  f.assertSourceUnchanged();
++});
++
++test("validation snapshots full schedule across case filters, skips completed jobs, and preserves image/context", async (t) => {
++  const f = await fixture(t);
++  const first = await f.run({ cases: ["case-01"] });
++  assert.equal(first.requests, 1);
++  assert.equal(first.results[0].reviewDecision, "pass");
++  const snapshotBytes = readFileSync(join(f.outputDir, "experiment.json"));
++  const snapshot = JSON.parse(snapshotBytes);
++  assert.equal(snapshot.generationJobs.length, 4);
++  assert.equal(snapshot.exclusions.length, 2);
++  assert.equal(snapshot.sourceGeneration.experimentId, "synthetic-source");
++  const second = await f.run({ cases: ["case-02"] });
++  assert.equal(second.requests, 1);
++  assert.ok(f.starts[1] - f.starts[0] >= 15000);
++  assert.deepEqual(
++    readFileSync(join(f.outputDir, "experiment.json")),
++    snapshotBytes,
++  );
++  assert.equal((await f.run({ cases: ["case-01"] })).requests, 0);
++  const sourceStart = readEvents(f.sourceDir).find(
++    (e) => e.event === "attempt-started" && e.job.caseId === "case-01",
++  );
++  const text = JSON.parse(f.bodies[0].messages[1].content[0].text);
++  assert.deepEqual(text, {
++    cellText: sourceStart.input.formattedContext,
++    suggestion: "Description for case-01.",
++  });
++  const image = f.bodies[0].messages[1].content[1].image_url.url;
++  assert.equal(
++    sha(Buffer.from(image.split(",")[1], "base64")),
++    sourceStart.input.imageSha256,
++  );
++  assert.ok(!("reasoning_effort" in f.bodies[0]));
++  assert.ok(!("temperature" in f.bodies[0]));
++  f.assertSourceUnchanged();
++});
++
++test("valid failed checks are succeeded executions requiring manual review; malformed checks are terminal", async (t) => {
++  const f = await fixture(t);
++  const result = await f.run(
++    { cases: ["case-01"] },
++    {
++      send: async () =>
++        response({
++          ...passing,
++          informative: false,
++          reasons: ["Missing the main distribution pattern."],
++        }),
++    },
++  );
++  assert.equal(result.results[0].outcome, "succeeded");
++  assert.equal(result.results[0].reviewDecision, "manual-review");
++  assert.deepEqual(
++    readEvents(f.outputDir).map((e) => e.event),
++    ["attempt-started", "response-received", "attempt-finished"],
++  );
++  const bad = await f.run(
++    { cases: ["case-02"] },
++    { send: async () => response({ grounded: true, accurate: true }) },
++  );
++  assert.equal(bad.results[0].outcome, "model-output-error");
++  assert.equal(bad.results[0].reviewDecision, "manual-review");
++  assert.equal((await f.run({ cases: ["case-02"] })).requests, 0);
++  f.assertSourceUnchanged();
++});
++
++test("recorded validation responses recover before dispatch even outside runtime filters", async (t) => {
++  const f = await fixture(t);
++  await f.run({ cases: ["case-01"] });
++  const events = readEvents(f.outputDir);
++  writeFileSync(
++    join(f.outputDir, "attempts.jsonl"),
++    events.slice(0, 2).map(JSON.stringify).join("\n") + "\n",
++  );
++  const recovered = await f.run(
++    { cases: ["case-05"] },
++    { send: () => assert.fail("Recovery re-POSTed") },
++  );
++  assert.equal(recovered.requests, 0);
++  const finish = readEvents(f.outputDir).at(-1);
++  assert.equal(finish.outcome, "succeeded");
++  assert.equal(finish.parsed.kind, "validation");
++  assert.deepEqual(finish.parsed.value, passing);
++  f.assertSourceUnchanged();
++});
++
++test("validation manual transient retries respect two-attempt limit and preserve generation", async (t) => {
++  const f = await fixture(t);
++  const send = async () => response(null, 503);
++  const first = await f.run({ cases: ["case-01"] }, { send });
++  assert.equal(first.requests, 1);
++  assert.equal(first.results[0].outcome, "retryable-error");
++  const second = await f.run({ cases: ["case-01"] }, { send });
++  assert.equal(second.results[0].attemptNumber, 2);
++  assert.equal(second.results[0].outcome, "exhausted-error");
++  assert.equal(second.results[0].reviewDecision, "manual-review");
++  const events = readEvents(f.outputDir).filter(
++    (e) => e.event === "attempt-started",
++  );
++  assert.ok(
++    Date.parse(events[1].timestamp) - Date.parse(events[0].timestamp) >= 30000,
++  );
++  assert.equal((await f.run({ cases: ["case-01"] })).requests, 0);
++  f.assertSourceUnchanged();
++});
++
++test("validation stops on 429 and retains provider-wide cooldown for another job", async (t) => {
++  const f = await fixture(t);
++  const first = await f.run(
++    {},
++    { send: async () => ({ ...response(null, 429), retryAfter: "120" }) },
++  );
++  assert.equal(first.requests, 1);
++  assert.equal(first.stopped, "rate-limited");
++  const events = readEvents(f.outputDir);
++  const firstCase = first.results[0].job.caseId;
++  const nextCase = firstCase === "case-01" ? "case-02" : "case-01";
++  const deadline = Date.parse(events[1].providerRetryNotBefore);
++  await f.run({ cases: [nextCase] });
++  assert.ok(f.starts[0] >= deadline);
++});
++
++test("validation caps a batch at four and paces all request starts", async (t) => {
++  const f = await fixture(t, {
++    "case-05": { concern: true, suggestion: "Another description." },
++  });
++  const first = await f.run();
++  assert.equal(first.requests, 4);
++  assert.equal(first.stopped, "batch-limit");
++  assert.equal((await f.run()).requests, 1);
++  for (let i = 1; i < f.starts.length; i++)
++    assert.ok(f.starts[i] - f.starts[i - 1] >= 15000);
++});
++
++test("no-improvement and over-limit exclusions never dispatch requests", async (t) => {
++  const long = Array(41).fill("word").join(" ");
++  const f = await fixture(t, {
++    "case-02": { concern: true, suggestion: long },
++  });
++  const dry = await f.run(
++    { dryRun: true, cases: ["case-02", "case-05"] },
++    { env: {} },
++  );
++  assert.equal(dry.plannedJobs.length, 0);
++  assert.deepEqual(
++    dry.exclusions.map((x) => x.reason),
++    ["over-word-limit", "no-improvement"],
++  );
++  const live = await f.run(
++    { cases: ["case-02", "case-05"] },
++    { send: () => assert.fail("Excluded job dispatched") },
++  );
++  assert.equal(live.requests, 0);
++  assert.equal(live.stopped, "complete");
++  f.assertSourceUnchanged();
++});
++
++test("an entirely ineligible source returns exclusions with zero requests", async (t) => {
++  const results = Object.fromEntries(
++    [1, 2, 3, 4, 5, 6].map((i) => [
++      `case-0${i}`,
++      { concern: false, suggestion: null },
++    ]),
++  );
++  const f = await fixture(t, results);
++  const dry = await f.run({ dryRun: true }, { env: {} });
++  assert.equal(dry.plannedJobs.length, 0);
++  assert.equal(dry.exclusions.length, 6);
++  assert.equal(
++    (await f.run({}, { send: () => assert.fail("Unexpected call") })).requests,
++    0,
++  );
++});
++
++test("source mutation on resume fails before changing validation evidence", async (t) => {
++  const f = await fixture(t);
++  await f.run({ cases: ["case-01"] });
++  const valBefore = readFileSync(join(f.outputDir, "attempts.jsonl"));
++  appendFileSync(join(f.sourceDir, "attempts.jsonl"), "\n"); // Valid JSONL, different immutable bytes.
++  await assert.rejects(f.run({ cases: ["case-02"] }), /identity differs/);
++  assert.deepEqual(
++    readFileSync(join(f.outputDir, "attempts.jsonl")),
++    valBefore,
++  );
++  assert.equal(f.starts.length, 1);
++});
++
++test("source raw/parsed disagreement and missing word evidence fail closed", async (t) => {
++  for (const mode of ["parsed", "wordLimit"]) {
++    const f = await fixture(t);
++    const events = readEvents(f.sourceDir);
++    const finish = events.find(
++      (e) => e.event === "attempt-finished" && e.job.caseId === "case-01",
++    );
++    if (mode === "parsed")
++      finish.parsed.value.suggestion = "Tampered suggestion.";
++    else finish.wordLimit = null;
++    writeFileSync(
++      join(f.sourceDir, "attempts.jsonl"),
++      events.map(JSON.stringify).join("\n") + "\n",
++    );
++    await assert.rejects(f.run(), /invalid|inconsistent/);
++    assert.equal(f.starts.length, 0);
++    assert.equal(existsSync(f.outputDir), false);
++  }
++});
++
++test("endpoint, config, filters, and protected/symlinked paths reject before writes", async (t) => {
++  const f = await fixture(t);
++  await assert.rejects(f.run({ cases: ["case-99"] }), /filter/);
++  await assert.rejects(f.run({ strategies: ["minimal"] }), /filter/);
++  await assert.rejects(
++    f.run(
++      {},
++      { env: { ...env, A11YLENS_MODEL_ENDPOINT: "https://other.test/v1" } },
++    ),
++    /endpoint differs/,
++  );
++  await assert.rejects(
++    f.run(
++      {},
++      {
++        env: {
++          ...env,
++          A11YLENS_MODEL_ENDPOINT: "https://user:secret@example.test/v1",
++        },
++      },
++    ),
++    /credential-free/,
++  );
++  await assert.rejects(f.run({ outputDir: f.sourceDir }), /overlap/);
++  await assert.rejects(f.run({ outputDir: f.base }), /overlap/);
++  await assert.rejects(
++    f.run({ outputDir: join(f.sourceDir, "child") }),
++    /overlap/,
++  );
++  const alias = join(f.base, "alias");
++  symlinkSync(f.sourceDir, alias, "dir");
++  await assert.rejects(
++    f.run({ outputDir: join(alias, "not-created") }),
++    /overlap/,
++  );
++  const config = JSON.parse(
++    readFileSync("evaluation/config.example.json", "utf8"),
++  );
++  config.maxOutputTokens = 1024;
++  const configPath = join(f.base, "config.json");
++  writeFileSync(configPath, JSON.stringify(config));
++  await assert.rejects(f.run({ configPath }), /configuration differs/);
++  assert.equal(f.starts.length, 0);
++  assert.equal(existsSync(f.outputDir), false);
++  f.assertSourceUnchanged();
++});
++
++test("terminal unavailable source is excluded; unfinished source is rejected", async (t) => {
++  const f = await fixture(t, { "case-04": { concern: "invalid" } });
++  const dry = await f.run({ dryRun: true }, { env: {} });
++  assert.equal(dry.plannedJobs.length, 3);
++  assert.equal(
++    dry.exclusions.find((x) => x.caseId === "case-04").reason,
++    "source-unavailable",
++  );
++  const incomplete = await fixture(t);
++  const events = readEvents(incomplete.sourceDir).filter(
++    (x) => x.job.caseId !== "case-04",
++  );
++  writeFileSync(
++    join(incomplete.sourceDir, "attempts.jsonl"),
++    events.map(JSON.stringify).join("\n") + "\n",
++  );
++  await assert.rejects(incomplete.run({ dryRun: true }), /terminal states/);
++  assert.equal(existsSync(incomplete.outputDir), false);
++});
++
++test("changed source prompt or snapshot and active source lock reject without dispatch", async (t) => {
++  for (const mode of ["prompt", "snapshot", "lock"]) {
++    const f = await fixture(t);
++    if (mode === "prompt")
++      appendFileSync(join(f.sourceDir, "prompts/validation.json"), " ");
++    if (mode === "snapshot") {
++      const path = join(f.sourceDir, "experiment.json");
++      const value = JSON.parse(readFileSync(path, "utf8"));
++      value.fingerprint = "0".repeat(64);
++      writeFileSync(path, JSON.stringify(value));
++    }
++    if (mode === "lock")
++      writeFileSync(join(f.sourceDir, ".runner.lock"), "{}\n");
++    await assert.rejects(f.run(), /artifact|fingerprint|locked/);
++    assert.equal(f.starts.length, 0);
++    assert.equal(existsSync(f.outputDir), false);
++  }
++});
++
++test("frozen benchmark symlink output is rejected before creating a destination", async (t) => {
++  const f = await fixture(t);
++  const alias = join(f.base, "benchmark-alias");
++  symlinkSync(resolve("test_files/benchmark"), alias, "dir");
++  const destination = join(alias, "must-not-create-validation");
++  await assert.rejects(f.run({ outputDir: destination }), /overlap/);
++  assert.equal(existsSync(destination), false);
++  assert.equal(f.starts.length, 0);
++});

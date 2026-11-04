@@ -1,0 +1,2995 @@
+{
+  "schemaVersion": "phase7-analysis-v1",
+  "sourceExperimentId": "dev-gemini35-v2",
+  "sourceFingerprint": "0e92239297cd94bd590ee07f320dcfe673f08e08f2065d35c63fd65a5f391578",
+  "freezeHash": "3ae902906f328f6378c5585db75acdfd6fe80535b4d49e877b767c6aa70d7ef8",
+  "partA": {
+    "totalCases": 6,
+    "commonValidCaseCount": 6,
+    "commonValidCaseIds": [
+      "case-01",
+      "case-02",
+      "case-03",
+      "case-04",
+      "case-05",
+      "case-06"
+    ],
+    "byStrategy": {
+      "minimal": {
+        "primary": {
+          "validResponseNumerator": 6,
+          "validResponseDenominator": 6,
+          "validResponseRate": 1,
+          "usableDescriptionNumerator": 6,
+          "usableDescriptionDenominator": 6,
+          "usableDescriptionRate": 1,
+          "requiredFactCoverage": 0.888888888888889,
+          "commonCaseFactCoverage": 0.888888888888889,
+          "totalFactsConveyed": 16,
+          "totalFactsRequired": 18,
+          "unsupportedOutputNumerator": 0,
+          "unsupportedOutputDenominator": 6,
+          "unsupportedOutputRate": 0,
+          "unsupportedClaimCount": 0,
+          "semanticDetection": {
+            "eligibleCases": 4,
+            "validDecisions": 4,
+            "tp": 2,
+            "tn": 2,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "missingEmptyRemediation": {
+            "totalCases": 2,
+            "remediatedCount": 2
+          }
+        },
+        "secondary": {
+          "avgSelectedSourceChars": 86.5,
+          "avgFormattedContextChars": 86.5,
+          "tokenUsage": {
+            "status": "available",
+            "reportedJobs": 6,
+            "avgPromptTokens": 1387.8333333333333,
+            "avgCompletionTokens": 41,
+            "avgTotalTokens": 1428.8333333333333
+          },
+          "avgTerminalLatencyMs": 1715.5,
+          "totalLatencyMs": 10293,
+          "totalRequestsSent": 6,
+          "firstAttemptSuccessCount": 6,
+          "eventualSuccessCount": 6,
+          "parseFailureCount": 0,
+          "constraintValidNumerator": 4,
+          "constraintValidDenominator": 4,
+          "constraintValidRate": 1
+        },
+        "subgroups": {
+          "byCategory": {
+            "missing-empty": {
+              "validJobCount": 2,
+              "avgFactCoverage": 1,
+              "unsupportedClaimCount": 0
+            },
+            "weak": {
+              "validJobCount": 2,
+              "avgFactCoverage": 0.6666666666666666,
+              "unsupportedClaimCount": 0
+            },
+            "acceptable": {
+              "validJobCount": 2,
+              "avgFactCoverage": 1,
+              "unsupportedClaimCount": 0
+            }
+          },
+          "byContextSensitivity": {
+            "contextSensitive": {
+              "validJobCount": 0,
+              "avgFactCoverage": null,
+              "unsupportedClaimCount": null
+            },
+            "notContextSensitive": {
+              "validJobCount": 6,
+              "avgFactCoverage": 0.888888888888889,
+              "unsupportedClaimCount": 0
+            }
+          }
+        }
+      },
+      "fixed-window": {
+        "primary": {
+          "validResponseNumerator": 6,
+          "validResponseDenominator": 6,
+          "validResponseRate": 1,
+          "usableDescriptionNumerator": 6,
+          "usableDescriptionDenominator": 6,
+          "usableDescriptionRate": 1,
+          "requiredFactCoverage": 0.888888888888889,
+          "commonCaseFactCoverage": 0.888888888888889,
+          "totalFactsConveyed": 16,
+          "totalFactsRequired": 18,
+          "unsupportedOutputNumerator": 0,
+          "unsupportedOutputDenominator": 6,
+          "unsupportedOutputRate": 0,
+          "unsupportedClaimCount": 0,
+          "semanticDetection": {
+            "eligibleCases": 4,
+            "validDecisions": 4,
+            "tp": 2,
+            "tn": 1,
+            "fp": 1,
+            "fn": 0,
+            "precision": 0.6666666666666666,
+            "recall": 1,
+            "f1": 0.8
+          },
+          "missingEmptyRemediation": {
+            "totalCases": 2,
+            "remediatedCount": 2
+          }
+        },
+        "secondary": {
+          "avgSelectedSourceChars": 256.6666666666667,
+          "avgFormattedContextChars": 382.6666666666667,
+          "tokenUsage": {
+            "status": "available",
+            "reportedJobs": 6,
+            "avgPromptTokens": 1472,
+            "avgCompletionTokens": 41.5,
+            "avgTotalTokens": 1513.5
+          },
+          "avgTerminalLatencyMs": 1066,
+          "totalLatencyMs": 7377,
+          "totalRequestsSent": 7,
+          "firstAttemptSuccessCount": 5,
+          "eventualSuccessCount": 6,
+          "parseFailureCount": 0,
+          "constraintValidNumerator": 5,
+          "constraintValidDenominator": 5,
+          "constraintValidRate": 1
+        },
+        "subgroups": {
+          "byCategory": {
+            "missing-empty": {
+              "validJobCount": 2,
+              "avgFactCoverage": 1,
+              "unsupportedClaimCount": 0
+            },
+            "weak": {
+              "validJobCount": 2,
+              "avgFactCoverage": 0.6666666666666666,
+              "unsupportedClaimCount": 0
+            },
+            "acceptable": {
+              "validJobCount": 2,
+              "avgFactCoverage": 1,
+              "unsupportedClaimCount": 0
+            }
+          },
+          "byContextSensitivity": {
+            "contextSensitive": {
+              "validJobCount": 0,
+              "avgFactCoverage": null,
+              "unsupportedClaimCount": null
+            },
+            "notContextSensitive": {
+              "validJobCount": 6,
+              "avgFactCoverage": 0.888888888888889,
+              "unsupportedClaimCount": 0
+            }
+          }
+        }
+      },
+      "structure-aware": {
+        "primary": {
+          "validResponseNumerator": 6,
+          "validResponseDenominator": 6,
+          "validResponseRate": 1,
+          "usableDescriptionNumerator": 6,
+          "usableDescriptionDenominator": 6,
+          "usableDescriptionRate": 1,
+          "requiredFactCoverage": 0.9444444444444443,
+          "commonCaseFactCoverage": 0.9444444444444443,
+          "totalFactsConveyed": 17,
+          "totalFactsRequired": 18,
+          "unsupportedOutputNumerator": 0,
+          "unsupportedOutputDenominator": 6,
+          "unsupportedOutputRate": 0,
+          "unsupportedClaimCount": 0,
+          "semanticDetection": {
+            "eligibleCases": 4,
+            "validDecisions": 4,
+            "tp": 2,
+            "tn": 2,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "missingEmptyRemediation": {
+            "totalCases": 2,
+            "remediatedCount": 2
+          }
+        },
+        "secondary": {
+          "avgSelectedSourceChars": 207.5,
+          "avgFormattedContextChars": 304.8333333333333,
+          "tokenUsage": {
+            "status": "available",
+            "reportedJobs": 6,
+            "avgPromptTokens": 1443.5,
+            "avgCompletionTokens": 39.666666666666664,
+            "avgTotalTokens": 1483.1666666666667
+          },
+          "avgTerminalLatencyMs": 1199,
+          "totalLatencyMs": 7194,
+          "totalRequestsSent": 6,
+          "firstAttemptSuccessCount": 6,
+          "eventualSuccessCount": 6,
+          "parseFailureCount": 0,
+          "constraintValidNumerator": 4,
+          "constraintValidDenominator": 4,
+          "constraintValidRate": 1
+        },
+        "subgroups": {
+          "byCategory": {
+            "missing-empty": {
+              "validJobCount": 2,
+              "avgFactCoverage": 1,
+              "unsupportedClaimCount": 0
+            },
+            "weak": {
+              "validJobCount": 2,
+              "avgFactCoverage": 0.8333333333333333,
+              "unsupportedClaimCount": 0
+            },
+            "acceptable": {
+              "validJobCount": 2,
+              "avgFactCoverage": 1,
+              "unsupportedClaimCount": 0
+            }
+          },
+          "byContextSensitivity": {
+            "contextSensitive": {
+              "validJobCount": 0,
+              "avgFactCoverage": null,
+              "unsupportedClaimCount": null
+            },
+            "notContextSensitive": {
+              "validJobCount": 6,
+              "avgFactCoverage": 0.9444444444444443,
+              "unsupportedClaimCount": 0
+            }
+          }
+        }
+      },
+      "largest-practical": {
+        "primary": {
+          "validResponseNumerator": 6,
+          "validResponseDenominator": 6,
+          "validResponseRate": 1,
+          "usableDescriptionNumerator": 6,
+          "usableDescriptionDenominator": 6,
+          "usableDescriptionRate": 1,
+          "requiredFactCoverage": 0.8888888888888888,
+          "commonCaseFactCoverage": 0.8888888888888888,
+          "totalFactsConveyed": 16,
+          "totalFactsRequired": 18,
+          "unsupportedOutputNumerator": 0,
+          "unsupportedOutputDenominator": 6,
+          "unsupportedOutputRate": 0,
+          "unsupportedClaimCount": 0,
+          "semanticDetection": {
+            "eligibleCases": 4,
+            "validDecisions": 4,
+            "tp": 2,
+            "tn": 1,
+            "fp": 1,
+            "fn": 0,
+            "precision": 0.6666666666666666,
+            "recall": 1,
+            "f1": 0.8
+          },
+          "missingEmptyRemediation": {
+            "totalCases": 2,
+            "remediatedCount": 2
+          }
+        },
+        "secondary": {
+          "avgSelectedSourceChars": 366.3333333333333,
+          "avgFormattedContextChars": 544.3333333333334,
+          "tokenUsage": {
+            "status": "available",
+            "reportedJobs": 6,
+            "avgPromptTokens": 1507.6666666666667,
+            "avgCompletionTokens": 47.5,
+            "avgTotalTokens": 1555.1666666666667
+          },
+          "avgTerminalLatencyMs": 2109.1666666666665,
+          "totalLatencyMs": 13528,
+          "totalRequestsSent": 7,
+          "firstAttemptSuccessCount": 5,
+          "eventualSuccessCount": 6,
+          "parseFailureCount": 0,
+          "constraintValidNumerator": 5,
+          "constraintValidDenominator": 5,
+          "constraintValidRate": 1
+        },
+        "subgroups": {
+          "byCategory": {
+            "missing-empty": {
+              "validJobCount": 2,
+              "avgFactCoverage": 0.8333333333333333,
+              "unsupportedClaimCount": 0
+            },
+            "weak": {
+              "validJobCount": 2,
+              "avgFactCoverage": 0.8333333333333333,
+              "unsupportedClaimCount": 0
+            },
+            "acceptable": {
+              "validJobCount": 2,
+              "avgFactCoverage": 1,
+              "unsupportedClaimCount": 0
+            }
+          },
+          "byContextSensitivity": {
+            "contextSensitive": {
+              "validJobCount": 0,
+              "avgFactCoverage": null,
+              "unsupportedClaimCount": null
+            },
+            "notContextSensitive": {
+              "validJobCount": 6,
+              "avgFactCoverage": 0.8888888888888888,
+              "unsupportedClaimCount": 0
+            }
+          }
+        }
+      }
+    },
+    "jobs": [
+      {
+        "scoringId": "ITEM-01",
+        "caseId": "case-05",
+        "strategy": "structure-aware",
+        "category": "acceptable",
+        "contextSensitive": false,
+        "shouldImprove": false,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "retained-existing-alt",
+        "effectiveDescription": "Line chart showing quarterly revenue increasing steadily across five quarters.",
+        "isNonEmptyDescription": true,
+        "modelConcern": false,
+        "humanScore": {
+          "scoringId": "ITEM-01",
+          "assetPath": "assets/ITEM-01.png",
+          "context": "The chart shows quarterly revenue in thousands of dollars across five consecutive quarters.",
+          "description": "Line chart showing quarterly revenue increasing steadily across five quarters.",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A line chart.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Line chart\""
+            },
+            {
+              "fact": "Quarterly revenue.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"quarterly revenue\""
+            },
+            {
+              "fact": "Revenue increases across five quarters.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"increasing steadily across five quarters\""
+            }
+          ],
+          "factsYes": 3,
+          "factsTotal": 3,
+          "factCoverage": 1,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": "Main trend is explained; only the exact revenue values are omitted."
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 1,
+        "attemptsUsed": 1,
+        "firstAttemptSuccess": true,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 985,
+        "totalLatencyMs": 985,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 231,
+        "formattedContextChars": 336,
+        "messageTextChars": 1703,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1436,
+          "completionTokens": 10,
+          "totalTokens": 1446
+        },
+        "wordLimit": null
+      },
+      {
+        "scoringId": "ITEM-02",
+        "caseId": "case-06",
+        "strategy": "structure-aware",
+        "category": "acceptable",
+        "contextSensitive": false,
+        "shouldImprove": false,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "retained-existing-alt",
+        "effectiveDescription": "Bar chart comparing 2026 department enrollment with Computer Science highest at 1,200 students.",
+        "isNonEmptyDescription": true,
+        "modelConcern": false,
+        "humanScore": {
+          "scoringId": "ITEM-02",
+          "assetPath": "assets/ITEM-02.png",
+          "context": "The chart compares 2026 department enrollment. CS means Computer Science; counts represent students.",
+          "description": "Bar chart comparing 2026 department enrollment with Computer Science highest at 1,200 students.",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A bar chart.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Bar chart\""
+            },
+            {
+              "fact": "2026 department enrollment.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"2026 department enrollment\""
+            },
+            {
+              "fact": "Computer Science has the highest enrollment.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Computer Science highest\""
+            }
+          ],
+          "factsYes": 3,
+          "factsTotal": 3,
+          "factCoverage": 1,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": "States the highest department (Computer Science at 1,200); only the remaining departments' values are omitted."
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 1,
+        "attemptsUsed": 1,
+        "firstAttemptSuccess": true,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 1418,
+        "totalLatencyMs": 1418,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 270,
+        "formattedContextChars": 352,
+        "messageTextChars": 1736,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1499,
+          "completionTokens": 21,
+          "totalTokens": 1520
+        },
+        "wordLimit": null
+      },
+      {
+        "scoringId": "ITEM-03",
+        "caseId": "case-03",
+        "strategy": "fixed-window",
+        "category": "weak",
+        "contextSensitive": false,
+        "shouldImprove": true,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "proposed-replacement",
+        "effectiveDescription": "Line graph of Quarterly Revenue showing an upward trend from $12k in Q1 to $40k in Q5.",
+        "isNonEmptyDescription": true,
+        "modelConcern": true,
+        "humanScore": {
+          "scoringId": "ITEM-03",
+          "assetPath": "assets/ITEM-03.png",
+          "context": "The chart shows quarterly revenue in thousands of dollars across five consecutive quarters.",
+          "description": "Line graph of Quarterly Revenue showing an upward trend from $12k in Q1 to $40k in Q5.",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A line chart.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Line graph\""
+            },
+            {
+              "fact": "Quarterly revenue.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Quarterly Revenue\""
+            },
+            {
+              "fact": "Revenue increases across five quarters.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"showing an upward trend from $12k in Q1 to $40k in Q5.\""
+            }
+          ],
+          "factsYes": 3,
+          "factsTotal": 3,
+          "factCoverage": 1,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 1,
+        "attemptsUsed": 1,
+        "firstAttemptSuccess": true,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 964,
+        "totalLatencyMs": 964,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 201,
+        "formattedContextChars": 327,
+        "messageTextChars": 1621,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1441,
+          "completionTokens": 39,
+          "totalTokens": 1480
+        },
+        "wordLimit": {
+          "wordCount": 17,
+          "maxWords": 40,
+          "withinLimit": true
+        }
+      },
+      {
+        "scoringId": "ITEM-04",
+        "caseId": "case-03",
+        "strategy": "minimal",
+        "category": "weak",
+        "contextSensitive": false,
+        "shouldImprove": true,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "proposed-replacement",
+        "effectiveDescription": "Line graph of Quarterly Revenue from Q1 to Q5, showing a steady increase from $12k in Q1 to $40k in Q5.",
+        "isNonEmptyDescription": true,
+        "modelConcern": true,
+        "humanScore": {
+          "scoringId": "ITEM-04",
+          "assetPath": "assets/ITEM-04.png",
+          "context": "The chart shows quarterly revenue in thousands of dollars across five consecutive quarters.",
+          "description": "Line graph of Quarterly Revenue from Q1 to Q5, showing a steady increase from $12k in Q1 to $40k in Q5.",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A line chart.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Line graph\""
+            },
+            {
+              "fact": "Quarterly revenue.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Quarterly Revenue\""
+            },
+            {
+              "fact": "Revenue increases across five quarters.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"showing a steady increase from $12k in Q1 to $40k in Q5.\""
+            }
+          ],
+          "factsYes": 3,
+          "factsTotal": 3,
+          "factCoverage": 1,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 1,
+        "attemptsUsed": 1,
+        "firstAttemptSuccess": true,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 1384,
+        "totalLatencyMs": 1384,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 31,
+        "formattedContextChars": 31,
+        "messageTextChars": 1325,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1357,
+          "completionTokens": 46,
+          "totalTokens": 1403
+        },
+        "wordLimit": {
+          "wordCount": 21,
+          "maxWords": 40,
+          "withinLimit": true
+        }
+      },
+      {
+        "scoringId": "ITEM-05",
+        "caseId": "case-04",
+        "strategy": "largest-practical",
+        "category": "weak",
+        "contextSensitive": false,
+        "shouldImprove": true,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "proposed-replacement",
+        "effectiveDescription": "Histogram titled Customer Age Distribution showing customer ages in years across 10 synthetic observations, with the highest count of 4 occurring in the 28 to 34 age range.",
+        "isNonEmptyDescription": true,
+        "modelConcern": true,
+        "humanScore": {
+          "scoringId": "ITEM-05",
+          "assetPath": "assets/ITEM-05.png",
+          "context": "The histogram summarizes customer ages in years from ten synthetic observations.",
+          "description": "Histogram titled Customer Age Distribution showing customer ages in years across 10 synthetic observations, with the highest count of 4 occurring in the 28 to 34 age range.",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A histogram.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Histogram\""
+            },
+            {
+              "fact": "Customer ages in years.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"customer ages in years\""
+            },
+            {
+              "fact": "Most observations lie between ages 22 and 34.",
+              "conveyed": false,
+              "mark": "No",
+              "evidence": "No mention of this in the description."
+            }
+          ],
+          "factsYes": 2,
+          "factsTotal": 3,
+          "factCoverage": 0.6666666666666666,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 0.6666666666666666,
+        "attemptsUsed": 1,
+        "firstAttemptSuccess": true,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 5505,
+        "totalLatencyMs": 5505,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 444,
+        "formattedContextChars": 622,
+        "messageTextChars": 1920,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1538,
+          "completionTokens": 50,
+          "totalTokens": 1588
+        },
+        "wordLimit": {
+          "wordCount": 28,
+          "maxWords": 40,
+          "withinLimit": true
+        }
+      },
+      {
+        "scoringId": "ITEM-06",
+        "caseId": "case-05",
+        "strategy": "minimal",
+        "category": "acceptable",
+        "contextSensitive": false,
+        "shouldImprove": false,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "retained-existing-alt",
+        "effectiveDescription": "Line chart showing quarterly revenue increasing steadily across five quarters.",
+        "isNonEmptyDescription": true,
+        "modelConcern": false,
+        "humanScore": {
+          "scoringId": "ITEM-06",
+          "assetPath": "assets/ITEM-06.png",
+          "context": "The chart shows quarterly revenue in thousands of dollars across five consecutive quarters.",
+          "description": "Line chart showing quarterly revenue increasing steadily across five quarters.",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A line chart.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Line chart\""
+            },
+            {
+              "fact": "Quarterly revenue.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"quarterly revenue\""
+            },
+            {
+              "fact": "Revenue increases across five quarters.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"increasing steadily across five quarters\""
+            }
+          ],
+          "factsYes": 3,
+          "factsTotal": 3,
+          "factCoverage": 1,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": "Main trend is explained; only the exact revenue values are omitted."
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 1,
+        "attemptsUsed": 1,
+        "firstAttemptSuccess": true,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 935,
+        "totalLatencyMs": 935,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 104,
+        "formattedContextChars": 104,
+        "messageTextChars": 1471,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1376,
+          "completionTokens": 14,
+          "totalTokens": 1390
+        },
+        "wordLimit": null
+      },
+      {
+        "scoringId": "ITEM-07",
+        "caseId": "case-06",
+        "strategy": "fixed-window",
+        "category": "acceptable",
+        "contextSensitive": false,
+        "shouldImprove": false,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "retained-existing-alt",
+        "effectiveDescription": "Bar chart comparing 2026 department enrollment with Computer Science highest at 1,200 students.",
+        "isNonEmptyDescription": true,
+        "modelConcern": false,
+        "humanScore": {
+          "scoringId": "ITEM-07",
+          "assetPath": "assets/ITEM-07.png",
+          "context": "The chart compares 2026 department enrollment. CS means Computer Science; counts represent students.",
+          "description": "Bar chart comparing 2026 department enrollment with Computer Science highest at 1,200 students.",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A bar chart.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Bar chart\""
+            },
+            {
+              "fact": "2026 department enrollment.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"2026 department enrollment\""
+            },
+            {
+              "fact": "Computer Science has the highest enrollment.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Computer Science highest\""
+            }
+          ],
+          "factsYes": 3,
+          "factsTotal": 3,
+          "factCoverage": 1,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": "States the highest department (Computer Science at 1,200); only the remaining departments' values are omitted."
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 1,
+        "attemptsUsed": 1,
+        "firstAttemptSuccess": true,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 920,
+        "totalLatencyMs": 920,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 317,
+        "formattedContextChars": 443,
+        "messageTextChars": 1827,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1532,
+          "completionTokens": 14,
+          "totalTokens": 1546
+        },
+        "wordLimit": null
+      },
+      {
+        "scoringId": "ITEM-08",
+        "caseId": "case-01",
+        "strategy": "structure-aware",
+        "category": "missing-empty",
+        "contextSensitive": false,
+        "shouldImprove": true,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "proposed-replacement",
+        "effectiveDescription": "Line chart of quarterly revenue from Q1 to Q5: Q1 is $12k, Q2 is $18k, Q3 is $24k, Q4 is $31k, and Q5 is $40k, showing a steady upward trend.",
+        "isNonEmptyDescription": true,
+        "modelConcern": true,
+        "humanScore": {
+          "scoringId": "ITEM-08",
+          "assetPath": "assets/ITEM-08.png",
+          "context": "The chart shows quarterly revenue in thousands of dollars across five consecutive quarters.",
+          "description": "Line chart of quarterly revenue from Q1 to Q5: Q1 is $12k, Q2 is $18k, Q3 is $24k, Q4 is $31k, and Q5 is $40k, showing a steady upward trend.",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A line chart.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Line chart\""
+            },
+            {
+              "fact": "Quarterly revenue.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"quarterly revenue\""
+            },
+            {
+              "fact": "Revenue increases across five quarters.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"from Q1 to Q5: Q1 is $12k, Q2 is $18k, Q3 is $24k, Q4 is $31k, and Q5 is $40k, showing a steady upward trend.\""
+            }
+          ],
+          "factsYes": 3,
+          "factsTotal": 3,
+          "factCoverage": 1,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 1,
+        "attemptsUsed": 1,
+        "firstAttemptSuccess": true,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 1120,
+        "totalLatencyMs": 1120,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 160,
+        "formattedContextChars": 265,
+        "messageTextChars": 1594,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1424,
+          "completionTokens": 72,
+          "totalTokens": 1496
+        },
+        "wordLimit": {
+          "wordCount": 30,
+          "maxWords": 40,
+          "withinLimit": true
+        }
+      },
+      {
+        "scoringId": "ITEM-09",
+        "caseId": "case-04",
+        "strategy": "structure-aware",
+        "category": "weak",
+        "contextSensitive": false,
+        "shouldImprove": true,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "proposed-replacement",
+        "effectiveDescription": "Histogram titled Customer Age Distribution showing customer ages in years across 5 bins, with counts ranging from 1 to 4.",
+        "isNonEmptyDescription": true,
+        "modelConcern": true,
+        "humanScore": {
+          "scoringId": "ITEM-09",
+          "assetPath": "assets/ITEM-09.png",
+          "context": "The histogram summarizes customer ages in years from ten synthetic observations.",
+          "description": "Histogram titled Customer Age Distribution showing customer ages in years across 5 bins, with counts ranging from 1 to 4.",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A histogram.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Histogram\""
+            },
+            {
+              "fact": "Customer ages in years.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"customer ages in years\""
+            },
+            {
+              "fact": "Most observations lie between ages 22 and 34.",
+              "conveyed": false,
+              "mark": "No",
+              "evidence": "The description gives no finding about where most observations lie."
+            }
+          ],
+          "factsYes": 2,
+          "factsTotal": 3,
+          "factCoverage": 0.6666666666666666,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": true,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": true,
+                "mark": "Yes",
+                "evidence": "The key point, which age group has the highest count, is not mentioned."
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 0.6666666666666666,
+        "attemptsUsed": 1,
+        "firstAttemptSuccess": true,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 1371,
+        "totalLatencyMs": 1371,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 273,
+        "formattedContextChars": 355,
+        "messageTextChars": 1653,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1463,
+          "completionTokens": 38,
+          "totalTokens": 1501
+        },
+        "wordLimit": {
+          "wordCount": 20,
+          "maxWords": 40,
+          "withinLimit": true
+        }
+      },
+      {
+        "scoringId": "ITEM-10",
+        "caseId": "case-06",
+        "strategy": "largest-practical",
+        "category": "acceptable",
+        "contextSensitive": false,
+        "shouldImprove": false,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "retained-existing-alt",
+        "effectiveDescription": "Bar chart comparing 2026 department enrollment with Computer Science highest at 1,200 students.",
+        "isNonEmptyDescription": true,
+        "modelConcern": false,
+        "humanScore": {
+          "scoringId": "ITEM-10",
+          "assetPath": "assets/ITEM-10.png",
+          "context": "The chart compares 2026 department enrollment. CS means Computer Science; counts represent students.",
+          "description": "Bar chart comparing 2026 department enrollment with Computer Science highest at 1,200 students.",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A bar chart.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Bar chart\""
+            },
+            {
+              "fact": "2026 department enrollment.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"2026 department enrollment\""
+            },
+            {
+              "fact": "Computer Science has the highest enrollment.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Computer Science highest\""
+            }
+          ],
+          "factsYes": 3,
+          "factsTotal": 3,
+          "factCoverage": 1,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": "States the highest department (Computer Science at 1,200); only the remaining departments' values are omitted."
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 1,
+        "attemptsUsed": 1,
+        "firstAttemptSuccess": true,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 1185,
+        "totalLatencyMs": 1185,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 440,
+        "formattedContextChars": 618,
+        "messageTextChars": 2002,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1573,
+          "completionTokens": 14,
+          "totalTokens": 1587
+        },
+        "wordLimit": null
+      },
+      {
+        "scoringId": "ITEM-11",
+        "caseId": "case-02",
+        "strategy": "structure-aware",
+        "category": "missing-empty",
+        "contextSensitive": false,
+        "shouldImprove": true,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "proposed-replacement",
+        "effectiveDescription": "Line chart titled Quarterly Revenue showing steady growth across five quarters: Q1 ($12k), Q2 ($18k), Q3 ($24k), Q4 ($31k), and Q5 ($40k).",
+        "isNonEmptyDescription": true,
+        "modelConcern": true,
+        "humanScore": {
+          "scoringId": "ITEM-11",
+          "assetPath": "assets/ITEM-11.png",
+          "context": "The chart shows quarterly revenue in thousands of dollars across five consecutive quarters.",
+          "description": "Line chart titled Quarterly Revenue showing steady growth across five quarters: Q1 ($12k), Q2 ($18k), Q3 ($24k), Q4 ($31k), and Q5 ($40k).",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A line chart.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Line chart\""
+            },
+            {
+              "fact": "Quarterly revenue.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Quarterly Revenue\""
+            },
+            {
+              "fact": "Revenue increases across five quarters.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"showing steady growth across five quarters\""
+            }
+          ],
+          "factsYes": 3,
+          "factsTotal": 3,
+          "factCoverage": 1,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 1,
+        "attemptsUsed": 1,
+        "firstAttemptSuccess": true,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 1263,
+        "totalLatencyMs": 1263,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 153,
+        "formattedContextChars": 258,
+        "messageTextChars": 1587,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1422,
+          "completionTokens": 61,
+          "totalTokens": 1483
+        },
+        "wordLimit": {
+          "wordCount": 22,
+          "maxWords": 40,
+          "withinLimit": true
+        }
+      },
+      {
+        "scoringId": "ITEM-12",
+        "caseId": "case-05",
+        "strategy": "fixed-window",
+        "category": "acceptable",
+        "contextSensitive": false,
+        "shouldImprove": false,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "proposed-replacement",
+        "effectiveDescription": "Line chart of quarterly revenue increasing steadily from $12k in Q1 to $40k in Q5 across five quarters.",
+        "isNonEmptyDescription": true,
+        "modelConcern": true,
+        "humanScore": {
+          "scoringId": "ITEM-12",
+          "assetPath": "assets/ITEM-12.png",
+          "context": "The chart shows quarterly revenue in thousands of dollars across five consecutive quarters.",
+          "description": "Line chart of quarterly revenue increasing steadily from $12k in Q1 to $40k in Q5 across five quarters.",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A line chart.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Line chart\""
+            },
+            {
+              "fact": "Quarterly revenue.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"quarterly revenue\""
+            },
+            {
+              "fact": "Revenue increases across five quarters.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"increasing steadily from $12k in Q1 to $40k in Q5 across five quarters.\""
+            }
+          ],
+          "factsYes": 3,
+          "factsTotal": 3,
+          "factCoverage": 1,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 1,
+        "attemptsUsed": 1,
+        "firstAttemptSuccess": true,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 1094,
+        "totalLatencyMs": 1094,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 274,
+        "formattedContextChars": 400,
+        "messageTextChars": 1767,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1460,
+          "completionTokens": 40,
+          "totalTokens": 1500
+        },
+        "wordLimit": {
+          "wordCount": 18,
+          "maxWords": 40,
+          "withinLimit": true
+        }
+      },
+      {
+        "scoringId": "ITEM-13",
+        "caseId": "case-02",
+        "strategy": "minimal",
+        "category": "missing-empty",
+        "contextSensitive": false,
+        "shouldImprove": true,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "proposed-replacement",
+        "effectiveDescription": "Line chart titled \"Quarterly Revenue\" showing an upward trend from Q1 ($12k) to Q5 ($40k). Q2 is $18k, Q3 is $24k, and Q4 is $31k.",
+        "isNonEmptyDescription": true,
+        "modelConcern": true,
+        "humanScore": {
+          "scoringId": "ITEM-13",
+          "assetPath": "assets/ITEM-13.png",
+          "context": "The chart shows quarterly revenue in thousands of dollars across five consecutive quarters.",
+          "description": "Line chart titled \"Quarterly Revenue\" showing an upward trend from Q1 ($12k) to Q5 ($40k). Q2 is $18k, Q3 is $24k, and Q4 is $31k.",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A line chart.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Line chart\""
+            },
+            {
+              "fact": "Quarterly revenue.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "titled \"Quarterly Revenue\""
+            },
+            {
+              "fact": "Revenue increases across five quarters.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"showing an upward trend from Q1 ($12k) to Q5 ($40k).\""
+            }
+          ],
+          "factsYes": 3,
+          "factsTotal": 3,
+          "factCoverage": 1,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 1,
+        "attemptsUsed": 1,
+        "firstAttemptSuccess": true,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 1231,
+        "totalLatencyMs": 1231,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 26,
+        "formattedContextChars": 26,
+        "messageTextChars": 1355,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1362,
+          "completionTokens": 68,
+          "totalTokens": 1430
+        },
+        "wordLimit": {
+          "wordCount": 25,
+          "maxWords": 40,
+          "withinLimit": true
+        }
+      },
+      {
+        "scoringId": "ITEM-14",
+        "caseId": "case-02",
+        "strategy": "fixed-window",
+        "category": "missing-empty",
+        "contextSensitive": false,
+        "shouldImprove": true,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "proposed-replacement",
+        "effectiveDescription": "Line plot of Quarterly Revenue showing an upward trend from $12k in Q1 to $40k in Q5.",
+        "isNonEmptyDescription": true,
+        "modelConcern": true,
+        "humanScore": {
+          "scoringId": "ITEM-14",
+          "assetPath": "assets/ITEM-14.png",
+          "context": "The chart shows quarterly revenue in thousands of dollars across five consecutive quarters.",
+          "description": "Line plot of Quarterly Revenue showing an upward trend from $12k in Q1 to $40k in Q5.",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A line chart.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Line plot\""
+            },
+            {
+              "fact": "Quarterly revenue.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Quarterly Revenue\""
+            },
+            {
+              "fact": "Revenue increases across five quarters.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"showing an upward trend from $12k in Q1 to $40k in Q5.\""
+            }
+          ],
+          "factsYes": 3,
+          "factsTotal": 3,
+          "factCoverage": 1,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 1,
+        "attemptsUsed": 2,
+        "firstAttemptSuccess": false,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 1199,
+        "totalLatencyMs": 2180,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 196,
+        "formattedContextChars": 322,
+        "messageTextChars": 1651,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1446,
+          "completionTokens": 39,
+          "totalTokens": 1485
+        },
+        "wordLimit": {
+          "wordCount": 17,
+          "maxWords": 40,
+          "withinLimit": true
+        }
+      },
+      {
+        "scoringId": "ITEM-15",
+        "caseId": "case-01",
+        "strategy": "largest-practical",
+        "category": "missing-empty",
+        "contextSensitive": false,
+        "shouldImprove": true,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "proposed-replacement",
+        "effectiveDescription": "Line chart of quarterly revenue in thousands of dollars from Q1 to Q5: Q1 is $12k, Q2 is $18k, Q3 is $24k, Q4 is $31k, and Q5 is $40k.",
+        "isNonEmptyDescription": true,
+        "modelConcern": true,
+        "humanScore": {
+          "scoringId": "ITEM-15",
+          "assetPath": "assets/ITEM-15.png",
+          "context": "The chart shows quarterly revenue in thousands of dollars across five consecutive quarters.",
+          "description": "Line chart of quarterly revenue in thousands of dollars from Q1 to Q5: Q1 is $12k, Q2 is $18k, Q3 is $24k, Q4 is $31k, and Q5 is $40k.",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A line chart.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Line chart\""
+            },
+            {
+              "fact": "Quarterly revenue.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"quarterly revenue\""
+            },
+            {
+              "fact": "Revenue increases across five quarters.",
+              "conveyed": false,
+              "mark": "No",
+              "evidence": "Lists all five values (Q1 is $12k through Q5 is $40k) from which an increase can be inferred, but does not explicitly state the upward trend."
+            }
+          ],
+          "factsYes": 2,
+          "factsTotal": 3,
+          "factCoverage": 0.6666666666666666,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 0.6666666666666666,
+        "attemptsUsed": 1,
+        "firstAttemptSuccess": true,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 1408,
+        "totalLatencyMs": 1408,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 313,
+        "formattedContextChars": 491,
+        "messageTextChars": 1820,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1483,
+          "completionTokens": 70,
+          "totalTokens": 1553
+        },
+        "wordLimit": {
+          "wordCount": 29,
+          "maxWords": 40,
+          "withinLimit": true
+        }
+      },
+      {
+        "scoringId": "ITEM-16",
+        "caseId": "case-04",
+        "strategy": "minimal",
+        "category": "weak",
+        "contextSensitive": false,
+        "shouldImprove": true,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "proposed-replacement",
+        "effectiveDescription": "Histogram titled Customer Age Distribution showing customer count on the y-axis ranging from 0 to 4, and age on the x-axis ranging from approximately 22 to 52, with the highest frequency between 28 and 34.",
+        "isNonEmptyDescription": true,
+        "modelConcern": true,
+        "humanScore": {
+          "scoringId": "ITEM-16",
+          "assetPath": "assets/ITEM-16.png",
+          "context": "The histogram summarizes customer ages in years from ten synthetic observations.",
+          "description": "Histogram titled Customer Age Distribution showing customer count on the y-axis ranging from 0 to 4, and age on the x-axis ranging from approximately 22 to 52, with the highest frequency between 28 and 34.",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A histogram.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Histogram\""
+            },
+            {
+              "fact": "Customer ages in years.",
+              "conveyed": false,
+              "mark": "No",
+              "evidence": "Mentions \"Customer Age\" and \"age on the x-axis\", but omits the unit \"in years\"."
+            },
+            {
+              "fact": "Most observations lie between ages 22 and 34.",
+              "conveyed": false,
+              "mark": "No",
+              "evidence": "States highest frequency is between 28 and 34, not that most observations lie between 22 and 34."
+            }
+          ],
+          "factsYes": 1,
+          "factsTotal": 3,
+          "factCoverage": 0.3333333333333333,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 0.3333333333333333,
+        "attemptsUsed": 1,
+        "firstAttemptSuccess": true,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 971,
+        "totalLatencyMs": 971,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 178,
+        "formattedContextChars": 178,
+        "messageTextChars": 1476,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1420,
+          "completionTokens": 65,
+          "totalTokens": 1485
+        },
+        "wordLimit": {
+          "wordCount": 35,
+          "maxWords": 40,
+          "withinLimit": true
+        }
+      },
+      {
+        "scoringId": "ITEM-17",
+        "caseId": "case-04",
+        "strategy": "fixed-window",
+        "category": "weak",
+        "contextSensitive": false,
+        "shouldImprove": true,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "proposed-replacement",
+        "effectiveDescription": "Histogram titled Customer Age Distribution showing customer count across 5 age bins from 22 to 52, with the highest count of 4 in the 28 to 34 age range.",
+        "isNonEmptyDescription": true,
+        "modelConcern": true,
+        "humanScore": {
+          "scoringId": "ITEM-17",
+          "assetPath": "assets/ITEM-17.png",
+          "context": "The histogram summarizes customer ages in years from ten synthetic observations.",
+          "description": "Histogram titled Customer Age Distribution showing customer count across 5 age bins from 22 to 52, with the highest count of 4 in the 28 to 34 age range.",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A histogram.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Histogram\""
+            },
+            {
+              "fact": "Customer ages in years.",
+              "conveyed": false,
+              "mark": "No",
+              "evidence": "Mentions \"Customer Age\" and \"age bins\", but omits the unit \"in years\"."
+            },
+            {
+              "fact": "Most observations lie between ages 22 and 34.",
+              "conveyed": false,
+              "mark": "No",
+              "evidence": "States the highest count of 4 in the 28 to 34 age range, not that most observations lie between 22 and 34."
+            }
+          ],
+          "factsYes": 1,
+          "factsTotal": 3,
+          "factCoverage": 0.3333333333333333,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": "Mentions the peak age range (28 to 34); only individual counts for the other bins are omitted."
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 0.3333333333333333,
+        "attemptsUsed": 1,
+        "firstAttemptSuccess": true,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 1098,
+        "totalLatencyMs": 1098,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 349,
+        "formattedContextChars": 475,
+        "messageTextChars": 1773,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1505,
+          "completionTokens": 54,
+          "totalTokens": 1559
+        },
+        "wordLimit": {
+          "wordCount": 29,
+          "maxWords": 40,
+          "withinLimit": true
+        }
+      },
+      {
+        "scoringId": "ITEM-18",
+        "caseId": "case-05",
+        "strategy": "largest-practical",
+        "category": "acceptable",
+        "contextSensitive": false,
+        "shouldImprove": false,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "proposed-replacement",
+        "effectiveDescription": "Line chart showing quarterly revenue increasing from $12k in Q1 to $40k in Q5.",
+        "isNonEmptyDescription": true,
+        "modelConcern": true,
+        "humanScore": {
+          "scoringId": "ITEM-18",
+          "assetPath": "assets/ITEM-18.png",
+          "context": "The chart shows quarterly revenue in thousands of dollars across five consecutive quarters.",
+          "description": "Line chart showing quarterly revenue increasing from $12k in Q1 to $40k in Q5.",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A line chart.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Line chart\""
+            },
+            {
+              "fact": "Quarterly revenue.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"quarterly revenue\""
+            },
+            {
+              "fact": "Revenue increases across five quarters.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"increasing from $12k in Q1 to $40k in Q5.\""
+            }
+          ],
+          "factsYes": 3,
+          "factsTotal": 3,
+          "factCoverage": 1,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 1,
+        "attemptsUsed": 1,
+        "firstAttemptSuccess": true,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 1701,
+        "totalLatencyMs": 1701,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 384,
+        "formattedContextChars": 562,
+        "messageTextChars": 1929,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1495,
+          "completionTokens": 38,
+          "totalTokens": 1533
+        },
+        "wordLimit": {
+          "wordCount": 14,
+          "maxWords": 40,
+          "withinLimit": true
+        }
+      },
+      {
+        "scoringId": "ITEM-19",
+        "caseId": "case-02",
+        "strategy": "largest-practical",
+        "category": "missing-empty",
+        "contextSensitive": false,
+        "shouldImprove": true,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "proposed-replacement",
+        "effectiveDescription": "Line chart of quarterly revenue in thousands of dollars across five quarters: Q1 ($12k), Q2 ($18k), Q3 ($24k), Q4 ($31k), and Q5 ($40k), showing an upward trend.",
+        "isNonEmptyDescription": true,
+        "modelConcern": true,
+        "humanScore": {
+          "scoringId": "ITEM-19",
+          "assetPath": "assets/ITEM-19.png",
+          "context": "The chart shows quarterly revenue in thousands of dollars across five consecutive quarters.",
+          "description": "Line chart of quarterly revenue in thousands of dollars across five quarters: Q1 ($12k), Q2 ($18k), Q3 ($24k), Q4 ($31k), and Q5 ($40k), showing an upward trend.",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A line chart.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Line chart\""
+            },
+            {
+              "fact": "Quarterly revenue.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"quarterly revenue\""
+            },
+            {
+              "fact": "Revenue increases across five quarters.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"across five quarters: Q1 ($12k), Q2 ($18k), Q3 ($24k), Q4 ($31k), and Q5 ($40k), showing an upward trend.\""
+            }
+          ],
+          "factsYes": 3,
+          "factsTotal": 3,
+          "factCoverage": 1,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 1,
+        "attemptsUsed": 2,
+        "firstAttemptSuccess": false,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 1362,
+        "totalLatencyMs": 2235,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 306,
+        "formattedContextChars": 484,
+        "messageTextChars": 1813,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1481,
+          "completionTokens": 67,
+          "totalTokens": 1548
+        },
+        "wordLimit": {
+          "wordCount": 27,
+          "maxWords": 40,
+          "withinLimit": true
+        }
+      },
+      {
+        "scoringId": "ITEM-20",
+        "caseId": "case-03",
+        "strategy": "largest-practical",
+        "category": "weak",
+        "contextSensitive": false,
+        "shouldImprove": true,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "proposed-replacement",
+        "effectiveDescription": "Line chart of quarterly revenue from Q1 to Q5, rising steadily from 12 thousand dollars in Q1 to 40 thousand dollars in Q5.",
+        "isNonEmptyDescription": true,
+        "modelConcern": true,
+        "humanScore": {
+          "scoringId": "ITEM-20",
+          "assetPath": "assets/ITEM-20.png",
+          "context": "The chart shows quarterly revenue in thousands of dollars across five consecutive quarters.",
+          "description": "Line chart of quarterly revenue from Q1 to Q5, rising steadily from 12 thousand dollars in Q1 to 40 thousand dollars in Q5.",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A line chart.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Line chart\""
+            },
+            {
+              "fact": "Quarterly revenue.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"quarterly revenue\""
+            },
+            {
+              "fact": "Revenue increases across five quarters.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"rising steadily from 12 thousand dollars in Q1 to 40 thousand dollars in Q5.\""
+            }
+          ],
+          "factsYes": 3,
+          "factsTotal": 3,
+          "factCoverage": 1,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 1,
+        "attemptsUsed": 1,
+        "firstAttemptSuccess": true,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 1494,
+        "totalLatencyMs": 1494,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 311,
+        "formattedContextChars": 489,
+        "messageTextChars": 1783,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1476,
+          "completionTokens": 46,
+          "totalTokens": 1522
+        },
+        "wordLimit": {
+          "wordCount": 23,
+          "maxWords": 40,
+          "withinLimit": true
+        }
+      },
+      {
+        "scoringId": "ITEM-21",
+        "caseId": "case-01",
+        "strategy": "fixed-window",
+        "category": "missing-empty",
+        "contextSensitive": false,
+        "shouldImprove": true,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "proposed-replacement",
+        "effectiveDescription": "Line chart titled Quarterly Revenue showing an upward trend across 5 quarters: Q1 ($12k), Q2 ($18k), Q3 ($24k), Q4 ($31k), and Q5 ($40k).",
+        "isNonEmptyDescription": true,
+        "modelConcern": true,
+        "humanScore": {
+          "scoringId": "ITEM-21",
+          "assetPath": "assets/ITEM-21.png",
+          "context": "The chart shows quarterly revenue in thousands of dollars across five consecutive quarters.",
+          "description": "Line chart titled Quarterly Revenue showing an upward trend across 5 quarters: Q1 ($12k), Q2 ($18k), Q3 ($24k), Q4 ($31k), and Q5 ($40k).",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A line chart.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Line chart\""
+            },
+            {
+              "fact": "Quarterly revenue.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Quarterly Revenue\""
+            },
+            {
+              "fact": "Revenue increases across five quarters.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"showing an upward trend across 5 quarters\""
+            }
+          ],
+          "factsYes": 3,
+          "factsTotal": 3,
+          "factCoverage": 1,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 1,
+        "attemptsUsed": 1,
+        "firstAttemptSuccess": true,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 1121,
+        "totalLatencyMs": 1121,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 203,
+        "formattedContextChars": 329,
+        "messageTextChars": 1658,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1448,
+          "completionTokens": 63,
+          "totalTokens": 1511
+        },
+        "wordLimit": {
+          "wordCount": 23,
+          "maxWords": 40,
+          "withinLimit": true
+        }
+      },
+      {
+        "scoringId": "ITEM-22",
+        "caseId": "case-06",
+        "strategy": "minimal",
+        "category": "acceptable",
+        "contextSensitive": false,
+        "shouldImprove": false,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "retained-existing-alt",
+        "effectiveDescription": "Bar chart comparing 2026 department enrollment with Computer Science highest at 1,200 students.",
+        "isNonEmptyDescription": true,
+        "modelConcern": false,
+        "humanScore": {
+          "scoringId": "ITEM-22",
+          "assetPath": "assets/ITEM-22.png",
+          "context": "The chart compares 2026 department enrollment. CS means Computer Science; counts represent students.",
+          "description": "Bar chart comparing 2026 department enrollment with Computer Science highest at 1,200 students.",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A bar chart.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Bar chart\""
+            },
+            {
+              "fact": "2026 department enrollment.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"2026 department enrollment\""
+            },
+            {
+              "fact": "Computer Science has the highest enrollment.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Computer Science highest\""
+            }
+          ],
+          "factsYes": 3,
+          "factsTotal": 3,
+          "factCoverage": 1,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": "States the highest department (Computer Science at 1,200); only the remaining departments' values are omitted."
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 1,
+        "attemptsUsed": 1,
+        "firstAttemptSuccess": true,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 4743,
+        "totalLatencyMs": 4743,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 147,
+        "formattedContextChars": 147,
+        "messageTextChars": 1531,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1448,
+          "completionTokens": 14,
+          "totalTokens": 1462
+        },
+        "wordLimit": null
+      },
+      {
+        "scoringId": "ITEM-23",
+        "caseId": "case-03",
+        "strategy": "structure-aware",
+        "category": "weak",
+        "contextSensitive": false,
+        "shouldImprove": true,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "proposed-replacement",
+        "effectiveDescription": "Line chart showing quarterly revenue increasing from $12k in Q1 to $40k in Q5.",
+        "isNonEmptyDescription": true,
+        "modelConcern": true,
+        "humanScore": {
+          "scoringId": "ITEM-23",
+          "assetPath": "assets/ITEM-23.png",
+          "context": "The chart shows quarterly revenue in thousands of dollars across five consecutive quarters.",
+          "description": "Line chart showing quarterly revenue increasing from $12k in Q1 to $40k in Q5.",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A line chart.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Line chart\""
+            },
+            {
+              "fact": "Quarterly revenue.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"quarterly revenue\""
+            },
+            {
+              "fact": "Revenue increases across five quarters.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"increasing from $12k in Q1 to $40k in Q5.\""
+            }
+          ],
+          "factsYes": 3,
+          "factsTotal": 3,
+          "factCoverage": 1,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 1,
+        "attemptsUsed": 1,
+        "firstAttemptSuccess": true,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 1037,
+        "totalLatencyMs": 1037,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 158,
+        "formattedContextChars": 263,
+        "messageTextChars": 1557,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1417,
+          "completionTokens": 36,
+          "totalTokens": 1453
+        },
+        "wordLimit": {
+          "wordCount": 14,
+          "maxWords": 40,
+          "withinLimit": true
+        }
+      },
+      {
+        "scoringId": "ITEM-24",
+        "caseId": "case-01",
+        "strategy": "minimal",
+        "category": "missing-empty",
+        "contextSensitive": false,
+        "shouldImprove": true,
+        "availability": "available",
+        "isAvailable": true,
+        "effectiveSource": "proposed-replacement",
+        "effectiveDescription": "Line chart titled Quarterly Revenue showing an upward trend from $12k in Q1 to $40k in Q5.",
+        "isNonEmptyDescription": true,
+        "modelConcern": true,
+        "humanScore": {
+          "scoringId": "ITEM-24",
+          "assetPath": "assets/ITEM-24.png",
+          "context": "The chart shows quarterly revenue in thousands of dollars across five consecutive quarters.",
+          "description": "Line chart titled Quarterly Revenue showing an upward trend from $12k in Q1 to $40k in Q5.",
+          "isEmptyDescriptionMarker": false,
+          "facts": [
+            {
+              "fact": "A line chart.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Line chart\""
+            },
+            {
+              "fact": "Quarterly revenue.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"Quarterly Revenue\""
+            },
+            {
+              "fact": "Revenue increases across five quarters.",
+              "conveyed": true,
+              "mark": "Yes",
+              "evidence": "\"showing an upward trend from $12k in Q1 to $40k in Q5.\""
+            }
+          ],
+          "factsYes": 3,
+          "factsTotal": 3,
+          "factCoverage": 1,
+          "unsupportedClaims": [],
+          "unsupportedClaimCount": 0,
+          "hasUnsupportedClaim": false,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false,
+            "raw": {
+              "Visual claim conflicts with the image": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Description contradicts approved notebook context": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Important image content is missing": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              },
+              "Wording is unnecessarily repetitive or irrelevant": {
+                "present": false,
+                "mark": "No",
+                "evidence": ""
+              }
+            }
+          },
+          "uncertaintiesNote": "Resolved before unblinding (see item notes and raw-marks-log.txt).",
+          "reviewer": "author (Noah Kim)",
+          "finalizedDate": "2026-11-03"
+        },
+        "effectiveFactCoverage": 1,
+        "attemptsUsed": 1,
+        "firstAttemptSuccess": true,
+        "eventualSuccess": true,
+        "terminalOutcome": "succeeded",
+        "terminalLatencyMs": 1029,
+        "totalLatencyMs": 1029,
+        "parseFailureCount": 0,
+        "selectedSourceChars": 33,
+        "formattedContextChars": 33,
+        "messageTextChars": 1362,
+        "truncated": false,
+        "usageAvailable": true,
+        "usage": {
+          "promptTokens": 1364,
+          "completionTokens": 39,
+          "totalTokens": 1403
+        },
+        "wordLimit": {
+          "wordCount": 17,
+          "maxWords": 40,
+          "withinLimit": true
+        }
+      }
+    ]
+  },
+  "partB": {
+    "validationExperimentId": "dev-gemini35-v2-validation",
+    "eligibleCount": 4,
+    "excludedCount": 2,
+    "summary": {
+      "problemsFlagged": 0,
+      "problemsMissed": 1,
+      "correctSuggestionsFlagged": 1,
+      "passes": 2,
+      "validatorFailures": 0,
+      "validatorReasonInconsistencies": 0
+    },
+    "cases": [
+      {
+        "caseId": "case-01",
+        "scoringId": "ITEM-08",
+        "eligibility": "eligible",
+        "suggestion": "Line chart of quarterly revenue from Q1 to Q5: Q1 is $12k, Q2 is $18k, Q3 is $24k, Q4 is $31k, and Q5 is $40k, showing a steady upward trend.",
+        "validatorOutcome": "succeeded",
+        "reviewDecision": "manual-review",
+        "reasonInconsistent": false,
+        "validatorChecks": {
+          "grounded": false,
+          "contextConsistent": true,
+          "informative": true,
+          "concise": true,
+          "noUnsupportedClaims": false,
+          "reasons": [
+            "The suggested alt text claims specific revenue values (Q1 is $12k, Q2 is $18k, Q3 is $24k, Q4 is $31k, Q5 is $40k), but Q4 is visibly around 31 (slightly above 30) and Q1 is around 12, introducing unsupported exact figures not precisely readable or explicitly stated as exact integers on the axis grid."
+          ]
+        },
+        "humanEvidence": {
+          "factCoverage": "3/3",
+          "hasMissingReferenceFact": false,
+          "unsupportedClaimCount": 0,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false
+          },
+          "humanHasQualityDefect": false
+        },
+        "checkComparison": {
+          "grounded": {
+            "validator": false,
+            "humanPass": true
+          },
+          "contextConsistent": {
+            "validator": true,
+            "humanPass": true
+          },
+          "informative": {
+            "validator": true,
+            "humanPass": true
+          },
+          "concise": {
+            "validator": true,
+            "humanPass": true
+          },
+          "noUnsupportedClaims": {
+            "validator": false,
+            "humanPass": true
+          }
+        },
+        "comparisonOutcome": "correct-suggestion-flagged"
+      },
+      {
+        "caseId": "case-02",
+        "scoringId": "ITEM-11",
+        "eligibility": "eligible",
+        "suggestion": "Line chart titled Quarterly Revenue showing steady growth across five quarters: Q1 ($12k), Q2 ($18k), Q3 ($24k), Q4 ($31k), and Q5 ($40k).",
+        "validatorOutcome": "succeeded",
+        "reviewDecision": "pass",
+        "reasonInconsistent": false,
+        "validatorChecks": {
+          "grounded": true,
+          "contextConsistent": true,
+          "informative": true,
+          "concise": true,
+          "noUnsupportedClaims": true,
+          "reasons": []
+        },
+        "humanEvidence": {
+          "factCoverage": "3/3",
+          "hasMissingReferenceFact": false,
+          "unsupportedClaimCount": 0,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false
+          },
+          "humanHasQualityDefect": false
+        },
+        "checkComparison": {
+          "grounded": {
+            "validator": true,
+            "humanPass": true
+          },
+          "contextConsistent": {
+            "validator": true,
+            "humanPass": true
+          },
+          "informative": {
+            "validator": true,
+            "humanPass": true
+          },
+          "concise": {
+            "validator": true,
+            "humanPass": true
+          },
+          "noUnsupportedClaims": {
+            "validator": true,
+            "humanPass": true
+          }
+        },
+        "comparisonOutcome": "pass"
+      },
+      {
+        "caseId": "case-03",
+        "scoringId": "ITEM-23",
+        "eligibility": "eligible",
+        "suggestion": "Line chart showing quarterly revenue increasing from $12k in Q1 to $40k in Q5.",
+        "validatorOutcome": "succeeded",
+        "reviewDecision": "pass",
+        "reasonInconsistent": false,
+        "validatorChecks": {
+          "grounded": true,
+          "contextConsistent": true,
+          "informative": true,
+          "concise": true,
+          "noUnsupportedClaims": true,
+          "reasons": []
+        },
+        "humanEvidence": {
+          "factCoverage": "3/3",
+          "hasMissingReferenceFact": false,
+          "unsupportedClaimCount": 0,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": false,
+            "repetitiveOrIrrelevant": false
+          },
+          "humanHasQualityDefect": false
+        },
+        "checkComparison": {
+          "grounded": {
+            "validator": true,
+            "humanPass": true
+          },
+          "contextConsistent": {
+            "validator": true,
+            "humanPass": true
+          },
+          "informative": {
+            "validator": true,
+            "humanPass": true
+          },
+          "concise": {
+            "validator": true,
+            "humanPass": true
+          },
+          "noUnsupportedClaims": {
+            "validator": true,
+            "humanPass": true
+          }
+        },
+        "comparisonOutcome": "pass"
+      },
+      {
+        "caseId": "case-04",
+        "scoringId": "ITEM-09",
+        "eligibility": "eligible",
+        "suggestion": "Histogram titled Customer Age Distribution showing customer ages in years across 5 bins, with counts ranging from 1 to 4.",
+        "validatorOutcome": "succeeded",
+        "reviewDecision": "pass",
+        "reasonInconsistent": false,
+        "validatorChecks": {
+          "grounded": true,
+          "contextConsistent": true,
+          "informative": true,
+          "concise": true,
+          "noUnsupportedClaims": true,
+          "reasons": []
+        },
+        "humanEvidence": {
+          "factCoverage": "2/3",
+          "hasMissingReferenceFact": true,
+          "unsupportedClaimCount": 0,
+          "defects": {
+            "visualConflict": false,
+            "contextContradiction": false,
+            "importantContentMissing": true,
+            "repetitiveOrIrrelevant": false
+          },
+          "humanHasQualityDefect": true
+        },
+        "checkComparison": {
+          "grounded": {
+            "validator": true,
+            "humanPass": true
+          },
+          "contextConsistent": {
+            "validator": true,
+            "humanPass": true
+          },
+          "informative": {
+            "validator": true,
+            "humanPass": false
+          },
+          "concise": {
+            "validator": true,
+            "humanPass": true
+          },
+          "noUnsupportedClaims": {
+            "validator": true,
+            "humanPass": true
+          }
+        },
+        "comparisonOutcome": "problem-missed"
+      },
+      {
+        "caseId": "case-05",
+        "scoringId": "ITEM-01",
+        "eligibility": "excluded",
+        "exclusionReason": "no-improvement"
+      },
+      {
+        "caseId": "case-06",
+        "scoringId": "ITEM-02",
+        "eligibility": "excluded",
+        "exclusionReason": "no-improvement"
+      }
+    ]
+  }
+}

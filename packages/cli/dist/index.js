@@ -45216,6 +45216,9 @@ init_cjs_shims();
 // ../core/src/utils/semantic-model-client.ts
 init_cjs_shims();
 
+// ../core/src/utils/semantic-model-request.ts
+init_cjs_shims();
+
 // ../core/src/utils/semantic-routing.ts
 init_cjs_shims();
 
@@ -45232,6 +45235,12 @@ init_cjs_shims();
 init_cjs_shims();
 
 // ../core/src/utils/image-candidate-selection.ts
+init_cjs_shims();
+
+// ../core/src/utils/evaluation-config.ts
+init_cjs_shims();
+
+// ../core/src/utils/evaluation-resume.ts
 init_cjs_shims();
 
 // src/ruleDescriptions.ts

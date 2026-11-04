@@ -695,6 +695,21 @@ is not persisted. The frozen benchmark inputs and annotations are unchanged.
 
 ## Phase 7 — Run the Experiment
 
+**Progress review — November 4, 2026:** Development v2 generation is complete
+(24 successful jobs), the 24-item human scoring packet is finalized, and four
+eligible Structure-aware replacements have saved validator judgments.
+Two no-improvement results are excluded from validation.
+
+The scoring analyzer has been repaired and its six tests pass. Regenerating
+the development JSON and Markdown summaries exactly reproduces the saved
+reports without new model requests or changes to the source evidence.
+
+The held-out configuration is prepared, but collection has not started.
+The 18-case study (72 generation jobs), strategy-masked human scoring,
+validation comparison, and final analysis remain outstanding.
+Development results do not establish general superiority of any strategy.
+Real-notebook supplementation remains deferred.
+
 **Target dates:** November 4–13  
 **One-sentence goal:** Use your 24 test cases to answer the research question: does structure-aware context help?
 
@@ -706,18 +721,27 @@ Keep the agreed 24 cases (6 development, 18 held-out), four comparison strategie
 
 Optional additions include repeated trials, more models/providers, parameter sweeps, advanced plots, and formal statistical testing. They must not displace the required runs, scoring, or report.
 
+The proposed configuration, two-total-attempt resume policy, failure handling,
+no-improvement scoring, and validation eligibility are specified in the
+[experiment protocol](evaluation-protocol.md) and
+[blinded scoring template](evaluation-scoring-template.md). The author approved these
+drafts on October 28, 2026. Development preflight is complete. Before held-out
+requests, save the reviewed code checkpoint and freeze the protocol, scoring
+rules, configuration, endpoint, and both prompt templates.
+
+
 ### The experiment has two parts
 
 #### Part A: Context comparison (the main experiment)
 
 **Setup:**
-- Use **one** model, **one** prompt, **one** temperature setting, **one** image format.
+- Use **one** model, **one** prompt template, **one** temperature policy, **one** image format.
 - The **only thing that changes** is the context strategy.
 - Use the 18 held-out cases (not the 6 development cases).
 
 **Procedure:**
-1. For each of the 4 strategies × 18 held-out cases = 72 runs:
-   - Run the pipeline with low temperature (for reproducibility).
+1. For each of the 4 strategies × 18 held-out cases = 72 generation jobs:
+   - Use the frozen generation settings; the proposed temperature and reasoning policies are provider-default (parameters omitted).
    - Save the raw AI output *before* validation.
    - Record all metadata (latency, tokens, input size, etc.).
 2. **Score the outputs by hand** (blinded):
@@ -730,8 +754,8 @@ Optional additions include repeated trials, more models/providers, parameter swe
 #### Part B: Validation experiment
 
 **Setup:**
-- Take only the structure-aware outputs from Part A.
-- Compare them before and after model-assisted validation.
+- Reuse saved structure-aware replacement suggestions from Part A that satisfy deterministic checks.
+- Compare validation screening decisions against blinded human evidence; validation does not rewrite descriptions.
 
 **Question:** Does validation catch bad suggestions? Does it make things worse?
 
@@ -771,7 +795,7 @@ Optional additions include repeated trials, more models/providers, parameter swe
 
 ### ✅ Phase 7 is done when
 
-- [ ] All 72 runs (4 strategies × 18 cases) are complete and saved.
+- [ ] All 72 generation jobs (4 strategies × 18 cases) have saved terminal outcomes: successes or explicit failures under the frozen attempt policy.
 - [ ] Manual scoring was done blinded (you didn't know which strategy produced which output).
 - [ ] Required quality and efficiency metrics are calculated from saved records; unavailable optional provider token counts are explicitly marked unavailable, not invented.
 - [ ] You can reproduce every number from the saved outputs (no re-running the AI).

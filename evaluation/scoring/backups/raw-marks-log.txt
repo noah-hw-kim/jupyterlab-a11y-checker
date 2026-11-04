@@ -1,0 +1,194 @@
+Raw rater marks, verbatim as sent in chat (append only). Transcription only; no feedback during scoring.
+
+ITEM-01
+F1 Yes "Line chart"
+F2 Yes "quarterly revenue"
+F3 Yes "increasing steadily across five quarters"
+U none
+D 3.1 No | 3.2 No | 3.3 No "main trend has been explained. Just exact revenue numbers are missing" | 3.4 No
+unsure: none
+
+ITEM-02
+F1 Yes "Bar chart"
+F2 Yes "2026 department enrollment"
+F3 Yes "Computer Science highest"
+U none
+D 3.1 No | 3.2 No | 3.3 Yes. The enrollment for CS is the highest while following Bio, Math, and history | 3.4 No
+unsure: none
+
+
+ITEM-03
+F1 Yes "Line graph"
+F2 Yes "Quarterly Revenue"
+F3 Yes "showing an upward trend from $12k in Q1 to $40k in Q5."
+U none
+D 3.1 No | 3.2 No | 3.3 No | 3.4 No
+unsure: none
+
+ITEM-04
+F1 Yes "Line graph"
+F2 Yes "Quarterly Revenue"
+F3 Yes "showing a steady increase from $12k in Q1 to $40k in Q5."
+U none
+D 3.1 No | 3.2 No | 3.3 No | 3.4 No
+unsure: none
+
+ITEM-05
+F1 Yes "Histogram"
+F2 Yes "customer ages in years"
+F3 No. No mentioning about this in description
+U none
+D 3.1 No | 3.2 No | 3.3 No | 3.4 No
+unsure: none
+
+ITEM-06
+F1 Yes "Line chart"
+F2 Yes "quarterly revenue"
+F3 No. increasing steadily across five quarters.
+U none
+D 3.1 No | 3.2 No | 3.3 Unsure. It says five quarters but not exactly Q1-Q5 so the reader could get confused on the time range | 3.4 No
+unsure: yes
+
+REVISION (rater decision after consistency flag; ITEM-06 text identical to ITEM-01)
+ITEM-06: F3 No -> Yes "increasing steadily across five quarters"; 3.3 Unsure -> No (same reasoning as ITEM-01); unsure resolved.
+
+ITEM-07
+F1 Yes "Bar chart"
+F2 Yes "2026 department enrollment"
+F3 Yes "Computer Science highest"
+U none
+D 3.1 No | 3.2 No | 3.3 Unsure. Following BIo, Math, and History enrollment number is not explained but it's not wrong ig | 3.4 No
+unsure: Yes
+
+REVISION (rater decision; ITEM-07, 10, 22 have text identical to ITEM-02)
+ITEM-07: 3.3 Unsure -> Yes (same as ITEM-02); unsure resolved.
+ITEM-10, ITEM-22: copied all ITEM-02 marks (F Yes/Yes/Yes, U None, 3.1 No, 3.2 No, 3.3 Yes, 3.4 No).
+
+ITEM-08
+F1 Yes "Line chart"
+F2 Yes "quarterly revenue"
+F3 Yes "from Q1 to Q5: Q1 is $12k, Q2 is $18k, Q3 is $24k, Q4 is $31k, and Q5 is $40k, showing a steady upward trend."
+U none
+D 3.1 No | 3.2 No | 3.3 No | 3.4 No
+unsure: No
+
+ITEM-09
+F1 Yes "Histogram"
+F2 Yes "customer ages in years"
+F3 No. No observations findings
+U none
+D 3.1 No | 3.2 No | 3.3 Yes. The key point is what age groups have highest count here but not mentioned | 3.4 No
+unsure: No
+
+ITEM-10 (skipped)
+
+ITEM-11
+F1 Yes "Line chart"
+F2 Yes "Quarterly Revenue"
+F3 Yes. Revenue showing steady growth across five quarters
+U none
+D 3.1 No | 3.2 No | 3.3 No | 3.4 No
+unsure: No
+
+ITEM-12
+F1 Yes "Line chart"
+F2 Yes "quarterly revenue"
+F3 Yes. increasing steadily from $12k in Q1 to $40k in Q5 across five quarters.
+U none
+D 3.1 No | 3.2 No | 3.3 No | 3.4 No
+unsure: No
+
+ITEM-13
+F1 Yes "Line chart"
+F2 Yes titled "Quarterly Revenue"
+F3 Yes showing an upward trend from Q1 ($12k) to Q5 ($40k).
+U none
+D 3.1 No | 3.2 No | 3.3 No | 3.4 Unsure
+unsure: Yes
+
+REVISION (rater decision on ITEM-13)
+ITEM-13: 3.4 Unsure -> No (consistent with ITEM-08 and ITEM-11); unsure resolved.
+
+ITEM-14
+F1 Unsue "Line plot". Is plot and chart a similar meaning? I'm ESL so I need to confirm this
+F2 Yes "Quarterly Revenue"
+F3 Yes "showing an upward trend from $12k in Q1 to $40k in Q5."
+U Unsure. depends on F1 plot v.s. Chart
+D 3.1 Unsure. depends on F1 plot v.s. Chart | 3.2 Unsure. depends on F1 plot v.s. Chart| 3.3 No | 3.4 No
+unsure: No
+
+ITEM-15
+F1 Yes "Line chart"
+F2 Yes "quarterly revenue"
+F3 Unsure. You can infer from numbers from Q1 to Q5 but it's not explicitly say? I need help on this
+U none
+D 3.1 No | 3.2 No | 3.3 Unsure. depends on F3 | 3.4 No
+unsure: No
+
+ITEM-16
+F1 Yes "Histogram "
+F2 Unsure. I don't know the exact meaning of ages in years. It says the x range is age
+F3 No. highest frequency between 28 and 34 doesn't gurantee 
+U none
+D 3.1 No | 3.2 Unsure. Depends on F2 | 3.3 Unsure. I think we had consistency on this in the past but it got deleted on scoring-packet.md? | 3.4 No
+unsure: No
+
+REVISION (rater decision on ITEM-14, ITEM-15, ITEM-16)
+ITEM-14: F1 Unsure -> Yes ("Line plot" equivalent to "line chart"); U None; 3.1 No; 3.2 No; unsure resolved.
+ITEM-15: F3 Unsure -> No (Option B: lists all five values Q1=$12k to Q5=$40k so the increase can be inferred from the numbers, but does not explicitly state the upward trend); 3.3 No; unsure resolved.
+ITEM-16: F2 Unsure -> No (mentions age but omits the unit "in years"); 3.2 No; 3.3 No (consistent with ITEM-05); unsure resolved.
+
+ITEM-17
+F1 Yes "Histogram"
+F2 No. No mentioning about years
+F3 No. No observation mentioning
+U No.
+D 3.1 No | 3.2 No | 3.3 No. Mentioned peak but missed other age group counts | 3.4 No
+unsure: No
+
+ITEM-18
+F1 Yes "Line chart"
+F2 Yes "quarterly revenue"
+F3 Yes "increasing from $12k in Q1 to $40k in Q5."
+U none
+D 3.1 No | 3.2 No | 3.3 No | 3.4 No
+unsure: No
+
+ITEM-19
+F1 Yes "Line chart"
+F2 Yes "quarterly revenue"
+F3 Yes "thousands of dollars across five quarters: Q1 ($12k), Q2 ($18k), Q3 ($24k), Q4 ($31k), and Q5 ($40k), showing an upward trend."
+U none
+D 3.1 No | 3.2 No | 3.3 No | 3.4 No
+unsure: No
+
+COPY (ITEM-23 text identical to ITEM-18)
+ITEM-23: copied all ITEM-18 marks.
+
+ITEM-20
+F1 Yes "Line chart"
+F2 Yes. quarterly revenue
+F3 Yes. rising steadily from 12 thousand dollars in Q1 to 40 thousand dollars in Q5.
+U none.
+D 3.1 No | 3.2 No | 3.3 No | 3.4 No
+unsure: No
+
+ITEM-21
+F1 Yes "Line chart"
+F2 Yes "Quarterly Revenue"
+F3 Yes "upward trend across 5 quarters"
+U none
+D 3.1 No | 3.2 No | 3.3 No | 3.4 No
+unsure: No
+
+ITEM-24
+F1 Yes "Line chart"
+F2 Yes "Quarterly Revenue"
+F3 Yes "upward trend from $12k in Q1 to $40k in Q5."
+U none
+D 3.1 No | 3.2 No | 3.3 No | 3.4 No
+unsure: No
+
+REVISION (rater decision on ITEM-02, ITEM-07, ITEM-10, ITEM-22 for uniform 3.3 takeaway rule)
+ITEM-02, ITEM-07, ITEM-10, ITEM-22: 3.3 Yes -> No ("States the highest department (Computer Science at 1,200); only the remaining departments' values are omitted.").
+FINALIZATION: All 24 items finalized on 2026-11-03 by author (all Unsure entries resolved before unblinding: Yes).

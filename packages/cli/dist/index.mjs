@@ -45228,6 +45228,9 @@ init_esm_shims();
 // ../core/src/utils/semantic-model-client.ts
 init_esm_shims();
 
+// ../core/src/utils/semantic-model-request.ts
+init_esm_shims();
+
 // ../core/src/utils/semantic-routing.ts
 init_esm_shims();
 
@@ -45244,6 +45247,12 @@ init_esm_shims();
 init_esm_shims();
 
 // ../core/src/utils/image-candidate-selection.ts
+init_esm_shims();
+
+// ../core/src/utils/evaluation-config.ts
+init_esm_shims();
+
+// ../core/src/utils/evaluation-resume.ts
 init_esm_shims();
 
 // src/ruleDescriptions.ts

@@ -1,0 +1,403 @@
+diff --git a/evaluation/export-scoring.mjs b/evaluation/export-scoring.mjs
+new file mode 100755
+--- /dev/null
++++ b/evaluation/export-scoring.mjs
+@@
++#!/usr/bin/env node
++import { createHash } from "node:crypto";
++import { promises as fs } from "node:fs";
++import { parseArgs } from "node:util";
++import { dirname, join, relative, resolve, sep } from "node:path";
++import { fileURLToPath } from "node:url";
++
++const ROOT = fileURLToPath(new URL("../", import.meta.url));
++const STRATEGIES = new Set([
++  "minimal",
++  "fixed-window",
++  "structure-aware",
++  "largest-practical",
++]);
++const TERMINAL_UNAVAILABLE = new Set([
++  "model-output-error",
++  "exhausted-error",
++  "interrupted-unknown",
++]);
++
++export class ScoringExporterError extends Error {}
++const fail = (message) => {
++  throw new ScoringExporterError(message);
++};
++const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
++const jobKey = (job) => JSON.stringify([job.caseId, job.strategy, job.stage]);
++const isSafeInteger = (value) =>
++  Number.isSafeInteger(value) && value >= 0 && value <= 0xffffffff;
++
++async function readJson(path) {
++  try {
++    return JSON.parse(await fs.readFile(path, "utf8"));
++  } catch (error) {
++    throw new ScoringExporterError(`Invalid JSON: ${path}`, { cause: error });
++  }
++}
++
++async function sha256(path) {
++  return hash(await fs.readFile(path));
++}
++
++function validateSeed(value) {
++  if (typeof value === "number" && isSafeInteger(value)) return value;
++  if (typeof value !== "string" || !/^(0|[1-9]\d*)$/.test(value)) {
++    fail("Seed must be an unsigned 32-bit integer.");
++  }
++  const seed = Number(value);
++  if (!isSafeInteger(seed)) fail("Seed must be an unsigned 32-bit integer.");
++  return seed;
++}
++
++function inside(parent, child) {
++  const parentPath = resolve(parent);
++  const childPath = resolve(child);
++  return childPath === parentPath || childPath.startsWith(parentPath + sep);
++}
++
++async function rejectOverlap(sourceDir, frozenDir, outputDir) {
++  const source = resolve(sourceDir);
++  const frozen = resolve(frozenDir);
++  const output = resolve(outputDir);
++  if (inside(output, source) || inside(source, output)) {
++    fail("Output and source paths overlap.");
++  }
++  if (inside(output, frozen) || inside(frozen, output)) {
++    fail("Output and frozen benchmark paths overlap.");
++  }
++  const parent = dirname(output);
++  try {
++    const realParent = await fs.realpath(parent);
++    if (inside(realParent, source) || inside(realParent, frozen)) {
++      fail("Output parent resolves inside a protected source path.");
++    }
++  } catch (error) {
++    if (error.code !== "ENOENT") throw error;
++    const ancestor = await nearestExistingAncestor(parent);
++    const realAncestor = await fs.realpath(ancestor);
++    if (inside(realAncestor, source) || inside(realAncestor, frozen)) {
++      fail("Output destination is under a protected symlinked parent.");
++    }
++  }
++}
++
++async function nearestExistingAncestor(path) {
++  let current = resolve(path);
++  while (true) {
++    try {
++      await fs.stat(current);
++      return current;
++    } catch (error) {
++      if (error.code !== "ENOENT") throw error;
++      const next = dirname(current);
++      if (next === current) throw new ScoringExporterError(
++        "Output parent has no existing ancestor.",
++      );
++      current = next;
++    }
++  }
++}
++
++function seededShuffle(items, seed) {
++  let state = seed >>> 0;
++  const result = [...items];
++  for (let i = result.length - 1; i > 0; i -= 1) {
++    state = Math.imul(state + 0x6d2b79f5, 1);
++    let mixed = Math.imul(state ^ (state >>> 15), 1 | state);
++    mixed ^= mixed + Math.imul(mixed ^ (mixed >>> 7), 61 | mixed);
++    const j = Math.floor((((mixed ^ (mixed >>> 14)) >>> 0) / 2 ** 32) * (i + 1));
++    [result[i], result[j]] = [result[j], result[i]];
++  }
++  return result;
++}
++
++function literal(value) {
++  return String(value ?? "")
++    .split("\n")
++    .map((line) => `> ${line}`)
++    .join("\n");
++}
++
++export function packetMarkdown(items) {
++  let output = [
++    "# Blinded Human Scoring Packet",
++    "",
++    "This is strategy-masked single-rater scoring. Familiarity and repeated images limit masking; shuffling only reduces cues.",
++    "",
++  ].join("\n");
++  for (const item of items) {
++    output += `\n---\n\n## Review Item: ${item.scoringId}\n\n`;
++    output += `![Chart](${item.assetPath})\n\n`;
++    output += `**Approved context**\n\n${literal(item.context)}\n\n`;
++    output += `**Description to score**\n\n`;
++    output += item.description === "" ? "> *(Empty description)*\n\n" : `${literal(item.description)}\n\n`;
++    output += "### Required facts\n\n| Fact | Conveyed? Yes / No / Unsure | Exact supporting words or explanation |\n| --- | --- | --- |\n";
++    for (const fact of item.requiredFacts) {
++      output += `| ${literal(fact).replaceAll("\n", "<br>")} | | |\n`;
++    }
++    output += "\n### Unsupported factual assertions\n\n| Quoted assertion | Evidence showing it is unsupported/incorrect |\n| --- | --- |\n| | |\n";
++    output += "\n### Other defects for validation analysis\n\n| Defect | Present? Yes / No / Unsure | Evidence |\n| --- | --- | --- |\n";
++    for (const defect of [
++      "Visual claim conflicts with the image",
++      "Description contradicts approved notebook context",
++      "Important image content is missing",
++      "Wording is unnecessarily repetitive or irrelevant",
++    ]) output += `| ${defect} | | |\n`;
++    output += "\n### Finalization\n\n- Uncertainties and resolution: \n- Reviewer identifier: \n- Finalized date: \n- All Unsure entries resolved before unblinding: \n";
++  }
++  return output + "\n";
++}
++
++function parseRecords(text) {
++  return text.split("\n").filter(Boolean).map((line, index) => {
++    try {
++      return JSON.parse(line);
++    } catch (error) {
++      throw new ScoringExporterError(`Invalid source JSONL at line ${index + 1}`, { cause: error });
++    }
++  });
++}
++
++function validateSource(snapshot, records, manifest, freeze, paths) {
++  if (snapshot.schemaVersion !== 1 || typeof snapshot.fingerprint !== "string") {
++    fail("Unsupported or incomplete source snapshot.");
++  }
++  if (snapshot.benchmarkFreezeSha256 !== paths.freezeHash) {
++    fail("Source snapshot does not match the current benchmark freeze.");
++  }
++  if (!Array.isArray(snapshot.generationJobs) || snapshot.generationJobs.length === 0) {
++    fail("Source snapshot has no complete generation schedule.");
++  }
++  const cases = manifest.cases.filter((entry) => entry.split === snapshot.config.split);
++  const expected = new Set(
++    cases.flatMap((entry) => [...STRATEGIES].map((strategy) => JSON.stringify({
++      caseId: entry.id, strategy, stage: "generation",
++    }))),
++  );
++  if (snapshot.generationJobs.length !== expected.size ||
++      snapshot.generationJobs.some((job) => !expected.delete(jobKey(job))) ||
++      expected.size !== 0) {
++    fail("Source schedule is incomplete or does not match the frozen split.");
++  }
++  const byJob = new Map();
++  for (const record of records) {
++    if (!record.job || !expectedJob(record.job, snapshot.generationJobs)) {
++      fail("Source log contains an unknown job.");
++    }
++    const key = jobKey(record.job);
++    const list = byJob.get(key) ?? [];
++    list.push(record);
++    byJob.set(key, list);
++  }
++  for (const job of snapshot.generationJobs) {
++    const events = byJob.get(jobKey(job)) ?? [];
++    const starts = events.filter((event) => event.event === "attempt-started");
++    const finishes = events.filter((event) => event.event === "attempt-finished");
++    if (finishes.length !== 1 || starts.length < 1) fail(`Incomplete source job: ${jobKey(job)}`);
++    const finish = finishes[0];
++    if (finish.outcome === "pending" || finish.outcome === "retryable-error" ||
++        finish.outcome === "interrupted-unknown") {
++      fail("Source contains a non-terminal job.");
++    }
++    if (!["succeeded", ...TERMINAL_UNAVAILABLE].includes(finish.outcome)) {
++      fail(`Unknown source outcome: ${finish.outcome}`);
++    }
++    if (finish.outcome === "succeeded" &&
++        (!finish.parsed || typeof finish.parsed.value?.concern !== "boolean")) {
++      fail("Succeeded source event lacks a parsed concern decision.");
++    }
++  }
++  return { cases, byJob };
++}
++
++function expectedJob(job, jobs) {
++  return jobs.some((candidate) => jobKey(candidate) === jobKey(job));
++}
++
++export async function exportScoring({
++  sourceDir,
++  frozenDir,
++  outputDir,
++  seed,
++  root = ROOT,
++} = {}) {
++  if (!sourceDir || !frozenDir || !outputDir) fail("sourceDir, frozenDir, and outputDir are required.");
++  const source = resolve(root, sourceDir);
++  const frozen = resolve(root, frozenDir);
++  const output = resolve(root, outputDir);
++  await rejectOverlap(source, frozen, output);
++  const snapshotPath = join(source, "experiment.json");
++  const attemptsPath = join(source, "attempts.jsonl");
++  const manifestPath = join(frozen, "references/manifest.json");
++  const freezePath = join(frozen, "references/freeze.json");
++  const [snapshot, manifest, freeze, attemptsText, snapshotBytes, attemptsBytes] =
++    await Promise.all([
++      readJson(snapshotPath), readJson(manifestPath), readJson(freezePath),
++      fs.readFile(attemptsPath, "utf8"), fs.readFile(snapshotPath), fs.readFile(attemptsPath),
++    ]);
++  const freezeHash = await sha256(freezePath);
++  const frozenHashes = {};
++  for (const [path, expected] of Object.entries(freeze.files)) {
++    const bytes = await fs.readFile(join(frozen, path));
++    if (hash(bytes) !== expected) fail(`Frozen file hash mismatch: ${path}`);
++    frozenHashes[path] = expected;
++  }
++  const records = parseRecords(attemptsText);
++  const { cases, byJob } = validateSource(snapshot, records, manifest, freeze, { freezeHash });
++  const numericSeed = validateSeed(seed ?? snapshot.config.orderSeed);
++  const caseById = new Map(cases.map((entry) => [entry.id, entry]));
++  const sourceItems = [];
++  for (const job of snapshot.generationJobs) {
++    const entry = caseById.get(job.caseId);
++    const finish = (byJob.get(jobKey(job)) ?? []).find((event) => event.event === "attempt-finished");
++    const parsed = finish.parsed?.value;
++    let description = "";
++    let effectiveSource = "missed-improvement-empty";
++    let availability = "available";
++    if (finish.outcome === "succeeded" && parsed.concern === true) {
++      description = parsed.suggestion ?? "";
++      effectiveSource = "proposed-replacement";
++    } else if (finish.outcome === "succeeded" && entry.expectedAltState === "present") {
++      description = entry.existingAltText ?? "";
++      effectiveSource = "retained-existing-alt";
++    } else if (finish.outcome !== "succeeded") {
++      availability = "unavailable";
++      effectiveSource = "unavailable";
++    }
++    sourceItems.push({
++      caseId: entry.id, strategy: job.strategy, attemptId: finish.attemptId ?? null,
++      description, effectiveSource, availability, context: entry.evidence.context,
++      requiredFacts: entry.requiredFacts, imagePath: entry.imagePath,
++      shouldImprove: entry.shouldImprove,
++    });
++  }
++  const shuffled = seededShuffle(sourceItems, numericSeed);
++  try {
++    const existing = await fs.readdir(output);
++    if (existing.length > 0) fail("Output directory exists and is nonempty.");
++  } catch (error) {
++    if (error.code !== "ENOENT") throw error;
++  }
++  const temp = `${output}.tmp-${process.pid}-${Date.now()}`;
++  try {
++    await fs.mkdir(join(temp, "reviewer/assets"), { recursive: true, mode: 0o700 });
++    const packetItems = [];
++    const mapping = [];
++    for (const [index, item] of shuffled.entries()) {
++      const scoringId = `ITEM-${String(index + 1).padStart(2, "0")}`;
++      const assetPath = `assets/${scoringId}.png`;
++      await fs.copyFile(join(frozen, item.imagePath), join(temp, "reviewer", assetPath));
++      if (item.availability === "available") packetItems.push({
++        scoringId, assetPath: `assets/${scoringId}.png`, context: item.context,
++        description: item.description, requiredFacts: item.requiredFacts,
++      });
++      mapping.push({ scoringId, caseId: item.caseId, strategy: item.strategy,
++        sourceAttemptId: item.attemptId, effectiveSource: item.effectiveSource,
++        availability: item.availability, effectiveDescription: item.description,
++        shouldImprove: item.shouldImprove });
++    }
++    await fs.writeFile(join(temp, "reviewer/scoring-packet.md"), packetMarkdown(packetItems));
++    await fs.writeFile(join(temp, "private-mapping.json"), JSON.stringify({
++      schemaVersion: 1, seed: numericSeed, sourceSnapshotSha256: hash(snapshotBytes),
++      sourceAttemptsSha256: hash(attemptsBytes), freezeHash, frozenHashes, items: mapping,
++    }, null, 2) + "\n", { mode: 0o600 });
++    if (hash(await fs.readFile(snapshotPath)) !== hash(snapshotBytes) ||
++        hash(await fs.readFile(attemptsPath)) !== hash(attemptsBytes)) {
++      fail("Source changed during export.");
++    }
++    await fs.writeFile(join(temp, "COMPLETE"), "complete\n", { mode: 0o600 });
++    await fs.rename(temp, output);
++    return { outputDir: output, itemCount: packetItems.length, unavailableCount: mapping.length - packetItems.length };
++  } catch (error) {
++    await fs.rm(temp, { recursive: true, force: true });
++    throw error;
++  }
++}
++
++if (process.argv[1] === fileURLToPath(import.meta.url)) {
++  const { values } = parseArgs({ options: {
++    source: { type: "string" }, frozen: { type: "string" }, output: { type: "string" },
++    seed: { type: "string" },
++  }});
++  exportScoring({ sourceDir: values.source, frozenDir: values.frozen,
++    outputDir: values.output, seed: values.seed }).catch((error) => {
++    console.error(error.message);
++    process.exitCode = 1;
++  });
++}
+diff --git a/evaluation/__tests__/export-scoring.test.mjs b/evaluation/__tests__/export-scoring.test.mjs
+new file mode 100644
+--- /dev/null
++++ b/evaluation/__tests__/export-scoring.test.mjs
+@@
++import { test } from "node:test";
++import assert from "node:assert/strict";
++import { mkdtemp, readFile, writeFile, mkdir, cp, rm, stat } from "node:fs/promises";
++import { join } from "node:path";
++import { tmpdir } from "node:os";
++import { exportScoring, packetMarkdown, ScoringExporterError } from "../export-scoring.mjs";
++
++async function fixture(t) {
++  const root = await mkdtemp(join(tmpdir(), "scoring-"));
++  t.after(() => rm(root, { recursive: true, force: true }));
++  const sourceDir = join(root, "source");
++  const frozenDir = join(root, "frozen");
++  await mkdir(join(sourceDir), { recursive: true });
++  await mkdir(join(frozenDir, "references"), { recursive: true });
++  // The fixture copies a complete 24-job schedule and all frozen files from an
++  // explicit test fixture directory; it never reads evaluation/runs/dev-synth.
++  await cp(join(import.meta.dirname, "fixtures/scoring-source"), sourceDir, { recursive: true });
++  await cp(join(import.meta.dirname, "fixtures/scoring-frozen"), frozenDir, { recursive: true });
++  return { root, sourceDir, frozenDir };
++}
++
++test("preserves the exact existing alt and maps empty/missing no-improvement to empty", async (t) => {
++  const paths = await fixture(t);
++  const result = await exportScoring({ sourceDir: paths.sourceDir, frozenDir: paths.frozenDir,
++    outputDir: join(paths.root, "out"), seed: "42" });
++  const mapping = JSON.parse(await readFile(join(result.outputDir, "private-mapping.json")));
++  assert.equal(mapping.items.find((item) => item.caseId === "case-05").effectiveDescription,
++    "Line chart showing quarterly revenue increasing steadily across five quarters.");
++  assert.equal(mapping.items.find((item) => item.caseId === "case-02").effectiveDescription, "");
++});
++
++test("keeps unavailable jobs out of fact-scoring packet and rejects incomplete sources", async (t) => {
++  const paths = await fixture(t);
++  await assert.rejects(() => exportScoring({ ...paths, outputDir: join(paths.root, "out") }),
++    ScoringExporterError);
++  await writeFile(join(paths.sourceDir, "attempts.jsonl"),
++    (await readFile(join(paths.sourceDir, "attempts.jsonl"), "utf8"))
++      .split("\n").slice(0, -4).join("\n"));
++  await assert.rejects(() => exportScoring({ ...paths, outputDir: join(paths.root, "out2") }),
++    /Incomplete source job/);
++});
++
++test("renders literal newlines, pipes, headings, backticks, and HTML", () => {
++  const text = packetMarkdown([{
++    scoringId: "ITEM-01", assetPath: "assets/ITEM-01.png",
++    context: "line one\n| not a column | `code` <b>literal</b>\n# not a heading",
++    description: "description\n| text `code` <b>literal</b>\n# not an instruction",
++    requiredFacts: ["fact\n| literal"],
++  }]);
++  assert.match(text, /> line one\n> \| not a column \| `code` <b>literal<\/b>\n> # not a heading/);
++  assert.match(text, /> description\n> \| text `code` <b>literal<\/b>\n> # not an instruction/);
++});
++
++test("uses opaque copied assets, private mapping separation, deterministic seeds, and protects paths", async (t) => {
++  const paths = await fixture(t);
++  const first = await exportScoring({ ...paths, outputDir: join(paths.root, "one"), seed: 7 });
++  const second = await exportScoring({ ...paths, outputDir: join(paths.root, "two"), seed: 7 });
++  assert.equal(await readFile(join(first.outputDir, "reviewer/scoring-packet.md")),
++    await readFile(join(second.outputDir, "reviewer/scoring-packet.md")));
++  assert.ok((await stat(join(first.outputDir, "reviewer/assets/ITEM-01.png"))).isFile());
++  assert.rejects(() => exportScoring({ ...paths, outputDir: paths.sourceDir }), ScoringExporterError);
++  await assert.rejects(() => exportScoring({ ...paths, outputDir: join(paths.root, "bad"), seed: "1.2" }),
++    /Seed must be/);
++  await assert.rejects(() => exportScoring({ ...paths, outputDir: join(paths.root, "one"), seed: 7 }),
++    /exists|nonempty|protected/);
++});

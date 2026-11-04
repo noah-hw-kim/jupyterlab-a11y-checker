@@ -1,4 +1,5 @@
 export * from "./types.js";
+export type * from "./evaluation-types.js";
 export * from "./parsers.js";
 export * from "./detection/base.js";
 export * from "./utils/issueFormatter.js";
@@ -17,3 +18,8 @@ export * from "./utils/semantic-routing.js";
 export * from "./utils/semantic-image-data.js";
 export * from "./utils/semantic-orchestrator.js";
 export * from "./utils/image-candidate-selection.js";
+export * from "./utils/evaluation-config.js";
+export * from "./utils/evaluation-resume.js";
+export * from "./utils/semantic-model-request.js";
+export * from "./utils/context-selection.js";
+export * from "./utils/context-formatting.js";

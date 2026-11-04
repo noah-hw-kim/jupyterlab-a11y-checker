@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "experimentId": "dev-gemini35-v2",
+  "createdAt": "2026-11-01T00:19:50.954Z",
+  "config": {
+    "schemaVersion": 1,
+    "model": "gemini-3.5-flash-lite",
+    "endpointEnv": "A11YLENS_MODEL_ENDPOINT",
+    "apiKeyEnv": "A11YLENS_API_KEY",
+    "split": "development",
+    "strategies": [
+      "minimal",
+      "fixed-window",
+      "structure-aware",
+      "largest-practical"
+    ],
+    "contextCharacterBudget": 2000,
+    "reasoningEffort": "provider-default",
+    "temperature": "provider-default",
+    "maxOutputTokens": 2048,
+    "maxSuggestionWords": 40,
+    "imageMimeType": "image/png",
+    "concurrency": 1,
+    "requestTimeoutMs": 120000,
+    "retry": {
+      "mode": "manual",
+      "maxAttempts": 2,
+      "minimumDelayMs": 30000,
+      "httpStatuses": [
+        408,
+        429,
+        500,
+        502,
+        503,
+        504
+      ]
+    },
+    "orderSeed": 20261028,
+    "batchSize": 4,
+    "minimumRequestIntervalMs": 15000
+  },
+  "resolvedEndpoint": "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+  "codeCommit": "865acec24d3d9f1d2d14b65d917a7907b6ebdeef",
+  "codeSnapshotSha256": "aa153747eac239b49be8cb60c49e7c3ebe3f510e4e58b173bbcbdd5f5b2ae6b9",
+  "benchmarkFreezeSha256": "3ae902906f328f6378c5585db75acdfd6fe80535b4d49e877b767c6aa70d7ef8",
+  "prompts": {
+    "generation": {
+      "path": "prompts/generation.json",
+      "sha256": "98437795b1f58c31323ff36277efc304d9dacb48b34dd0f59b1e391a5acc349c"
+    },
+    "validation": {
+      "path": "prompts/validation.json",
+      "sha256": "073b5e463da200dc4f94d882ae052cf048ff7bdb41856c925eed3d6bdcf6b51c"
+    }
+  },
+  "generationJobs": [
+    {
+      "caseId": "case-06",
+      "strategy": "structure-aware",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-01",
+      "strategy": "minimal",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-06",
+      "strategy": "fixed-window",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-04",
+      "strategy": "structure-aware",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-03",
+      "strategy": "largest-practical",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-04",
+      "strategy": "fixed-window",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-01",
+      "strategy": "structure-aware",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-02",
+      "strategy": "structure-aware",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-01",
+      "strategy": "largest-practical",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-06",
+      "strategy": "minimal",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-02",
+      "strategy": "largest-practical",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-04",
+      "strategy": "largest-practical",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-05",
+      "strategy": "largest-practical",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-05",
+      "strategy": "minimal",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-03",
+      "strategy": "minimal",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-05",
+      "strategy": "fixed-window",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-02",
+      "strategy": "fixed-window",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-04",
+      "strategy": "minimal",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-03",
+      "strategy": "structure-aware",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-02",
+      "strategy": "minimal",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-06",
+      "strategy": "largest-practical",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-03",
+      "strategy": "fixed-window",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-05",
+      "strategy": "structure-aware",
+      "stage": "generation"
+    },
+    {
+      "caseId": "case-01",
+      "strategy": "fixed-window",
+      "stage": "generation"
+    }
+  ],
+  "fingerprint": "0e92239297cd94bd590ee07f320dcfe673f08e08f2065d35c63fd65a5f391578"
+}

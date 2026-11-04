@@ -1,0 +1,136 @@
+{
+  "stage": "validation",
+  "sourceGeneration": {
+    "experimentId": "dev-gemini35-v2",
+    "fingerprint": "0e92239297cd94bd590ee07f320dcfe673f08e08f2065d35c63fd65a5f391578",
+    "snapshotSha256": "991c5ce3037c676ee31870a9d7981f6c0144159fbb9c1498774ddf534a6d0d75",
+    "attemptsSha256": "1a32ff06810f1e4349faceced3c05ca4881d1945b5d5592a968984c01ab137b7"
+  },
+  "exclusions": [
+    {
+      "caseId": "case-05",
+      "strategy": "structure-aware",
+      "stage": "validation",
+      "reason": "no-improvement",
+      "sourceGenerationAttemptId": "a84fc72e-e8d5-4dfc-b7ed-408953ccbfeb"
+    },
+    {
+      "caseId": "case-06",
+      "strategy": "structure-aware",
+      "stage": "validation",
+      "reason": "no-improvement",
+      "sourceGenerationAttemptId": "075eb7c3-cc21-4743-9ddb-8e46be4a04bf"
+    }
+  ],
+  "dryRun": true,
+  "requests": 0,
+  "plannedJobs": [
+    {
+      "job": {
+        "caseId": "case-01",
+        "strategy": "structure-aware",
+        "stage": "validation"
+      },
+      "input": {
+        "task": "quality-validation",
+        "existingAltText": null,
+        "imagePath": "assets/case-01.png",
+        "imageSha256": "466faf2d57cdae24b77e66d8d8741dafc453954939684cbbe48bfdc16ec22631",
+        "imageMimeType": "image/png",
+        "formattedContext": "Cell 4 — current-cell\n<img src=\"../assets/case-01.png\">\n\nCell 0 — section-heading\n# Quarterly revenue\n\nCell 1 — same-section-markdown\nThe chart shows quarterly revenue in thousands of dollars across five consecutive quarters.\n\nCell 3 — nearby-code\ndisplay_scale = 1",
+        "includedCellIndices": [
+          4,
+          0,
+          1,
+          3
+        ],
+        "selectedSourceCharacterCount": 160,
+        "formattedContextCharacterCount": 265,
+        "messageTextCharacterCount": 1391,
+        "truncated": false,
+        "sourceGenerationAttemptId": "8ebe7826-b04e-41f0-b671-682708656522",
+        "suggestionToValidate": "Line chart of quarterly revenue from Q1 to Q5: Q1 is $12k, Q2 is $18k, Q3 is $24k, Q4 is $31k, and Q5 is $40k, showing a steady upward trend."
+      }
+    },
+    {
+      "job": {
+        "caseId": "case-02",
+        "strategy": "structure-aware",
+        "stage": "validation"
+      },
+      "input": {
+        "task": "quality-validation",
+        "existingAltText": null,
+        "imagePath": "assets/case-02.png",
+        "imageSha256": "466faf2d57cdae24b77e66d8d8741dafc453954939684cbbe48bfdc16ec22631",
+        "imageMimeType": "image/png",
+        "formattedContext": "Cell 4 — current-cell\n![](../assets/case-02.png)\n\nCell 0 — section-heading\n# Quarterly revenue\n\nCell 1 — same-section-markdown\nThe chart shows quarterly revenue in thousands of dollars across five consecutive quarters.\n\nCell 3 — nearby-code\ndisplay_scale = 1",
+        "includedCellIndices": [
+          4,
+          0,
+          1,
+          3
+        ],
+        "selectedSourceCharacterCount": 153,
+        "formattedContextCharacterCount": 258,
+        "messageTextCharacterCount": 1379,
+        "truncated": false,
+        "sourceGenerationAttemptId": "dcea03a0-83c3-4c86-b294-bc50b64421a8",
+        "suggestionToValidate": "Line chart titled Quarterly Revenue showing steady growth across five quarters: Q1 ($12k), Q2 ($18k), Q3 ($24k), Q4 ($31k), and Q5 ($40k)."
+      }
+    },
+    {
+      "job": {
+        "caseId": "case-03",
+        "strategy": "structure-aware",
+        "stage": "validation"
+      },
+      "input": {
+        "task": "quality-validation",
+        "existingAltText": "graph",
+        "imagePath": "assets/case-03.png",
+        "imageSha256": "466faf2d57cdae24b77e66d8d8741dafc453954939684cbbe48bfdc16ec22631",
+        "imageMimeType": "image/png",
+        "formattedContext": "Cell 4 — current-cell\n![graph](../assets/case-03.png)\n\nCell 0 — section-heading\n# Quarterly revenue\n\nCell 1 — same-section-markdown\nThe chart shows quarterly revenue in thousands of dollars across five consecutive quarters.\n\nCell 3 — nearby-code\ndisplay_scale = 1",
+        "includedCellIndices": [
+          4,
+          0,
+          1,
+          3
+        ],
+        "selectedSourceCharacterCount": 158,
+        "formattedContextCharacterCount": 263,
+        "messageTextCharacterCount": 1324,
+        "truncated": false,
+        "sourceGenerationAttemptId": "a4c4dcf6-9762-4081-807e-26849f8520b6",
+        "suggestionToValidate": "Line chart showing quarterly revenue increasing from $12k in Q1 to $40k in Q5."
+      }
+    },
+    {
+      "job": {
+        "caseId": "case-04",
+        "strategy": "structure-aware",
+        "stage": "validation"
+      },
+      "input": {
+        "task": "quality-validation",
+        "existingAltText": "histogram",
+        "imagePath": "assets/case-04.png",
+        "imageSha256": "fd32b1021e76d563306c7d4f42aa95fd0e6ef8090cd3cf1c39dbd21cce34b7b0",
+        "imageMimeType": "image/png",
+        "formattedContext": "Cell 4 — current-cell\nimport matplotlib.pyplot as plt\nplt.hist([22, 25, 29, 31, 34, 28, 45, 52, 27, 33], bins=5)\nplt.title(\"Customer Age Distribution\")\nplt.xlabel(\"Age\")\nplt.ylabel(\"Count\")\nplt.show()\n\nCell 0 — section-heading\n# Customer ages\n\nCell 1 — same-section-markdown\nThe histogram summarizes customer ages in years from ten synthetic observations.",
+        "includedCellIndices": [
+          4,
+          0,
+          1
+        ],
+        "selectedSourceCharacterCount": 273,
+        "formattedContextCharacterCount": 355,
+        "messageTextCharacterCount": 1467,
+        "truncated": false,
+        "sourceGenerationAttemptId": "f59fd1b9-df3f-41ae-8b0b-18996eca44a6",
+        "suggestionToValidate": "Histogram titled Customer Age Distribution showing customer ages in years across 5 bins, with counts ranging from 1 to 4."
+      }
+    }
+  ]
+}
