@@ -76,6 +76,10 @@ export function packetMarkdown(items) {
     "List distinct unsupported assertions with evidence; an omitted fact is not an invented claim. Correct unit conversions are allowed. Assess all four defects separately; a missing reference fact does not automatically make the whole description uninformative.\n\n";
   output +=
     "Word limits are assessed independently from unnecessary verbosity. Resolve all Unsure entries before unblinding. Do not open the private mapping until review is finalized.\n\n";
+  output +=
+    "Scoring clarification approved November 6, 2026, after held-out collection: relationship facts require the relationship to be expressed; listing values alone does not satisfy them. Equivalent relational wording counts, regardless of fact number. Unit abbreviations such as ms count as stated units.\n\n";
+  output +=
+    "Defect 3.3 checks whether essential information is missing or cannot be established. A missing summary sentence alone is not a defect: a straightforward comparison of a short, complete, clearly ordered value sequence may supply sufficient information. A relationship fact No and 3.3 No are allowed. Do not choose marks merely to avoid overlap. Record uncertainty for complex or ambiguous presentations.\n\n";
   for (const item of items) {
     output += `---\n\n## Review Item: ${item.scoringId}\n\n![Chart](${item.assetPath})\n\n`;
     output += `**Approved context**\n\n${fenced(item.context)}\n\n**Description to score**\n\n`;

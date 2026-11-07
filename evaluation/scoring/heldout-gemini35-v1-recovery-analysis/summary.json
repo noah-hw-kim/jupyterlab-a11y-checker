@@ -1,0 +1,179 @@
+{
+  "schemaVersion": "supplementary-format-recovery-analysis-v1",
+  "sourceExperimentId": "heldout-gemini35-v1",
+  "sourceFingerprint": "3daf125639f14c7d51cd6423a3b355412de4b611d79ce42d2718c264371c1672",
+  "sourceSnapshotSha256": "6055f804b20fd3060a326b8bc754973b69af9ed7ab28b4355ad8c7d8928f5bfa",
+  "sourceAttemptsSha256": "3939bde2a7313e5e81fd83856e7d3df12cf3743fa6e71ba3dc3ddc004744aa59",
+  "primaryMappingSha256": "1666fdb6829f8dca9a0620dde8aaf85cd9103457f02615b4affe348e63ae03bf",
+  "primaryPacketSha256": "ad476baaa2841275d462f601597e10849bc3ca553e05ab3c7958f30a917a676f",
+  "supplementaryMappingSha256": "ebf3b2bbacbcd614fab9e5945886c9b1d9dd117697808bd7e20d1542ea97cfcd",
+  "supplementaryPacketSha256": "aa6259132c61df0082f820f57546f31cb5dcff8ec73632218d4c2de45b597d2b",
+  "recoveryRule": "single-surplus-final-closing-brace-v1",
+  "additionalModelRequests": 0,
+  "primaryResultsReplaced": false,
+  "primaryExecution": {
+    "jobs": 72,
+    "validResponses": 69,
+    "formatFailures": 3,
+    "totalRequests": 74
+  },
+  "commonCasesBeforeRecovery": 16,
+  "commonCasesAfterRecovery": 18,
+  "recoveredItems": [
+    {
+      "scoringId": "ITEM-20",
+      "job": {
+        "caseId": "case-07",
+        "strategy": "minimal",
+        "stage": "generation"
+      },
+      "sourceAttemptId": "2f3f1314-4fd7-4a19-8bc9-f9f9c9c92800",
+      "rawContentSha256": "eaf8a5e8bd38110704b00aff9aa55fc4498ab77c034fcb742f527192911d5a28",
+      "descriptionSha256": "df0f88fd77b4828e12895ef55e13a1e8f5a77ab1d3e488e7b33393ad0c80072d",
+      "factCoverage": 0.3333333333333333,
+      "factsConveyed": 1,
+      "factsRequired": 3,
+      "unsupportedClaimCount": 0,
+      "originalOutcome": "model-output-error"
+    },
+    {
+      "scoringId": "ITEM-64",
+      "job": {
+        "caseId": "case-07",
+        "strategy": "fixed-window",
+        "stage": "generation"
+      },
+      "sourceAttemptId": "51062fa1-4a92-4727-bd68-4bf6087ffd4d",
+      "rawContentSha256": "c1bc42b44a402115aa2205c9fc555bca0722876e9e54c851cb267607b95d1936",
+      "descriptionSha256": "5bddfec9a71135abf483e47b8054d1b2fc584f46634ecbab17291229772ce97e",
+      "factCoverage": 0.3333333333333333,
+      "factsConveyed": 1,
+      "factsRequired": 3,
+      "unsupportedClaimCount": 0,
+      "originalOutcome": "model-output-error"
+    },
+    {
+      "scoringId": "ITEM-51",
+      "job": {
+        "caseId": "case-11",
+        "strategy": "structure-aware",
+        "stage": "generation"
+      },
+      "sourceAttemptId": "7e3d853d-6876-4bda-8fe2-5fc28659f798",
+      "rawContentSha256": "3f57b0361f9118fdca22928ddb4f13ff9708d2bdbdfc13783b50ddc40da9f5c5",
+      "descriptionSha256": "f87563f665c9735ef160a43e0f0fd2130c38433352d988ef586b726e0b40dbfa",
+      "factCoverage": 0.6666666666666666,
+      "factsConveyed": 2,
+      "factsRequired": 3,
+      "unsupportedClaimCount": 0,
+      "originalOutcome": "model-output-error"
+    }
+  ],
+  "comparison": {
+    "minimal": {
+      "primary": {
+        "scoredDescriptions": 17,
+        "requiredFactCoverage": 0.43627450980392146,
+        "factsConveyed": 25,
+        "factsRequired": 57,
+        "unsupportedOutputs": 0,
+        "nonemptyDescriptions": 17,
+        "unsupportedOutputRate": 0,
+        "unsupportedClaimCount": 0
+      },
+      "withFormatRecovery": {
+        "scoredDescriptions": 18,
+        "requiredFactCoverage": 0.4305555555555555,
+        "factsConveyed": 26,
+        "factsRequired": 60,
+        "unsupportedOutputs": 0,
+        "nonemptyDescriptions": 18,
+        "unsupportedOutputRate": 0,
+        "unsupportedClaimCount": 0
+      },
+      "coverageDifference": -0.005718954248365937,
+      "primaryMatchedCaseCoverage": 0.42187499999999994,
+      "matchedCasesAfterRecoveryCoverage": 0.4305555555555555,
+      "originalMatchedCasesRecheckedCoverage": 0.4218749999999999
+    },
+    "fixed-window": {
+      "primary": {
+        "scoredDescriptions": 17,
+        "requiredFactCoverage": 0.43627450980392146,
+        "factsConveyed": 25,
+        "factsRequired": 57,
+        "unsupportedOutputs": 0,
+        "nonemptyDescriptions": 17,
+        "unsupportedOutputRate": 0,
+        "unsupportedClaimCount": 0
+      },
+      "withFormatRecovery": {
+        "scoredDescriptions": 18,
+        "requiredFactCoverage": 0.4305555555555555,
+        "factsConveyed": 26,
+        "factsRequired": 60,
+        "unsupportedOutputs": 0,
+        "nonemptyDescriptions": 18,
+        "unsupportedOutputRate": 0,
+        "unsupportedClaimCount": 0
+      },
+      "coverageDifference": -0.005718954248365937,
+      "primaryMatchedCaseCoverage": 0.42187499999999994,
+      "matchedCasesAfterRecoveryCoverage": 0.4305555555555555,
+      "originalMatchedCasesRecheckedCoverage": 0.4218749999999999
+    },
+    "structure-aware": {
+      "primary": {
+        "scoredDescriptions": 17,
+        "requiredFactCoverage": 0.6078431372549019,
+        "factsConveyed": 34,
+        "factsRequired": 57,
+        "unsupportedOutputs": 0,
+        "nonemptyDescriptions": 17,
+        "unsupportedOutputRate": 0,
+        "unsupportedClaimCount": 0
+      },
+      "withFormatRecovery": {
+        "scoredDescriptions": 18,
+        "requiredFactCoverage": 0.6111111111111112,
+        "factsConveyed": 36,
+        "factsRequired": 60,
+        "unsupportedOutputs": 0,
+        "nonemptyDescriptions": 18,
+        "unsupportedOutputRate": 0,
+        "unsupportedClaimCount": 0
+      },
+      "coverageDifference": 0.0032679738562092497,
+      "primaryMatchedCaseCoverage": 0.6041666666666667,
+      "matchedCasesAfterRecoveryCoverage": 0.6111111111111112,
+      "originalMatchedCasesRecheckedCoverage": 0.6041666666666666
+    },
+    "largest-practical": {
+      "primary": {
+        "scoredDescriptions": 18,
+        "requiredFactCoverage": 0.5185185185185185,
+        "factsConveyed": 31,
+        "factsRequired": 60,
+        "unsupportedOutputs": 0,
+        "nonemptyDescriptions": 18,
+        "unsupportedOutputRate": 0,
+        "unsupportedClaimCount": 0
+      },
+      "withFormatRecovery": {
+        "scoredDescriptions": 18,
+        "requiredFactCoverage": 0.5185185185185185,
+        "factsConveyed": 31,
+        "factsRequired": 60,
+        "unsupportedOutputs": 0,
+        "nonemptyDescriptions": 18,
+        "unsupportedOutputRate": 0,
+        "unsupportedClaimCount": 0
+      },
+      "coverageDifference": 0,
+      "primaryMatchedCaseCoverage": 0.49999999999999994,
+      "matchedCasesAfterRecoveryCoverage": 0.5185185185185185,
+      "originalMatchedCasesRecheckedCoverage": 0.49999999999999994
+    }
+  },
+  "partBChanged": false
+}

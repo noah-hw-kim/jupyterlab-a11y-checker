@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 1,
+  "experimentId": "heldout-gemini35-v1-validation",
+  "createdAt": "2026-11-07T00:24:11.450Z",
+  "config": {
+    "schemaVersion": 1,
+    "model": "gemini-3.5-flash-lite",
+    "endpointEnv": "A11YLENS_MODEL_ENDPOINT",
+    "apiKeyEnv": "A11YLENS_API_KEY",
+    "split": "held-out",
+    "strategies": [
+      "minimal",
+      "fixed-window",
+      "structure-aware",
+      "largest-practical"
+    ],
+    "contextCharacterBudget": 2000,
+    "reasoningEffort": "provider-default",
+    "temperature": "provider-default",
+    "maxOutputTokens": 2048,
+    "maxSuggestionWords": 40,
+    "imageMimeType": "image/png",
+    "concurrency": 1,
+    "requestTimeoutMs": 120000,
+    "retry": {
+      "mode": "manual",
+      "maxAttempts": 2,
+      "minimumDelayMs": 30000,
+      "httpStatuses": [
+        408,
+        429,
+        500,
+        502,
+        503,
+        504
+      ]
+    },
+    "orderSeed": 20261028,
+    "batchSize": 4,
+    "minimumRequestIntervalMs": 15000
+  },
+  "resolvedEndpoint": "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+  "codeCommit": "9403058c5032eb34ea1f02dd14f5c55584298ecb",
+  "codeSnapshotSha256": "255f108c77d97891c9024d1ab44e4c1da6d50d3709963b1679d364b93ae15e2a",
+  "benchmarkFreezeSha256": "3ae902906f328f6378c5585db75acdfd6fe80535b4d49e877b767c6aa70d7ef8",
+  "prompts": {
+    "generation": {
+      "path": "prompts/generation.json",
+      "sha256": "98437795b1f58c31323ff36277efc304d9dacb48b34dd0f59b1e391a5acc349c"
+    },
+    "validation": {
+      "path": "prompts/validation.json",
+      "sha256": "073b5e463da200dc4f94d882ae052cf048ff7bdb41856c925eed3d6bdcf6b51c"
+    }
+  },
+  "generationJobs": [
+    {
+      "caseId": "case-07",
+      "strategy": "structure-aware",
+      "stage": "validation"
+    },
+    {
+      "caseId": "case-08",
+      "strategy": "structure-aware",
+      "stage": "validation"
+    },
+    {
+      "caseId": "case-09",
+      "strategy": "structure-aware",
+      "stage": "validation"
+    },
+    {
+      "caseId": "case-10",
+      "strategy": "structure-aware",
+      "stage": "validation"
+    },
+    {
+      "caseId": "case-12",
+      "strategy": "structure-aware",
+      "stage": "validation"
+    },
+    {
+      "caseId": "case-13",
+      "strategy": "structure-aware",
+      "stage": "validation"
+    },
+    {
+      "caseId": "case-14",
+      "strategy": "structure-aware",
+      "stage": "validation"
+    },
+    {
+      "caseId": "case-15",
+      "strategy": "structure-aware",
+      "stage": "validation"
+    },
+    {
+      "caseId": "case-16",
+      "strategy": "structure-aware",
+      "stage": "validation"
+    },
+    {
+      "caseId": "case-17",
+      "strategy": "structure-aware",
+      "stage": "validation"
+    },
+    {
+      "caseId": "case-18",
+      "strategy": "structure-aware",
+      "stage": "validation"
+    },
+    {
+      "caseId": "case-20",
+      "strategy": "structure-aware",
+      "stage": "validation"
+    }
+  ],
+  "sourceGeneration": {
+    "experimentId": "heldout-gemini35-v1",
+    "fingerprint": "3daf125639f14c7d51cd6423a3b355412de4b611d79ce42d2718c264371c1672",
+    "snapshotSha256": "6055f804b20fd3060a326b8bc754973b69af9ed7ab28b4355ad8c7d8928f5bfa",
+    "attemptsSha256": "3939bde2a7313e5e81fd83856e7d3df12cf3743fa6e71ba3dc3ddc004744aa59"
+  },
+  "exclusions": [
+    {
+      "caseId": "case-11",
+      "strategy": "structure-aware",
+      "stage": "validation",
+      "reason": "source-unavailable",
+      "sourceGenerationAttemptId": "7e3d853d-6876-4bda-8fe2-5fc28659f798"
+    },
+    {
+      "caseId": "case-19",
+      "strategy": "structure-aware",
+      "stage": "validation",
+      "reason": "no-improvement",
+      "sourceGenerationAttemptId": "f958bffb-991c-48b4-b7b8-fff1dc6a5878"
+    },
+    {
+      "caseId": "case-21",
+      "strategy": "structure-aware",
+      "stage": "validation",
+      "reason": "no-improvement",
+      "sourceGenerationAttemptId": "5b76b2c5-4662-4fa8-9511-9961f58a1456"
+    },
+    {
+      "caseId": "case-22",
+      "strategy": "structure-aware",
+      "stage": "validation",
+      "reason": "no-improvement",
+      "sourceGenerationAttemptId": "d5f39568-3b11-41e1-950c-d04f484166a0"
+    },
+    {
+      "caseId": "case-23",
+      "strategy": "structure-aware",
+      "stage": "validation",
+      "reason": "no-improvement",
+      "sourceGenerationAttemptId": "944393fc-df4c-468e-b290-5792798406c0"
+    },
+    {
+      "caseId": "case-24",
+      "strategy": "structure-aware",
+      "stage": "validation",
+      "reason": "no-improvement",
+      "sourceGenerationAttemptId": "2e917382-8ef8-4d79-83ee-27b2eea9fefd"
+    }
+  ],
+  "fingerprint": "df1392c6742a13b368b28ff83a45403f986366325236f74e7109cda160102164"
+}

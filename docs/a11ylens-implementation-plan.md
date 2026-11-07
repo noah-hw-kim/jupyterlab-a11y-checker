@@ -695,20 +695,24 @@ is not persisted. The frozen benchmark inputs and annotations are unchanged.
 
 ## Phase 7 — Run the Experiment
 
-**Progress review — November 4, 2026:** Development v2 generation is complete
-(24 successful jobs), the 24-item human scoring packet is finalized, and four
-eligible Structure-aware replacements have saved validator judgments.
-Two no-improvement results are excluded from validation.
+**Progress review — November 6, 2026:** Held-out generation and analysis are
+complete: all 72 jobs reached terminal outcomes (69 valid responses and three
+format errors), using 74 generation requests. Author-finalized scores cover the
+69 primary descriptions and three separately recovered descriptions. Part B
+completed all 12 eligible validation jobs; five no-improvement decisions and one
+primary format failure were excluded.
 
-The scoring analyzer has been repaired and its six tests pass. Regenerating
-the development JSON and Markdown summaries exactly reproduces the saved
-reports without new model requests or changes to the source evidence.
+The separate recovery analysis preserves the primary failures and requires no
+new model requests. Structure-aware had the highest observed mean fact coverage
+(60.8% primary; 61.1% with recovered text), without recorded unsupported claims.
+These are descriptive findings from a small controlled benchmark.
 
-The held-out configuration is prepared, but collection has not started.
-The 18-case study (72 generation jobs), strategy-masked human scoring,
-validation comparison, and final analysis remain outstanding.
-Development results do not establish general superiority of any strategy.
-Real-notebook supplementation remains deferred.
+The [findings and limitations](phase7-findings.md) document individual failures,
+validator disagreements, scoring assistance and masking limits, and the
+post-collection rubric clarification. Primary reports reproduce exactly from
+saved evidence; nine focused analyzer tests passed. Real-notebook supplementation
+remains deferred. Phase 8 release checks, documentation/demo, and the reviewed Git
+checkpoint remain outstanding.
 
 **Target dates:** November 4–13  
 **One-sentence goal:** Use your 24 test cases to answer the research question: does structure-aware context help?
@@ -725,9 +729,10 @@ The proposed configuration, two-total-attempt resume policy, failure handling,
 no-improvement scoring, and validation eligibility are specified in the
 [experiment protocol](evaluation-protocol.md) and
 [blinded scoring template](evaluation-scoring-template.md). The author approved these
-drafts on October 28, 2026. Development preflight is complete. Before held-out
-requests, save the reviewed code checkpoint and freeze the protocol, scoring
-rules, configuration, endpoint, and both prompt templates.
+drafts on October 28, 2026. The held-out snapshot records the saved code
+checkpoint, configuration, endpoint, benchmark freeze, and both prompt templates.
+The November 6 scoring clarification and actual scoring assistance are disclosed
+in the findings rather than presented as part of the original frozen design.
 
 
 ### The experiment has two parts
@@ -795,11 +800,11 @@ rules, configuration, endpoint, and both prompt templates.
 
 ### ✅ Phase 7 is done when
 
-- [ ] All 72 generation jobs (4 strategies × 18 cases) have saved terminal outcomes: successes or explicit failures under the frozen attempt policy.
-- [ ] Manual scoring was done blinded (you didn't know which strategy produced which output).
-- [ ] Required quality and efficiency metrics are calculated from saved records; unavailable optional provider token counts are explicitly marked unavailable, not invented.
-- [ ] You can reproduce every number from the saved outputs (no re-running the AI).
-- [ ] Important failures are analyzed individually (not just averaged away).
+- [x] All 72 generation jobs (4 strategies × 18 cases) have saved terminal outcomes: successes or explicit failures under the frozen attempt policy.
+- [x] Strategy names were hidden in reviewer packets and all scores were finalized by the author; scoring assistance, familiarity, and limits of masking are disclosed in the findings. This replaces the stronger original blinding claim.
+- [x] Required quality and efficiency metrics are calculated from saved records; unavailable optional provider token counts are explicitly marked unavailable, not invented.
+- [x] Primary reports reproduce exactly from saved outputs without new model calls; recovery metrics are separately reproducible from saved text and scores.
+- [x] Important failures are analyzed individually, including three format errors and validator misses/false alarms.
 
 ---
 

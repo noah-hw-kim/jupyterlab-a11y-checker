@@ -367,3 +367,32 @@ node evaluation/__tests__/export-scoring.test.mjs
 node evaluation/__tests__/analyze-scoring.test.mjs
 corepack yarn workspace @berkeley-dsep-infra/a11y-checker-core test
 ```
+
+### Supplementary format-recovery analysis
+
+After finalizing both scoring packets, compare the original quality metrics with
+the three descriptions recovered from surplus-brace JSON failures:
+
+```bash
+node evaluation/analyze-recovery.mjs \
+  --primary-scoring evaluation/scoring/heldout-gemini35-v1 \
+  --source evaluation/runs/heldout-gemini35-v1 \
+  --supplementary-scoring evaluation/scoring/heldout-gemini35-v1-format-recovery \
+  --audit evaluation/format-audits/heldout-gemini35-v1 \
+  --frozen test_files/benchmark \
+  --output evaluation/scoring/heldout-gemini35-v1-recovery-analysis
+```
+
+This offline analysis verifies source hashes, unchanged recovered wording,
+frozen facts/images, and finalized scores. Its separate `summary.json` and
+`summary.md` compare mean fact coverage and unsupported claims using explicit
+denominators and common-case subsets. Recovery only removes exactly one surplus
+closing brace; it neither rewrites descriptions nor sends model requests.
+Original execution outcomes, primary reports, and Part B eligibility remain
+unchanged. The output directory must be new and outside all input directories.
+
+Run its offline regression tests:
+
+```bash
+node evaluation/__tests__/analyze-recovery.test.mjs
+```

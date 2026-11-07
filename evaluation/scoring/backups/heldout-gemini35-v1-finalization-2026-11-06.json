@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "scoring-finalization-v1",
+  "experimentId": "heldout-gemini35-v1",
+  "reviewer": "Hyeonwoo Kim",
+  "finalizationDate": "2026-11-06",
+  "allPrefilledItemsReviewed": true,
+  "totalItems": 72,
+  "packets": [
+    {
+      "packet": "heldout-gemini35-v1",
+      "items": 69,
+      "reviewer": "Hyeonwoo Kim",
+      "finalizedDate": "2026-11-06",
+      "beforeSha256": "fb0b305902502cd39852d7930d69d828494227c2abdec212f03803370299f985",
+      "finalizedSha256": "ad476baaa2841275d462f601597e10849bc3ca553e05ab3c7958f30a917a676f",
+      "snapshotPath": "backups/heldout-gemini35-v1-scoring-packet.finalized.md"
+    },
+    {
+      "packet": "heldout-gemini35-v1-format-recovery",
+      "items": 3,
+      "reviewer": "Hyeonwoo Kim",
+      "finalizedDate": "2026-11-06",
+      "beforeSha256": "39ca6ffdffac669c457a7c3c3d7d48844a61c3fa6b8136dc7cb1a7936c121f65",
+      "finalizedSha256": "aa6259132c61df0082f820f57546f31cb5dcff8ec73632218d4c2de45b597d2b",
+      "snapshotPath": "backups/heldout-gemini35-v1-format-recovery-scoring-packet.finalized.md"
+    }
+  ],
+  "finalizedMarkLogSha256": "ade4ecb42233ad77c812dd86946f00f7d9be6c5223a6305643e0b7913e0dc38d",
+  "clarificationPath": "clarifications/2026-11-06-relationship-and-important-content.md",
+  "clarificationSha256": "f43ef6b98121f3d3ad16ced55ac58332780bdf826bc19b288d6a2fd0050dd076",
+  "newModelRequests": 0,
+  "scoresChanged": false
+}

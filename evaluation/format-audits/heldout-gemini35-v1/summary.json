@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "sourceExperimentId": "heldout-gemini35-v1",
+  "sourceSnapshotSha256": "6055f804b20fd3060a326b8bc754973b69af9ed7ab28b4355ad8c7d8928f5bfa",
+  "sourceAttemptsSha256": "3939bde2a7313e5e81fd83856e7d3df12cf3743fa6e71ba3dc3ddc004744aa59",
+  "purpose": "Supplementary format-only audit; primary records and scores are unchanged.",
+  "recoveryRule": "After existing fence removal, accept only one complete contract-valid JSON object followed by exactly one surplus closing brace. Reject duplicate keys, unexpected fields, other suffixes, and malformed strings.",
+  "failuresAudited": 3,
+  "unambiguouslyRecoverable": 3,
+  "modelRequests": 0,
+  "descriptionWordsEdited": false,
+  "primaryJobStatuses": {
+    "succeeded": 69,
+    "model-output-error": 3
+  },
+  "auditTestsPassed": 6,
+  "originalEvidenceFilesUnchanged": 100,
+  "supplementaryScoringStatus": "not exported or scored",
+  "acceptedByExistingCoreParser": 3,
+  "within40WordLimit": 3
+}

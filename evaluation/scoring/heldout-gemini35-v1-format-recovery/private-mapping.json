@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "supplementary-format-recovery-v1",
+  "sourceExperimentId": "heldout-gemini35-v1",
+  "sourceAttemptsSha256": "3939bde2a7313e5e81fd83856e7d3df12cf3743fa6e71ba3dc3ddc004744aa59",
+  "sourceSnapshotSha256": "6055f804b20fd3060a326b8bc754973b69af9ed7ab28b4355ad8c7d8928f5bfa",
+  "sourceAuditSummarySha256": "ca587ba872636b5b89d1b33efcf133dc0a2a6f612e5e75aefa2b24c4239541ec",
+  "sourceRecoveryCandidatesSha256": "b12534285aecdda9da139440ec5f05f1e75ec25c8334e7c0f97a703aa0e435c1",
+  "primaryMappingSha256": "1666fdb6829f8dca9a0620dde8aaf85cd9103457f02615b4affe348e63ae03bf",
+  "freezeHash": "3ae902906f328f6378c5585db75acdfd6fe80535b4d49e877b767c6aa70d7ef8",
+  "primaryResultsReplaced": false,
+  "items": [
+    {
+      "scoringId": "ITEM-20",
+      "job": {
+        "caseId": "case-07",
+        "strategy": "minimal",
+        "stage": "generation"
+      },
+      "sourceAttemptId": "2f3f1314-4fd7-4a19-8bc9-f9f9c9c92800",
+      "primaryOutcome": "model-output-error",
+      "effectiveDescription": "Line plot titled Measurements showing a positive trend with four points: (1, 12), (2, 16), (3, 20), and (4, 24).",
+      "recoveryRule": "single-surplus-final-closing-brace-v1",
+      "rawContentSha256": "eaf8a5e8bd38110704b00aff9aa55fc4498ab77c034fcb742f527192911d5a28"
+    },
+    {
+      "scoringId": "ITEM-64",
+      "job": {
+        "caseId": "case-07",
+        "strategy": "fixed-window",
+        "stage": "generation"
+      },
+      "sourceAttemptId": "51062fa1-4a92-4727-bd68-4bf6087ffd4d",
+      "primaryOutcome": "model-output-error",
+      "effectiveDescription": "Line plot titled Measurements with Observation on the x-axis (1 to 4) and Value on the y-axis (0 to 24), showing four connected points at (1, 12), (2, 16), (3, 20), and (4, 24).",
+      "recoveryRule": "single-surplus-final-closing-brace-v1",
+      "rawContentSha256": "c1bc42b44a402115aa2205c9fc555bca0722876e9e54c851cb267607b95d1936"
+    },
+    {
+      "scoringId": "ITEM-51",
+      "job": {
+        "caseId": "case-11",
+        "strategy": "structure-aware",
+        "stage": "generation"
+      },
+      "sourceAttemptId": "7e3d853d-6876-4bda-8fe2-5fc28659f798",
+      "primaryOutcome": "model-output-error",
+      "effectiveDescription": "Scatter plot titled 'Rainfall and runoff' showing four points at (1 mm, 2 liters), (2 mm, 4 liters), (3 mm, 5 liters), and (4 mm, 8 liters).",
+      "recoveryRule": "single-surplus-final-closing-brace-v1",
+      "rawContentSha256": "3f57b0361f9118fdca22928ddb4f13ff9708d2bdbdfc13783b50ddc40da9f5c5"
+    }
+  ]
+}

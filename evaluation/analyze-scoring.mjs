@@ -1036,7 +1036,7 @@ function computePartAMetrics({
   };
 }
 
-function computeStrategySlice(jobs, commonValidCaseIds) {
+export function computeStrategySlice(jobs, commonValidCaseIds) {
   const totalJobs = jobs.length;
   const validJobs = jobs.filter((j) => j.isAvailable);
   const nonEmptyJobs = jobs.filter((j) => j.isNonEmptyDescription);

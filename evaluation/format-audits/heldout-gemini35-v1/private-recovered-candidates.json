@@ -1,0 +1,63 @@
+{
+  "sourceExperimentId": "heldout-gemini35-v1",
+  "sourceAttemptsSha256": "3939bde2a7313e5e81fd83856e7d3df12cf3743fa6e71ba3dc3ddc004744aa59",
+  "items": [
+    {
+      "auditId": "FORMAT-01",
+      "job": {
+        "caseId": "case-07",
+        "strategy": "minimal",
+        "stage": "generation"
+      },
+      "sourceAttemptId": "2f3f1314-4fd7-4a19-8bc9-f9f9c9c92800",
+      "sourceOutcome": "model-output-error",
+      "rawContentSha256": "eaf8a5e8bd38110704b00aff9aa55fc4498ab77c034fcb742f527192911d5a28",
+      "rawContent": "```json\n{\"concern\":true,\"suggestion\":\"Line plot titled Measurements showing a positive trend with four points: (1, 12), (2, 16), (3, 20), and (4, 24).\"}}\n```",
+      "recoveredJsonPrefix": "{\"concern\":true,\"suggestion\":\"Line plot titled Measurements showing a positive trend with four points: (1, 12), (2, 16), (3, 20), and (4, 24).\"}",
+      "recoveredValue": {
+        "concern": true,
+        "suggestion": "Line plot titled Measurements showing a positive trend with four points: (1, 12), (2, 16), (3, 20), and (4, 24)."
+      },
+      "recoveryRule": "single-surplus-final-closing-brace-v1",
+      "descriptionWordsEdited": false
+    },
+    {
+      "auditId": "FORMAT-02",
+      "job": {
+        "caseId": "case-07",
+        "strategy": "fixed-window",
+        "stage": "generation"
+      },
+      "sourceAttemptId": "51062fa1-4a92-4727-bd68-4bf6087ffd4d",
+      "sourceOutcome": "model-output-error",
+      "rawContentSha256": "c1bc42b44a402115aa2205c9fc555bca0722876e9e54c851cb267607b95d1936",
+      "rawContent": "```json\n{\"concern\":true,\"suggestion\":\"Line plot titled Measurements with Observation on the x-axis (1 to 4) and Value on the y-axis (0 to 24), showing four connected points at (1, 12), (2, 16), (3, 20), and (4, 24).\"}}\n```",
+      "recoveredJsonPrefix": "{\"concern\":true,\"suggestion\":\"Line plot titled Measurements with Observation on the x-axis (1 to 4) and Value on the y-axis (0 to 24), showing four connected points at (1, 12), (2, 16), (3, 20), and (4, 24).\"}",
+      "recoveredValue": {
+        "concern": true,
+        "suggestion": "Line plot titled Measurements with Observation on the x-axis (1 to 4) and Value on the y-axis (0 to 24), showing four connected points at (1, 12), (2, 16), (3, 20), and (4, 24)."
+      },
+      "recoveryRule": "single-surplus-final-closing-brace-v1",
+      "descriptionWordsEdited": false
+    },
+    {
+      "auditId": "FORMAT-03",
+      "job": {
+        "caseId": "case-11",
+        "strategy": "structure-aware",
+        "stage": "generation"
+      },
+      "sourceAttemptId": "7e3d853d-6876-4bda-8fe2-5fc28659f798",
+      "sourceOutcome": "model-output-error",
+      "rawContentSha256": "3f57b0361f9118fdca22928ddb4f13ff9708d2bdbdfc13783b50ddc40da9f5c5",
+      "rawContent": "```json\n{\"concern\":true,\"suggestion\":\"Scatter plot titled 'Rainfall and runoff' showing four points at (1 mm, 2 liters), (2 mm, 4 liters), (3 mm, 5 liters), and (4 mm, 8 liters).\"}}\n```",
+      "recoveredJsonPrefix": "{\"concern\":true,\"suggestion\":\"Scatter plot titled 'Rainfall and runoff' showing four points at (1 mm, 2 liters), (2 mm, 4 liters), (3 mm, 5 liters), and (4 mm, 8 liters).\"}",
+      "recoveredValue": {
+        "concern": true,
+        "suggestion": "Scatter plot titled 'Rainfall and runoff' showing four points at (1 mm, 2 liters), (2 mm, 4 liters), (3 mm, 5 liters), and (4 mm, 8 liters)."
+      },
+      "recoveryRule": "single-surplus-final-closing-brace-v1",
+      "descriptionWordsEdited": false
+    }
+  ]
+}

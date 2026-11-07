@@ -1,7 +1,9 @@
 # Blinded scoring template
 
-Status: author-approved draft as of October 28, 2026. Practice on development
-examples before final freeze. Use with the [experiment protocol](evaluation-protocol.md).
+Status: author-approved October 28, 2026; relationship-coverage and defect 3.3
+interpretation clarified November 6, 2026, after held-out collection, during the
+first held-out item's review. See the [dated clarification record](../evaluation/scoring/clarifications/2026-11-06-relationship-and-important-content.md).
+Use with the [experiment protocol](evaluation-protocol.md).
 Fill one form per valid-response job, including no-improvement results. The
 packet generator supplies the effective description according to the protocol.
 Unavailable requests are recorded automatically, not invented as descriptions.
@@ -25,6 +27,14 @@ Only count defined facts. Equivalent wording counts. A wrong subject or unit doe
 not satisfy a fact requiring that subject or unit. Use the complete supported
 meaning, not keyword matches. Do not add a new criterion because a description
 happens to mention more details. Empty text conveys no required facts.
+
+For a reference fact about a trend, comparison, peak, or other relationship,
+the description must express the relationship. Equivalent relational wording
+counts; no particular keyword is required. For example, "revenue rises from
+$12k to $40k" expresses an increase. Listing Q1 through Q5 values alone does
+not satisfy an increase fact, even when the increase can be inferred.
+This applies wherever a relationship fact appears, not only to facts numbered F3.
+Standard unit abbreviations count as stated units: "ms" conveys milliseconds.
 
 ## Unsupported factual assertions
 
@@ -57,6 +67,20 @@ whether the text is unnecessarily verbose. A short description can omit importan
 content; a longer one can be accurate but violate the configured length limit.
 Missing any one reference fact does not automatically mean the whole description
 is uninformative: identify the important missing content in the evidence column.
+
+For defect 3.3 (important image content is missing), mark Yes when essential
+information is absent or cannot be established from the description. Do not
+mark Yes solely because a summary sentence is absent or the reader must make a
+straightforward comparison between a few clearly identified values. A short,
+complete, ordered sequence can supply sufficient information even without
+explicitly summarizing its relationship. A range alone may not: "revenue ranges
+from $12k to $40k" does not establish which quarters are higher.
+
+Thus a relationship fact can be No while 3.3 is No: the relationship is not
+expressed, but the essential information remains available. Conversely, mark
+3.3 Yes if important information is genuinely missing. Do not choose either
+mark merely to avoid or create overlap with fact coverage. For complex or
+ambiguous presentations, use Unsure and record the specific uncertainty.
 
 ## Finalization
 

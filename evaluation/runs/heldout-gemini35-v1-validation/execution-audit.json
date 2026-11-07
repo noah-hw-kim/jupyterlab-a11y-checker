@@ -1,0 +1,25 @@
+{
+  "experimentId": "heldout-gemini35-v1-validation",
+  "eligibleJobs": 12,
+  "exclusions": {
+    "source-unavailable": 1,
+    "no-improvement": 5
+  },
+  "totalRequests": 12,
+  "httpStatuses": {
+    "200": 12
+  },
+  "successfulExecutions": 12,
+  "validatorPasses": 10,
+  "manualReviewFlags": 2,
+  "minimumStartGapSeconds": 15.009,
+  "allFirstAttempts": true,
+  "protectedOriginalFilesUnchanged": 187,
+  "runnerStopped": true,
+  "primaryReportReproducedExactly": true,
+  "reportPath": "evaluation/scoring/heldout-gemini35-v1/analysis",
+  "primaryReportSha256": {
+    "summary.json": "6121481c8a39c77cab6bb61997d0dc4d7cd4f5817a810e330b9842592c8b7e95",
+    "summary.md": "b574a9ec47f16cac96c00168ed05364ff6c63c0d5ad70a47cf2d6a402a4f770d"
+  }
+}

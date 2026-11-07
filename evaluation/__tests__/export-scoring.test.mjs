@@ -214,6 +214,16 @@ test("verifies snapshot fingerprint and frozen manifest bytes", async (t) => {
   await f.assertPreserved();
 });
 
+test("packet instructions distinguish expressed relationships from missing essential content", () => {
+  const markdown = packetMarkdown([]);
+  assert.match(markdown, /after held-out collection/);
+  assert.match(markdown, /listing values alone does not satisfy them/);
+  assert.match(markdown, /regardless of fact number/);
+  assert.match(markdown, /Unit abbreviations such as ms count as stated units/);
+  assert.match(markdown, /A missing summary sentence alone is not a defect/);
+  assert.match(markdown, /A relationship fact No and 3\.3 No are allowed/);
+});
+
 test("renders descriptions literally and escapes fact-table markup", () => {
   const text =
     "# Heading\n<b>HTML</b>\n```\n| pipe |\nminimal is a legitimate description word";

@@ -151,6 +151,15 @@ missing a required fact is not itself an unsupported claim. Do not change frozen
 reference facts after seeing outputs; document suspected annotation issues for a
 future dataset revision. Practice the rubric only on development examples.
 
+**Dated scoring clarification — November 6, 2026:** After held-out collection,
+during the first held-out item's review, the author approved the distinction
+between explicitly expressed relationship facts and defect 3.3. Relationship
+facts require relational wording; 3.3 does not automatically fail a short,
+complete value sequence whose essential information is available through a
+straightforward comparison. The [clarification record](../evaluation/scoring/clarifications/2026-11-06-relationship-and-important-content.md)
+documents timing and examples. This is not presented as a newly prespecified
+rule. Frozen inputs, prompts, request settings, and original results are unchanged.
+
 Report fact coverage averaged over valid-response jobs, counting a valid
 no-improvement response with missing/empty alt as zero. Report unsupported-output
 rate over nonempty descriptions, with the numerator and denominator shown.
