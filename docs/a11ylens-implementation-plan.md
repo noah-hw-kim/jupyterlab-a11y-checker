@@ -37,7 +37,9 @@ A11yLens adds **context-aware, AI-assisted image alt-text analysis**. In plain E
 
 > Does giving the AI model *notebook context* (headings, surrounding text, code) produce better alt-text suggestions than giving it the image alone?
 
-You will answer this by running a controlled experiment with 24 test cases across four context strategies.
+The benchmark contains 24 cases: six development cases and 18 held-out
+cases. The completed comparison used the 18 held-out cases across four
+strategies, producing 72 generation jobs.
 
 ### Deadlines
 
@@ -825,11 +827,25 @@ Only fix bugs that:
 
 #### 2. Run all quality checks
 
-- [ ] All core tests pass.
-- [ ] TypeScript type-checking passes (`tsc --noEmit`).
-- [ ] Linting passes.
-- [ ] The extension builds and loads in JupyterLab.
-- [ ] Manual walkthrough of the full flow works.
+- [x] All core tests pass.
+- [x] TypeScript type-checking passes (`tsc --noEmit`).
+- [x] Linting passes.
+- [x] The extension builds and loads in JupyterLab.
+- [x] Manual walkthrough of the full flow works.
+
+Verification: November 6–7, 2026. Automated checks passed:
+313 core tests, 33 extension tests, and 45 evaluation tests;
+core/extension type checks, extension lint, and development build.
+JupyterLab reported the extension enabled and OK.
+
+The author reported passing all eight browser checks: structural
+detection, analysis without notebook changes, editing, exact-image Apply,
+Dismiss, output-alt persistence after reopening, stale-output rejection,
+and keyboard operation. The development notebook was restored afterward.
+These are author-reported browser results, not automated browser tests.
+Installation from a fresh clone remains unverified.
+
+See [Setup and demo guide](a11ylens-setup-and-demo.md).
 
 #### 3. Write documentation
 
@@ -935,8 +951,11 @@ Broader coverage becomes required only when an approved acceptance case, experim
 
 - **Deadlines:** Midterm report October 23, 2026 (target submission October 22); final delivery November 21, 2026.
 - **Midterm page count:** Applicability of the general 30-page minimum and which pages count await instructor clarification; no exemption is assumed.
-- **AI model:** One Berkeley-hosted OpenAI-compatible multimodal model.
-- **You (the author)** write the benchmark cases and do the blinded scoring.
+- **Executed model:** Requested `gemini-3.5-flash-lite` through one
+  OpenAI-compatible endpoint; the saved experiment records its identity.
+- **Benchmark and scoring:** Author-reviewed reference annotations and
+  author-finalized strategy-masked scores. AI assistance and masking
+  limitations are disclosed in the findings.
 - **One AI run per condition** is acceptable for a course project. Document model nondeterminism as a limitation.
 - **JupyterLab is the main interface.** CLI compatibility is nice-to-have.
 - **Out of scope:** Link quality, table captions, embeddings, agent frameworks, dependency tracing, decorative-image classification, dynamic outputs.

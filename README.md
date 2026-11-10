@@ -24,7 +24,7 @@ Here's a snapshot of the extension:
 
 ### Issue Resolution
 
-We provide a user interface tailored to each issue, such as a text field for adding alt-text, a dropdown for fixing header issues, etc. The fix interfaces are listed in [Fix Interface Description](./doc/fix-interfaces.md).
+We provide a user interface tailored to each issue, such as a text field for adding alt-text, a dropdown for fixing header issues, etc. The fix interfaces are listed in [Fix Interface Description](./docs/components/fix.md).
 
 ### AI Assistance
 
@@ -79,6 +79,16 @@ Try it at: [jupycheck.vercel.app](https://jupycheck.vercel.app)
 
 ## Getting Started
 
+### A11yLens project workflow
+
+For this branch's context strategies, image review, and validation workflow,
+see the [A11yLens setup and demo guide](docs/a11ylens-setup-and-demo.md).
+Use the source build instructions there; the published package and hosted
+demos are not evidence that this branch's changes are installed.
+
+The [evaluation findings](docs/phase7-findings.md) describe the measured
+results and study limitations.
+
 ### Installing
 
 You can install the extension directly via pip:
@@ -93,7 +103,7 @@ Find the package on PyPI. [Link to PyPI Package](https://pypi.org/project/jupyte
 
 We're building this tool for the community, and we'd love your help! Whether it's adding new accessibility checks, or refining the fix suggestions, your contributions can help this project make a broader impact.
 
-See the [Contributing Guide](./doc/contributing.md) for project structure, build instructions, and development workflow.
+See the [Contributing Guide](./docs/developer-documentation/contributing.md) for project structure, build instructions, and development workflow.
 
 ## Acknowledgements
 

@@ -7,8 +7,13 @@ Part B validation reuses exact saved Structure-aware replacements through the
 same durable execution loop. `export-scoring.mjs` creates strategy-masked human
 scoring packets; `analyze-scoring.mjs` verifies the finalized scores and saved
 experiment evidence, then calculates Part A and Part B metrics offline.
-Development preflight is complete. Held-out collection has not started;
-the reviewed code checkpoint and final configuration freeze precede it.
+Phase 7 held-out collection and scoring are complete. The primary run
+recorded 69 valid responses and three model-output format failures across
+72 generation jobs. A separate offline supplementary analysis scored the
+three recovered descriptions without replacing the primary failures.
+See the [findings and limitations](../docs/phase7-findings.md) for results
+and links to the saved evidence. Commands below describe runner operation;
+they are not instructions to rerun the completed frozen experiment.
 See the approved [protocol](../docs/evaluation-protocol.md) and
 [scoring template](../docs/evaluation-scoring-template.md).
 
@@ -128,6 +133,20 @@ preserved. The analyzer writes `summary.json` and `summary.md`; it does not
 regenerate descriptions or modify human scores. `--validation` is optional
 when only Part A analysis is needed. Development reports are preflight evidence,
 not results from the held-out study.
+
+To reproduce the completed held-out analysis, including Part B, offline:
+
+```bash
+node evaluation/analyze-scoring.mjs \
+  --scoring evaluation/scoring/heldout-gemini35-v1 \
+  --source evaluation/runs/heldout-gemini35-v1 \
+  --validation evaluation/runs/heldout-gemini35-v1-validation \
+  --frozen test_files/benchmark \
+  --output /tmp/a11ylens-heldout-analysis-review
+```
+
+Use a new output directory each time. This command reads the saved records;
+it makes no model requests.
 
 ## Operator workflow
 

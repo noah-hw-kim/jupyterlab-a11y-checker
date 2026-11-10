@@ -1,11 +1,10 @@
 # Phase 7 experiment protocol
 
-Status: development trial completed and analysis reproduced.
-Held-out settings are specified in ../evaluation/config.held-out.json.
-Before the first held-out request, checkpoint the reviewed code and freeze
-the protocol, scoring rules, configuration, endpoint and both prompt templates.
-The runner records the experiment identity before dispatch.
-Held-out execution requires separate authorization.
+Status: held-out generation, scoring, validation, and analysis completed.
+This document records the planned procedure and the dated scoring
+clarification. See [Phase 7 findings](phase7-findings.md) for actual outcomes,
+departures from the original scoring procedure, and limitations.
+The saved experiment snapshot is authoritative for executed settings.
 
 ## Question and scope
 
@@ -16,7 +15,7 @@ cases for the study: four strategies × 18 cases = 72 generation jobs. A job is
 one case/strategy pair, not one HTTP attempt. Never modify the frozen notebooks,
 images, or annotations to make outputs score better.
 
-## Proposed fixed configuration
+## Study configuration
 
 | Setting | Value |
 | --- | --- |

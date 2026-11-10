@@ -7,7 +7,8 @@ Reference annotations were drafted with AI assistance from source data and plots
 On October 28, 2026, the project author completed review and accepted all 24
 annotations, using another AI only to check annotation correctness. The author
 confirmed that no held-out system outputs were generated or used for tuning.
-The benchmark is frozen; held-out system evaluation has not started.
+The benchmark remains frozen. Held-out system evaluation is complete;
+see [findings and limitations](../../docs/phase7-findings.md).
 
 | Category      | Development | Held-out | Markdown total | Code-output total |
 | ------------- | ----------: | -------: | -------------: | ----------------: |
@@ -53,8 +54,8 @@ The sidebar offers AI suggestions for missing/empty Markdown findings and AI
 review cards for existing-alt Markdown images and code outputs. Review cards
 support editing, explicit application, and dismissal. Accepted output alt text
 is stored in metadata and restored only for matching rendered image data. Use
-development cases for manual checks; keep held-out cases untouched until the
-controlled evaluation. Do not apply changes to frozen inputs and then treat the
+development cases for manual checks; preserve the held-out cases used in
+the completed controlled evaluation. Do not apply changes to frozen inputs and then treat the
 modified notebooks as the same benchmark revision.
 
 ## Review and freeze
