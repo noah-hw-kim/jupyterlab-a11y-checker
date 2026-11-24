@@ -1,3 +1,14 @@
+> ### A11yLens (`feat/semantic-recommendations` Fork Extension)
+>
+> **A11yLens** is my M.S. CS capstone extension built on top of UC Berkeley's open-source [`berkeley-cdss/jupyterlab-a11y-checker`](https://github.com/berkeley-cdss/jupyterlab-a11y-checker). While the upstream deterministic checker remains intact below, this branch adds structure-aware notebook context selection, post-generation suggestion validation, stale-edit-safe author review with persistent code-output alt metadata, and a reproducible evaluation harness.
+>
+> - **Demo Video**: [Watch walkthrough on YouTube](https://youtu.be/svdqcMpqOMY)
+> - **Code Diff**: [Compare `main...feat/semantic-recommendations`](https://github.com/noah-hw-kim/jupyterlab-a11y-checker/compare/main...feat/semantic-recommendations)
+> - **Key Modules**: [`context-selection.ts`](packages/core/src/utils/context-selection.ts) · [`semantic-orchestrator.ts`](packages/core/src/utils/semantic-orchestrator.ts) · [`semantic-validation.ts`](packages/core/src/utils/semantic-validation.ts) · [`semantic-image-review.ts`](packages/extension/src/semantic-image-review.ts) · [`output-alt.ts`](packages/extension/src/output-alt.ts) · [`evaluation/runner.mjs`](evaluation/runner.mjs)
+> - **Results & Setup**: [Phase 7 Held-Out Findings](docs/phase7-findings.md) · [Build & Demo Guide](docs/a11ylens-setup-and-demo.md)
+
+---
+
 # jupyterlab-a11y-checker
 
 [![jupyterlab-a11y-checker](https://marketplace.orbrx.io/api/badge/jupyterlab-a11y-checker?metric=downloads&leftColor=%23555&rightColor=%23F37620&style=flat)](https://marketplace.orbrx.io/extensions/jupyterlab-a11y-checker)
